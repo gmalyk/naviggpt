@@ -1,5 +1,5 @@
 /**
- * API Service for Virgile AI
+ * API Service for Virgile AI - Optimized for Cloudflare
  */
 
 const handleResponse = async (response) => {
@@ -8,8 +8,7 @@ const handleResponse = async (response) => {
         throw new Error(data.error || 'Fetch error');
     }
 
-    // The server returns a JSON string in 'data' for /api/ask
-    if (typeof data.data === 'string' && data.data.startsWith('{')) {
+    if (typeof data.data === 'string' && data.data.trim().startsWith('{')) {
         try {
             return JSON.parse(data.data.replace(/```json/g, '').replace(/```/g, '').trim());
         } catch (e) {
@@ -21,9 +20,12 @@ const handleResponse = async (response) => {
     return data.data;
 };
 
+// Use relative URL for Cloudflare Unified Worker
+const API_BASE = '/api';
+
 export const api = {
     ask: async (payload) => {
-        const response = await fetch('/api/ask', {
+        const response = await fetch(`${API_BASE}/ask`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -32,7 +34,7 @@ export const api = {
     },
 
     submitFilters: async (payload) => {
-        const response = await fetch('/api/filters', {
+        const response = await fetch(`${API_BASE}/filters`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -41,7 +43,7 @@ export const api = {
     },
 
     followUp: async (payload) => {
-        const response = await fetch('/api/followup', {
+        const response = await fetch(`${API_BASE}/followup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)

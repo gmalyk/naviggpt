@@ -1,0 +1,12 @@
+{
+    "name": "virgile",
+    "main": "worker.js",
+    "compatibility_date": "2026-01-31",
+    "assets": {
+        "directory": "client/dist",
+        "binding": "ASSETS"
+    },
+    "observability": {
+        "enabled": true
+    }
+}
