@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const partners = [
     { name: 'Gemini', src: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg' },
@@ -8,10 +9,12 @@ const partners = [
 ];
 
 const Footer = () => {
+    const { t } = useTranslation();
+
     return (
         <footer className="py-16 mt-auto">
             <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
-                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] mb-8">Fonctionne avec</p>
+                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] mb-8">{t('works_with')}</p>
                 <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-30 grayscale hover:opacity-50 transition-all duration-700 font-medium text-slate-400">
                     {partners.map(p => (
                         <div key={p.name} className="flex items-center gap-2">
