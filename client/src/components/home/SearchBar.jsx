@@ -29,8 +29,8 @@ const SearchBar = () => {
     };
 
     return (
-        <section className="max-w-2xl w-full mx-auto mb-10 relative z-20">
-            <div className="relative group bg-[#f0f4f9] border border-slate-100 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
+        <section className="max-w-2xl w-full mx-auto mb-8 relative z-20">
+            <div className="relative group bg-[#f0f4f9] border border-transparent rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
                 <div className="flex items-center gap-3 mb-3">
                     <input
                         type="text"
@@ -51,14 +51,14 @@ const SearchBar = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 justify-center sm:justify-start pt-2 mt-2 border-t border-slate-200/40">
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start pt-2 mt-2 border-t border-slate-200/60">
                     {profiles.map(p => (
                         <button
                             key={p.id}
                             onClick={() => dispatch({ type: ACTIONS.SET_PROFILE, payload: p.id })}
                             className={`px-4 py-1.5 rounded-full text-xs transition-all border ${state.profile === p.id
-                                    ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
-                                    : 'bg-white/60 border-slate-100 text-slate-600 hover:bg-white hover:border-slate-200'
+                                ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
+                                : 'bg-white/60 border-slate-100 text-slate-600 hover:bg-white hover:border-slate-200'
                                 }`}
                         >
                             {t(p.labelKey)}
