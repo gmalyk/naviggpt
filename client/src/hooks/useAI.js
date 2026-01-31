@@ -80,11 +80,14 @@ export const useAI = () => {
             });
 
             if (result.rejected) {
-                alert(result.message || "Different topic detected.");
+                dispatch({
+                    type: ACTIONS.ADD_FOLLOW_UP,
+                    payload: { user: followUpText, ai: result.message || "Désolé, sujet différent." }
+                });
             } else {
                 dispatch({
                     type: ACTIONS.ADD_FOLLOW_UP,
-                    payload: { user: followUpText, ai: result }
+                    payload: { user: followUpText, ai: result.response }
                 });
             }
         } catch (error) {

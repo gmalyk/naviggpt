@@ -5,11 +5,11 @@ import ContentGrid from './ContentGrid';
 
 const HomeView = () => {
     return (
-        <main className="flex-grow pt-16 px-6 max-w-6xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
+        <section className="pb-12 px-6 max-w-6xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
             <HeroSection />
             <SearchBar />
             <ContentGrid />
-        </main>
+        </section>
     );
 };
 

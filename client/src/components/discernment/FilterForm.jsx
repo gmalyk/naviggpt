@@ -31,9 +31,9 @@ const FilterForm = () => {
                                 <button
                                     key={oIdx}
                                     onClick={() => handleToggle(section.title, option)}
-                                    className={`w-full text-left p-1.5 px-3 border rounded-[4px] text-[10px] leading-tight transition-all flex items-center gap-2 ${isSelected
-                                            ? 'bg-slate-50 border-[#0F172A] text-slate-900 font-bold'
-                                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                                    className={`w-full text-left p-1.5 px-3 border rounded-[4px] text-xs leading-tight transition-all flex items-center gap-2 ${isSelected
+                                        ? 'bg-slate-50 border-[#0F172A] text-slate-900 font-bold'
+                                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                                         }`}
                                 >
                                     <div className={`shrink-0 w-2.5 h-2.5 rounded-full border flex items-center justify-center ${isSelected ? 'bg-[#B88644] border-[#B88644]' : 'bg-white border-slate-300'

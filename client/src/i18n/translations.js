@@ -21,11 +21,14 @@ export const translations = {
         cell4_text: "« Rejoignez notre communauté, découvrez en toute transparence comment nous construisons nos clés de discernement et élaborez avec nous la conscience de l’IA, pour une IA au service de l’humain et de ce qu’il a de meilleur. »",
         discernment_title: "Sélectionnez les clés de discernement pour orienter l'IA.",
         compare_btn: "Comparer",
-        followup_placeholder: "Une précision ? Une autre question ?",
+        followup_placeholder: "Poursuivre la discussion avec Virgile",
         new_question_btn: "Nouvelle question",
         subscribe_btn: "S'abonner à Virgile",
         beta_notice: "Virgile Beta - Vos données restent privées.",
-        works_with: "Fonctionne avec"
+        works_with: "Fonctionne avec",
+        submit_btn_long: "Obtiens la réponse de Virgile",
+        footer_title: "Ne laissez plus le hasard guider vos réponses.",
+        footer_text: "Inscrivez vous à Virgile, pour une discussion sans limitation, intégrez Virgile dans votre établissement d'enseignement, pour une protection des plus jeunes et la préservation de vos valeurs, dans votre entreprise ou votre association pour obtenir le meilleur de l'IA."
     },
     en: {
         brand_name: "Virgil",
@@ -49,11 +52,14 @@ export const translations = {
         cell4_text: "« Join our community, discover transparently how we build our discernment keys, and help us develop AI consciousness—for an AI at the service of humanity and its best qualities. »",
         discernment_title: "Select discernment keys to guide the AI.",
         compare_btn: "Compare",
-        followup_placeholder: "Need clarification? Another question?",
+        followup_placeholder: "Continue the discussion with Virgil",
         new_question_btn: "New question",
         subscribe_btn: "Subscribe to Virgil",
         beta_notice: "Virgil Beta - Your data remains private.",
-        works_with: "Powered by"
+        works_with: "Powered by",
+        submit_btn_long: "Get Virgil's response",
+        footer_title: "Don't let chance guide your answers anymore.",
+        footer_text: "Sign up for Virgil for unlimited discussion, integrate Virgil into your educational institution for the protection of the youngest and the preservation of your values, or into your company or association to get the best out of AI."
     },
     it: {
         brand_name: "Virgilio",
@@ -77,11 +83,14 @@ export const translations = {
         cell4_text: "« Unisciti alla nostra comunità, scopri in modo trasparente come costruiamo le nostre chiavi di discernimento e aiutaci a sviluppare la coscienza dell'IA, per un'IA al servizio dell'umanità e delle sue migliori qualità. »",
         discernment_title: "Seleziona le chiavi di discernimento per guidare l'IA.",
         compare_btn: "Confronta",
-        followup_placeholder: "Hai bisogno di chiarimenti? Un'altra domanda?",
+        followup_placeholder: "Continua la discussione con Virgilio",
         new_question_btn: "Nuova domanda",
         subscribe_btn: "Iscriviti a Virgilio",
         beta_notice: "Virgilio Beta - I tuoi dati rimangono privati.",
-        works_with: "Alimentato da"
+        works_with: "Alimentato da",
+        submit_btn_long: "Ottieni la risposta di Virgilio",
+        footer_title: "Non lasciare più che il caso guidi le tue risposte.",
+        footer_text: "Iscriviti a Virgilio per discussioni illimitate, integra Virgilio nel tuo istituto scolastico per la protezione dei più giovani e la conservazione dei tuoi valori, o nella tua azienda o associazione per ottenere il meglio dall'IA."
     },
     de: {
         brand_name: "Virgil",
@@ -105,11 +114,14 @@ export const translations = {
         cell4_text: "« Treten Sie unserer Gemeinschaft bei, entdecken Sie transparent, wie wir unsere Schlüssel zur Unterscheidung aufbauen, und helfen Sie uns, das Bewusstsein der KI zu entwickeln – für eine KI im Dienste der Menschheit und ihrer besten Qualitäten. »",
         discernment_title: "Wählen Sie Schlüssel zur Unterscheidung, um die KI zu leiten.",
         compare_btn: "Vergleichen",
-        followup_placeholder: "Klärungsbedarf? Eine andere Frage?",
+        followup_placeholder: "Diskussion mit Virgil fortsetzen",
         new_question_btn: "Neue Frage",
         subscribe_btn: "Virgil abonnieren",
         beta_notice: "Virgil Beta - Ihre Daten bleiben privat.",
-        works_with: "Unterstützt von"
+        works_with: "Unterstützt von",
+        submit_btn_long: "Hol dir Virgils Antwort",
+        footer_title: "Lassen Sie nicht länger den Zufall Ihre Antworten leiten.",
+        footer_text: "Melden Sie sich bei Virgil für unbegrenzte Diskussionen an, integrieren Sie Virgil in Ihre Bildungseinrichtung zum Schutz der Jüngsten und zur Bewahrung Ihrer Werte oder in Ihr Unternehmen oder Ihren Verband, um das Beste aus der KI herauszuholen."
     },
     es: {
         brand_name: "Virgilio",
@@ -133,11 +145,14 @@ export const translations = {
         cell4_text: "« Únase a nuestra comunidad, descubra de forma transparente cómo construimos nuestras claves de discernimiento y ayúdenos a desarrollar la conciencia de la IA: para una IA al servicio de la humanidad y sus mejores cualidades. »",
         discernment_title: "Seleccione claves de discernimiento para guiar a la IA.",
         compare_btn: "Comparar",
-        followup_placeholder: "¿Necesita aclaraciones? ¿Otra pregunta?",
+        followup_placeholder: "Continuar la discusión con Virgilio",
         new_question_btn: "Nueva pregunta",
         subscribe_btn: "Suscribirse a Virgilio",
         beta_notice: "Virgilio Beta - Sus datos permanecen privados.",
-        works_with: "Desarrollado por"
+        works_with: "Desarrollado por",
+        submit_btn_long: "Obtén la respuesta de Virgilio",
+        footer_title: "No dejes que el azar siga guiando tus respuestas.",
+        footer_text: "Regístrate en Virgilio para debates ilimitados, integra Virgilio en tu institución educativa para la protección de los más jóvenes y la preservación de tus valores, o en tu empresa o asociación para obtener lo mejor de la IA."
     },
     pt: {
         brand_name: "Virgílio",
@@ -161,11 +176,14 @@ export const translations = {
         cell4_text: "« Junte-se à nossa comunidade, descubra de forma transparente como construímos as nossas chaves de discernimento e ajude-nos a desenvolver a consciência da IA — por uma IA ao serviço da humanidade e das suas melhores qualidades. »",
         discernment_title: "Selecione chaves de discernimento para guiar a IA.",
         compare_btn: "Comparar",
-        followup_placeholder: "Precisa de esclarecimentos? Outra pergunta?",
+        followup_placeholder: "Continuar a discussão com Virgílio",
         new_question_btn: "Nova pergunta",
         subscribe_btn: "Subscrever Virgílio",
         beta_notice: "Virgílio Beta - Seus dados permanecem privados.",
-        works_with: "Desenvolvido por"
+        works_with: "Desenvolvido por",
+        submit_btn_long: "Obtenha a resposta de Virgílio",
+        footer_title: "Não deixe que o acaso guie mais as suas respostas.",
+        footer_text: "Registe-se no Virgílio para discussões ilimitadas, integre o Virgílio na sua instituição de ensino para a proteção dos mais jovens e a preservação dos seus valores, ou na sua empresa ou associação para obter o melhor da IA."
     },
     ru: {
         brand_name: "Виргилий",
@@ -189,11 +207,14 @@ export const translations = {
         cell4_text: "« Присоединяйтесь к нашему сообществу, узнайте прозрачно, как мы создаем наши ключи проницательности, и помогите нам развить сознание ИИ — ради ИИ на службе человечества и его лучших качеств. »",
         discernment_title: "Выберите ключи проницательности, чтобы направить ИИ.",
         compare_btn: "Сравнить",
-        followup_placeholder: "Нужны разъяснения? Другой вопрос?",
+        followup_placeholder: "Продолжить обсуждение с Виргилием",
         new_question_btn: "Новый вопрос",
         subscribe_btn: "Подписаться на Виргилия",
         beta_notice: "Виргилий Бета - Ваши данные остаются конфиденциальными.",
-        works_with: "Работает на"
+        works_with: "Работает на",
+        submit_btn_long: "Получить ответ Виргилия",
+        footer_title: "Пусть случай больше не управляет вашими ответами.",
+        footer_text: "Зарегистрируйтесь в Виргилии для неограниченного общения, интегрируйте Виргилия в свое учебное заведение для защиты самых маленьких и сохранения ваших ценностей, или в свою компанию или ассоциацию, чтобы получить максимум от ИИ."
     },
     zh: {
         brand_name: "维吉尔",
@@ -217,11 +238,14 @@ export const translations = {
         cell4_text: "「 加入我们的社区，透明地发现我们如何构建洞察力密钥，并帮助我们开发人工智能意识——为了服务于人类及其优秀品质的人工智能。 」",
         discernment_title: "选择洞察力密钥来引导人工智能。",
         compare_btn: "比较",
-        followup_placeholder: "需要澄清吗？还有其他问题吗？",
+        followup_placeholder: "继续与维吉尔讨论",
         new_question_btn: "新问题",
         subscribe_btn: "订阅维吉尔",
         beta_notice: "维吉尔 Beta - 您的数据仍然是私密的。",
-        works_with: "技术支持"
+        works_with: "技术支持",
+        submit_btn_long: "获取维吉尔的回复",
+        footer_title: "不再让偶然引导你的回答。",
+        footer_text: "注册维吉尔以获得无限讨论，将维吉尔整合到您的教育机构中以保护最年幼的孩子并维护您的价值观，或者整合到您的公司或协会中以充分利用人工智能。"
     },
     ar: {
         brand_name: "فيرجيل",
@@ -245,11 +269,14 @@ export const translations = {
         cell4_text: "« انضم إلى مجتمعنا، واكتشف بشفافية كيف نبني مفاتيح التمييز لدينا، وساعدنا في تطوير وعي الذكاء الاصطناعي - من أجل ذكاء اصطناعي في خدمة الإنسانية وأفضل ما فيها. »",
         discernment_title: "اختر مفاتيح التمييز لتوجيه الذكاء الاصطناعي.",
         compare_btn: "مقارنة",
-        followup_placeholder: "هل تحتاج لتوضيح؟ سؤال آخر؟",
+        followup_placeholder: "مواصلة المناقشة مع فيرجيل",
         new_question_btn: "سؤال جديد",
         subscribe_btn: "اشترك في فيرجيل",
         beta_notice: "فيرجيل بيتا - بياناتك تبقى خاصة.",
-        works_with: "مدعوم من"
+        works_with: "مدعوم من",
+        submit_btn_long: "احصل على إجابة فيرجيل",
+        footer_title: "لا تدع الصدفة توجه إجاباتك بعد الآن.",
+        footer_text: "سجل في فيرجيل لمناقشات غير محدودة، وادمج فيرجيل في مؤسستك التعليمية لحماية الصغار والحفاظ على قيمك، أو في شركتك أو جمعيتك للحصول على أفضل ما في الذكاء الاصطناعي."
     },
     hi: {
         brand_name: "वर्जिल",
@@ -273,10 +300,13 @@ export const translations = {
         cell4_text: "« हमारे समुदाय में शामिल हों, पारदर्शिता से जानें कि हम अपनी विवेक कुंजियाँ कैसे बनाते हैं, और एआई को मानवता और उसकी सर्वोत्तम विशेषताओं की सेवा में बनाए रखने के लिए उसका विवेक विकसित करने में हमारी मदद करें। »",
         discernment_title: "एआई को निर्देशित करने के लिए विवेक कुंजियाँ चुनें।",
         compare_btn: "तुलना करें",
-        followup_placeholder: "स्पष्टीकरण चाहिए? एक और सवाल?",
+        followup_placeholder: "वर्जिल के साथ चर्चा जारी रखें",
         new_question_btn: "नया सवाल",
         subscribe_btn: "वर्जिल की सदस्यता लें",
         beta_notice: "वर्जिल बीटा - आपका डेटा निजी रहता है।",
-        works_with: "द्वारा संचालित"
+        works_with: "द्वारा संचालित",
+        submit_btn_long: "वर्जिल की प्रतिक्रिया प्राप्त करें",
+        footer_title: "अब अपनी प्रतिक्रियाओं को संयोग के भरोसे न छोड़ें।",
+        footer_text: "असीमित चर्चा के लिए वर्जिल में साइन अप करें, युवाओं की सुरक्षा और अपने मूल्यों के संरक्षण के लिए वर्जिल को अपने शैक्षणिक संस्थान में एकीकृत करें, या एआई का सर्वोत्तम लाभ उठाने के लिए अपनी कंपनी या एसोसिएशन में शामिल करें।"
     }
 };
