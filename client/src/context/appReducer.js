@@ -1,0 +1,85 @@
+export const initialState = {
+    view: 'home', // 'home', 'discernment', 'result'
+    language: 'fr',
+    dir: 'ltr',
+    profile: 'adult',
+    question: '',
+    analysis: '',
+    sections: [],
+    selectedFilters: [],
+    precision: '',
+    virgileResponse: '',
+    standardResponse: '',
+    followUpHistory: [],
+    loading: false,
+    settings: {
+        provider: localStorage.getItem('virgile_provider') || 'openai',
+        openaiKey: localStorage.getItem('virgile_openai_key') || '',
+        geminiKey: localStorage.getItem('virgile_gemini_key') || ''
+    }
+};
+
+export const ACTIONS = {
+    SET_VIEW: 'SET_VIEW',
+    SET_LANGUAGE: 'SET_LANGUAGE',
+    SET_PROFILE: 'SET_PROFILE',
+    SET_QUESTION: 'SET_QUESTION',
+    SET_INITIAL_ANALYSIS: 'SET_INITIAL_ANALYSIS',
+    SET_SELECTED_FILTERS: 'SET_SELECTED_FILTERS',
+    SET_PRECISION: 'SET_PRECISION',
+    SET_FINAL_RESPONSES: 'SET_FINAL_RESPONSES',
+    ADD_FOLLOW_UP: 'ADD_FOLLOW_UP',
+    SET_LOADING: 'SET_LOADING',
+    UPDATE_SETTINGS: 'UPDATE_SETTINGS'
+};
+
+export function appReducer(state, action) {
+    switch (action.type) {
+        case ACTIONS.SET_VIEW:
+            return { ...state, view: action.payload };
+        case ACTIONS.SET_LANGUAGE:
+            return {
+                ...state,
+                language: action.payload,
+                dir: action.payload === 'ar' ? 'rtl' : 'ltr'
+            };
+        case ACTIONS.SET_PROFILE:
+            return { ...state, profile: action.payload };
+        case ACTIONS.SET_QUESTION:
+            return { ...state, question: action.payload };
+        case ACTIONS.SET_INITIAL_ANALYSIS:
+            return {
+                ...state,
+                analysis: action.payload.analysis,
+                sections: action.payload.sections,
+                selectedFilters: [],
+                precision: ''
+            };
+        case ACTIONS.SET_SELECTED_FILTERS:
+            return { ...state, selectedFilters: action.payload };
+        case ACTIONS.SET_PRECISION:
+            return { ...state, precision: action.payload };
+        case ACTIONS.SET_FINAL_RESPONSES:
+            return {
+                ...state,
+                virgileResponse: action.payload.virgile,
+                standardResponse: action.payload.standard,
+                followUpHistory: []
+            };
+        case ACTIONS.ADD_FOLLOW_UP:
+            return {
+                ...state,
+                followUpHistory: [...state.followUpHistory, action.payload]
+            };
+        case ACTIONS.SET_LOADING:
+            return { ...state, loading: action.payload };
+        case ACTIONS.UPDATE_SETTINGS:
+            const newSettings = { ...state.settings, ...action.payload };
+            if (action.payload.provider) localStorage.setItem('virgile_provider', action.payload.provider);
+            if (action.payload.openaiKey !== undefined) localStorage.setItem('virgile_openai_key', action.payload.openaiKey);
+            if (action.payload.geminiKey !== undefined) localStorage.setItem('virgile_gemini_key', action.payload.geminiKey);
+            return { ...state, settings: newSettings };
+        default:
+            return state;
+    }
+}
