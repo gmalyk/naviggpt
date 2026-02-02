@@ -8,10 +8,10 @@ const router = express.Router();
 
 // POST /api/ask - Initial analysis stage
 router.post('/ask', async (req, res) => {
-    const { question, profile, language, provider, apiKey } = req.body;
+    const { question, profile, faith, values, language, provider, apiKey } = req.body;
 
     try {
-        const systemPrompt = getAskVirgilePrompt(profile, language);
+        const systemPrompt = getAskVirgilePrompt(profile, faith, values, language);
         const response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
 
         // The response is expected to be JSON as per the system prompt instructions
@@ -23,10 +23,10 @@ router.post('/ask', async (req, res) => {
 
 // POST /api/filters - Result generation stage
 router.post('/filters', async (req, res) => {
-    const { question, profile, language, provider, apiKey, filters, precision } = req.body;
+    const { question, profile, faith, values, language, provider, apiKey, filters, precision } = req.body;
 
     try {
-        const systemPrompt = getSubmitFiltersPrompt(profile, language);
+        const systemPrompt = getSubmitFiltersPrompt(profile, faith, values, language);
         const userMessage = `Question: "${question}"\nFiltres: ${filters.join(', ')}\nPrécision: "${precision}"`;
         const response = await callAI(provider, apiKey, systemPrompt, userMessage);
 
@@ -38,7 +38,7 @@ router.post('/filters', async (req, res) => {
 
 // POST /api/followup - Follow-up chat stage
 router.post('/followup', async (req, res) => {
-    const { followUp, context, profile, language, provider, apiKey } = req.body;
+    const { followUp, context, profile, faith, values, language, provider, apiKey } = req.body;
 
     try {
         // Stage 3a: Context Check
@@ -50,7 +50,7 @@ router.post('/followup', async (req, res) => {
         }
 
         // Stage 3b: Generation
-        const genPrompt = getFollowUpGenPrompt(profile, language);
+        const genPrompt = getFollowUpGenPrompt(profile, faith, values, language);
         const response = await callAI(provider, apiKey, genPrompt, `Suite discussion : "${followUp}"`);
 
         res.json({ success: true, rejected: false, data: response });

@@ -3,6 +3,8 @@ export const initialState = {
     language: 'fr',
     dir: 'ltr',
     profile: 'adult',
+    faith: null,
+    values: [],
     question: '',
     analysis: '',
     sections: [],
@@ -23,6 +25,8 @@ export const ACTIONS = {
     SET_VIEW: 'SET_VIEW',
     SET_LANGUAGE: 'SET_LANGUAGE',
     SET_PROFILE: 'SET_PROFILE',
+    SET_FAITH: 'SET_FAITH',
+    SET_VALUES: 'SET_VALUES',
     SET_QUESTION: 'SET_QUESTION',
     SET_INITIAL_ANALYSIS: 'SET_INITIAL_ANALYSIS',
     SET_SELECTED_FILTERS: 'SET_SELECTED_FILTERS',
@@ -45,6 +49,10 @@ export function appReducer(state, action) {
             };
         case ACTIONS.SET_PROFILE:
             return { ...state, profile: action.payload };
+        case ACTIONS.SET_FAITH:
+            return { ...state, faith: action.payload };
+        case ACTIONS.SET_VALUES:
+            return { ...state, values: action.payload };
         case ACTIONS.SET_QUESTION:
             return { ...state, question: action.payload };
         case ACTIONS.SET_INITIAL_ANALYSIS:

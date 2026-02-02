@@ -18,7 +18,7 @@ const DiscernmentView = () => {
         <section className="w-full bg-slate-50/50 py-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="px-6 max-w-6xl mx-auto w-full">
                 <div className="flex items-baseline gap-2 mb-6">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Votre question :</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('ui_your_question')}</span>
                     <p className="text-slate-600 italic text-xs md:text-sm font-medium">"{state.question}"</p>
                 </div>
 

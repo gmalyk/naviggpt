@@ -35,7 +35,7 @@ const FollowUpChat = () => {
                             <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
                                 <User className="w-3.5 h-3.5 text-slate-400" />
                             </div>
-                            <p className="text-[10px] text-slate-400 uppercase font-extrabold tracking-wider">{t('you_label') || 'Vous'} : {chat.user}</p>
+                            <p className="text-[10px] text-slate-400 uppercase font-extrabold tracking-wider">{t('you_label')} : {chat.user}</p>
                         </div>
                         <MarkdownContent content={chat.ai} />
                     </div>

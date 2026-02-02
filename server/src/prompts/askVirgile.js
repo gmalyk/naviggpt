@@ -1,14 +1,18 @@
 /**
  * System prompt for Step 1: Initial Analysis & Profiling
- * @param {string} profile - User profile (kid, teen, adult, senior)
+ * @param {object} faith - Selected faith/tradition
+ * @param {Array} values - Selected ACT values
  * @param {string} lang - Selected language code
  * @returns {string} The formatted system prompt
  */
-export const getAskVirgilePrompt = (profile, lang) => {
+export const getAskVirgilePrompt = (profile, faith, values, lang) => {
+  const faithStr = faith ? `\nTradition/Sensibilité : ${faith.label}` : '';
+  const valuesStr = values && values.length > 0 ? `\nValeurs/Domaines (ACT) : ${values.join(', ')}` : '';
+
   return `RÔLE
 Tu agis comme un module d’analyse préalable et de cadrage cognitif.
 Ton objectif n’est PAS de répondre à la question, mais de préparer les conditions d’une réponse de très haute qualité.
-Profil utilisateur : ${profile}. Adapte ton analyse et tes suggestions à ce profil.
+Profil utilisateur : ${profile}.${faithStr}${valuesStr} Adapte ton analyse et tes suggestions à ce profil.
 
 PRINCIPES FONDAMENTAUX
 - Tu ne réponds jamais directement à la question initiale.

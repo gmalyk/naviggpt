@@ -17,14 +17,19 @@ Réponds OUI ou NON. Si NON, traduis ce message dans la langue ${lang} :
 /**
  * System prompt for Step 3b: Follow-up Generation
  * @param {string} profile - User profile
+ * @param {object} faith - Selected faith
+ * @param {Array} values - Selected ACT values
  * @param {string} lang - Selected language code
  * @returns {string} The formatted generation prompt
  */
-export const getFollowUpGenPrompt = (profile, lang) => {
+export const getFollowUpGenPrompt = (profile, faith, values, lang) => {
+    const faithStr = faith ? `\nTradition/Sensibilité : ${faith.label}` : '';
+    const valuesStr = values && values.length > 0 ? `\nValeurs/Domaines (ACT) : ${values.join(', ')}` : '';
+
     return `
 Tu es Virgile. Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
 Ta réponse doit rester honnête, bousculer les idées reçues et encourager la réflexion profonde.
-Profil utilisateur : ${profile}.
+Profil utilisateur : ${profile}.${faithStr}${valuesStr}
 
 Conserve la même vigilance que dans tes réponses précédentes. Si l'utilisateur change de sujet, rappelle-lui gentiment que Virgile est là pour approfondir le discernement sur le thème initial.
 

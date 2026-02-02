@@ -20,18 +20,18 @@ const SearchBar = () => {
     const [inputValue, setInputValue] = useState('');
     const [isFaithOpen, setIsFaithOpen] = useState(false);
     const [isValuesOpen, setIsValuesOpen] = useState(false);
-    const [selectedFaith, setSelectedFaith] = useState(null);
+    const [selectedFaithId, setSelectedFaithId] = useState(null);
     const [selectedValues, setSelectedValues] = useState([]);
 
     const religions = [
-        { id: 'christianity', label: 'Christianisme', icon: '✝️' },
-        { id: 'islam', label: 'Islam', icon: '☪️' },
-        { id: 'judaism', label: 'Judaïsme', icon: '✡️' },
-        { id: 'buddhism', label: 'Bouddhisme', icon: '☸️' },
-        { id: 'hinduism', label: 'Hindouisme', icon: '🕉️' },
-        { id: 'sikhism', label: 'Sikhisme', icon: '☬' },
-        { id: 'atheism', label: 'Athéisme/Agnostique', icon: '⚛️' },
-        { id: 'other', label: 'Autre / Spiritualité', icon: '✨' }
+        { id: 'christianity', label: t('rel_christianity'), icon: '✝️' },
+        { id: 'islam', label: t('rel_islam'), icon: '☪️' },
+        { id: 'judaism', label: t('rel_judaism'), icon: '✡️' },
+        { id: 'buddhism', label: t('rel_buddhism'), icon: '☸️' },
+        { id: 'hinduism', label: t('rel_hinduism'), icon: '🕉️' },
+        { id: 'sikhism', label: t('rel_sikhism'), icon: '☬' },
+        { id: 'atheism', label: t('rel_atheism'), icon: '⚛️' },
+        { id: 'other', label: t('rel_other'), icon: '✨' }
     ];
 
     const actDomains = [
@@ -41,9 +41,17 @@ const SearchBar = () => {
         { id: 'leisure', label: t('act_compass_leisure'), icon: '🎮' }
     ];
 
+    const selectedFaith = religions.find(r => r.id === selectedFaithId);
+
     const handleSend = () => {
         if (!inputValue.trim() || loading) return;
-        askVirgile(inputValue.trim());
+
+        const valuesLabels = selectedValues.map(vId => {
+            const domain = actDomains.find(d => d.id === vId);
+            return domain ? domain.label : vId;
+        });
+
+        askVirgile(inputValue.trim(), selectedFaith, valuesLabels);
     };
 
     const handleKeyDown = (e) => {
@@ -56,8 +64,8 @@ const SearchBar = () => {
         );
     };
 
-    const selectFaith = (rel) => {
-        setSelectedFaith(rel);
+    const selectFaith = (relId) => {
+        setSelectedFaithId(relId);
         setIsFaithOpen(false);
     };
 
@@ -139,8 +147,8 @@ const SearchBar = () => {
                             {religions.map(rel => (
                                 <button
                                     key={rel.id}
-                                    onClick={() => selectFaith(rel)}
-                                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all group ${selectedFaith?.id === rel.id
+                                    onClick={() => selectFaith(rel.id)}
+                                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all group ${selectedFaithId === rel.id
                                         ? 'border-amber-400 bg-amber-50'
                                         : 'border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'
                                         }`}
@@ -198,7 +206,7 @@ const SearchBar = () => {
                             <button
                                 onClick={() => {
                                     setIsValuesOpen(false);
-                                    setInputValue("Aide moi à définir ma boussole des valeurs ACT.");
+                                    setInputValue(t('ai_help_query'));
                                     handleSend();
                                 }}
                                 className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-3 shadow-lg shadow-slate-200"
