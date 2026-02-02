@@ -28,7 +28,18 @@ export const translations = {
         works_with: "Fonctionne avec",
         submit_btn_long: "Obtiens la réponse de Virgile",
         footer_title: "Ne laissez plus le hasard guider vos réponses.",
-        footer_text: "Inscrivez vous à Virgile, pour une discussion sans limitation, intégrez Virgile dans votre établissement d'enseignement, pour une protection des plus jeunes et la préservation de vos valeurs, dans votre entreprise ou votre association pour obtenir le meilleur de l'IA."
+        footer_text: "Inscrivez vous à Virgile, pour une discussion sans limitation, intégrez Virgile dans votre établissement d'enseignement, pour une protection des plus jeunes et la préservation de vos valeurs, dans votre entreprise ou votre association pour obtenir le meilleur de l'IA.",
+        prof_faith: "Votre foi",
+        prof_values: "Vos valeurs",
+        faith_modal_title: "Quelle est votre sensibilité spirituelle ?",
+        values_modal_title: "Déterminez vos valeurs d'action",
+        act_compass_def: "La boussole ACT (Acceptance and Commitment Therapy) est un outil pour clarifier ce qui donne du sens à votre vie. Contrairement aux buts qui peuvent être atteints, les valeurs sont des directions constantes (ex: 'être curieux').",
+        act_compass_example_title: "Les domaines de la vie :",
+        act_compass_work: "Travail / Éducation",
+        act_compass_relationships: "Relations / Famille",
+        act_compass_personal: "Développement personnel",
+        act_compass_leisure: "Loisirs / Fun",
+        ai_help_values_btn: "Aider moi à définir mes valeurs avec l'IA"
     },
     en: {
         brand_name: "Virgil",
@@ -59,7 +70,18 @@ export const translations = {
         works_with: "Powered by",
         submit_btn_long: "Get Virgil's response",
         footer_title: "Don't let chance guide your answers anymore.",
-        footer_text: "Sign up for Virgil for unlimited discussion, integrate Virgil into your educational institution for the protection of the youngest and the preservation of your values, or into your company or association to get the best out of AI."
+        footer_text: "Sign up for Virgil for unlimited discussion, integrate Virgil into your educational institution for the protection of the youngest and the preservation of your values, or into your company or association to get the best out of AI.",
+        prof_faith: "Your Faith",
+        prof_values: "Your Values",
+        faith_modal_title: "What is your spiritual sensitivity?",
+        values_modal_title: "Define your core values",
+        act_compass_def: "The ACT (Acceptance and Commitment Therapy) compass is a tool to clarify what truly matters to you. Unlike goals that can be achieved, values are ongoing directions in life.",
+        act_compass_example_title: "Life Domains :",
+        act_compass_work: "Work / Education",
+        act_compass_relationships: "Relationships / Family",
+        act_compass_personal: "Personal Development",
+        act_compass_leisure: "Leisure / Recreation",
+        ai_help_values_btn: "Help me define my values with AI"
     },
     it: {
         brand_name: "Virgilio",
