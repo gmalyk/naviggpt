@@ -45,12 +45,16 @@ const callAI = async (provider, apiKey, systemPrompt, userMessage) => {
     throw new Error(`Unsupported AI provider: ${provider}`);
 };
 
-// Prompts
-const getAskVirgilePrompt = (profile, lang) => {
-    return `RÔLE
+// Prompt Registry
+const PROMPT_REGISTRY = {
+    askVirgile: {
+        name: 'Initial Analysis & Cognitive Framing',
+        description: 'Used when a user first asks a question. Analyzes the question and generates discernment key sections.',
+        variables: ['profile', 'lang'],
+        defaultTemplate: `RÔLE
 Tu agis comme un module d'analyse préalable et de cadrage cognitif.
 Ton objectif n'est PAS de répondre à la question, mais de préparer les conditions d'une réponse de très haute qualité.
-Profil utilisateur : ${profile}. Adapte ton analyse et tes suggestions à ce profil.
+Profil utilisateur : {{profile}}. Adapte ton analyse et tes suggestions à ce profil.
 
 PRINCIPES FONDAMENTAUX
 - Tu ne réponds jamais directement à la question initiale.
@@ -94,14 +98,15 @@ FORMAT DE SORTIE — STRICTEMENT JSON
   ]
 }
 
-Langue de sortie : ${lang}`;
-};
-
-const getSubmitFiltersPrompt = (profile, lang) => {
-    return `
-Tu es Virgile. Ta mission est de répondre en appliquant strictement les filtres choisis par l'utilisateur (sans les lister).
+Langue de sortie : {{lang}}`
+    },
+    submitFilters: {
+        name: 'Virgile Response with Filters',
+        description: 'Used when the user submits their selected discernment filters. Generates the main Virgile response.',
+        variables: ['profile', 'lang'],
+        defaultTemplate: `Tu es Virgile. Ta mission est de répondre en appliquant strictement les filtres choisis par l'utilisateur (sans les lister).
 La réponse doit être honnête, bousculer les idées reçues et encourager la réflexion profonde.
-Profil utilisateur : ${profile}.
+Profil utilisateur : {{profile}}.
 
 Si l'utilisateur poursuit la discussion, conserve en mémoire ses choix mais analyse sa réaction et sauf changement de sujet, ne lui propose plus d'effectuer de nouveaux choix. Conserve, le style et le ton adopté. Continue tes réponses avec la même vigilance.
 
@@ -112,28 +117,32 @@ SOURCES ET LIENS : À la fin de ta réponse, ajoute toujours une section "Source
 - Pour tout autre sujet : liens vers les sources d'information fiables utilisées.
 Fournis des liens réels et vérifiables. Utilise le format markdown [texte](url).
 
-Langue : ${lang}.
-`;
-};
-
-const getStandardPrompt = (lang) => {
-    return `Tu es un assistant IA générique. Réponds à la question de manière directe et classique, sans aucune personnalisation. Langue : ${lang}.`;
-};
-
-const getFollowUpCheckPrompt = (context, newQ, lang) => {
-    return `CONTEXTE PRÉCÉDENT : ${context}
-NOUVELLE QUESTION : "${newQ}"
+Langue : {{lang}}.`
+    },
+    standard: {
+        name: 'Generic AI Response',
+        description: 'Used to generate the standard/comparison AI response without any Virgile personalization.',
+        variables: ['lang'],
+        defaultTemplate: `Tu es un assistant IA générique. Réponds à la question de manière directe et classique, sans aucune personnalisation. Langue : {{lang}}.`
+    },
+    followUpCheck: {
+        name: 'Follow-Up Context Check',
+        description: 'Used to check if a follow-up question is related to the ongoing conversation context.',
+        variables: ['context', 'newQ', 'lang'],
+        defaultTemplate: `CONTEXTE PRÉCÉDENT : {{context}}
+NOUVELLE QUESTION : "{{newQ}}"
 
 Est-ce que la nouvelle question est une suite logique ou liée au même thème ?
-Réponds OUI ou NON. Si NON, traduis ce message dans la langue ${lang} :
-"Désolé, mais cette requête est sans rapport avec la précédente, il faut donc la poser en première page du site pour une nouvelle génération de clés de discernement. Veuillez cliquez sur le logo du menu supérieur."`;
-};
-
-const getFollowUpGenPrompt = (profile, lang) => {
-    return `
-Tu es Virgile. Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
+Réponds OUI ou NON. Si NON, traduis ce message dans la langue {{lang}} :
+"Désolé, mais cette requête est sans rapport avec la précédente, il faut donc la poser en première page du site pour une nouvelle génération de clés de discernement. Veuillez cliquez sur le logo du menu supérieur."`
+    },
+    followUpGen: {
+        name: 'Follow-Up Generation',
+        description: 'Used to generate a follow-up response continuing the conversation with the same style and filters.',
+        variables: ['profile', 'lang'],
+        defaultTemplate: `Tu es Virgile. Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
 Ta réponse doit rester honnête, bousculer les idées reçues et encourager la réflexion profonde.
-Profil utilisateur : ${profile}.
+Profil utilisateur : {{profile}}.
 
 Conserve la même vigilance que dans tes réponses précédentes. Si l'utilisateur change de sujet, rappelle-lui gentiment que Virgile est là pour approfondir le discernement sur le thème initial.
 
@@ -144,8 +153,46 @@ SOURCES ET LIENS : À la fin de ta réponse, ajoute toujours une section "Source
 - Pour tout autre sujet : liens vers les sources d'information fiables utilisées.
 Fournis des liens réels et vérifiables. Utilise le format markdown [texte](url).
 
-Langue : ${lang}.
-`;
+Langue : {{lang}}.`
+    }
+};
+
+// Interpolation helpers
+const interpolate = (template, vars) =>
+    template.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] !== undefined ? vars[key] : `{{${key}}}`);
+
+const getPromptTemplate = async (env, key) => {
+    if (env.PROMPTS) {
+        const override = await env.PROMPTS.get(`prompt:${key}`);
+        if (override !== null) return override;
+    }
+    return PROMPT_REGISTRY[key].defaultTemplate;
+};
+
+// Prompt functions (async, KV-backed)
+const getAskVirgilePrompt = async (env, profile, lang) => {
+    const template = await getPromptTemplate(env, 'askVirgile');
+    return interpolate(template, { profile, lang });
+};
+
+const getSubmitFiltersPrompt = async (env, profile, lang) => {
+    const template = await getPromptTemplate(env, 'submitFilters');
+    return interpolate(template, { profile, lang });
+};
+
+const getStandardPrompt = async (env, lang) => {
+    const template = await getPromptTemplate(env, 'standard');
+    return interpolate(template, { lang });
+};
+
+const getFollowUpCheckPrompt = async (env, context, newQ, lang) => {
+    const template = await getPromptTemplate(env, 'followUpCheck');
+    return interpolate(template, { context, newQ, lang });
+};
+
+const getFollowUpGenPrompt = async (env, profile, lang) => {
+    const template = await getPromptTemplate(env, 'followUpGen');
+    return interpolate(template, { profile, lang });
 };
 
 const app = new Hono();
@@ -154,7 +201,7 @@ app.use('*', cors());
 app.post('/api/ask', async (c) => {
     try {
         const { question, profile, language, provider, apiKey } = await c.req.json();
-        const systemPrompt = getAskVirgilePrompt(profile, language);
+        const systemPrompt = await getAskVirgilePrompt(c.env, profile, language);
         const response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
         return c.json({ success: true, data: response });
     } catch (e) {
@@ -167,11 +214,11 @@ app.post('/api/filters', async (c) => {
         const { question, profile, language, provider, apiKey, filters, precision } = await c.req.json();
 
         // Virgile response: full context with filters and profile
-        const virgilePrompt = getSubmitFiltersPrompt(profile, language);
+        const virgilePrompt = await getSubmitFiltersPrompt(c.env, profile, language);
         const virgileMessage = `Question: "${question}"\nFiltres: ${filters.join(', ')}\nPrécision: "${precision}"`;
 
         // Standard response: raw question only, no filters/profile/context
-        const standardPrompt = getStandardPrompt(language);
+        const standardPrompt = await getStandardPrompt(c.env, language);
         const standardMessage = `Question: "${question}"`;
 
         // Run both calls in parallel
@@ -191,7 +238,7 @@ app.post('/api/followup', async (c) => {
         const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, language, provider, apiKey } = await c.req.json();
 
         // 1. Check Context
-        const checkPrompt = getFollowUpCheckPrompt(context, followUp, language);
+        const checkPrompt = await getFollowUpCheckPrompt(c.env, context, followUp, language);
         const checkResult = await callAI(provider, apiKey, "Tu es un vérificateur de contexte.", checkPrompt);
 
         if (checkResult.toUpperCase().includes("NON")) {
@@ -205,7 +252,7 @@ app.post('/api/followup', async (c) => {
         }
 
         // 2. Generate — include full conversation history
-        const genPrompt = getFollowUpGenPrompt(profile, language);
+        const genPrompt = await getFollowUpGenPrompt(c.env, profile, language);
 
         let conversationContext = `Question initiale : "${question}"\nFiltres : ${filters ? filters.join(', ') : 'aucun'}\nPrécision : "${precision || ''}"\n\nRéponse de Virgile :\n${virgileResponse || ''}`;
 
@@ -220,6 +267,89 @@ app.post('/api/followup', async (c) => {
 
         const response = await callAI(provider, apiKey, genPrompt, conversationContext);
         return c.json({ success: true, data: { rejected: false, response } });
+    } catch (e) {
+        return c.json({ success: false, error: e.message }, 500);
+    }
+});
+
+// Prompt Editor API routes
+
+app.get('/api/prompts', async (c) => {
+    try {
+        const prompts = {};
+        for (const [key, meta] of Object.entries(PROMPT_REGISTRY)) {
+            let currentTemplate = meta.defaultTemplate;
+            let isOverridden = false;
+            if (c.env.PROMPTS) {
+                const override = await c.env.PROMPTS.get(`prompt:${key}`);
+                if (override !== null) {
+                    currentTemplate = override;
+                    isOverridden = true;
+                }
+            }
+            prompts[key] = {
+                name: meta.name,
+                description: meta.description,
+                variables: meta.variables,
+                defaultTemplate: meta.defaultTemplate,
+                currentTemplate,
+                isOverridden
+            };
+        }
+        return c.json({ success: true, data: prompts });
+    } catch (e) {
+        return c.json({ success: false, error: e.message }, 500);
+    }
+});
+
+app.put('/api/prompts', async (c) => {
+    try {
+        const { prompts } = await c.req.json();
+        if (!prompts || typeof prompts !== 'object') {
+            return c.json({ success: false, error: 'Invalid payload' }, 400);
+        }
+        if (!c.env.PROMPTS) {
+            return c.json({ success: false, error: 'KV not available' }, 500);
+        }
+        for (const [key, template] of Object.entries(prompts)) {
+            if (!PROMPT_REGISTRY[key]) continue;
+            await c.env.PROMPTS.put(`prompt:${key}`, template);
+        }
+        return c.json({ success: true });
+    } catch (e) {
+        return c.json({ success: false, error: e.message }, 500);
+    }
+});
+
+app.put('/api/prompts/:key', async (c) => {
+    try {
+        const key = c.req.param('key');
+        if (!PROMPT_REGISTRY[key]) {
+            return c.json({ success: false, error: 'Unknown prompt key' }, 404);
+        }
+        const { template } = await c.req.json();
+        if (typeof template !== 'string') {
+            return c.json({ success: false, error: 'Invalid template' }, 400);
+        }
+        if (!c.env.PROMPTS) {
+            return c.json({ success: false, error: 'KV not available' }, 500);
+        }
+        await c.env.PROMPTS.put(`prompt:${key}`, template);
+        return c.json({ success: true });
+    } catch (e) {
+        return c.json({ success: false, error: e.message }, 500);
+    }
+});
+
+app.post('/api/prompts/reset', async (c) => {
+    try {
+        if (!c.env.PROMPTS) {
+            return c.json({ success: false, error: 'KV not available' }, 500);
+        }
+        for (const key of Object.keys(PROMPT_REGISTRY)) {
+            await c.env.PROMPTS.delete(`prompt:${key}`);
+        }
+        return c.json({ success: true });
     } catch (e) {
         return c.json({ success: false, error: e.message }, 500);
     }

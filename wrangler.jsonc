@@ -8,5 +8,12 @@
     },
     "observability": {
         "enabled": true
-    }
+    },
+    "kv_namespaces": [
+        {
+            "binding": "PROMPTS",
+            "id": "b75529298766475b8f536f53b575d410",
+            "preview_id": "7c5dc5a26077424b84b61a0f71e54090"
+        }
+    ]
 }

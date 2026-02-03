@@ -3,7 +3,12 @@
  */
 
 const handleResponse = async (response) => {
-    const data = await response.json();
+    let data;
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error(`Server error (${response.status})`);
+    }
     if (!response.ok || !data.success) {
         throw new Error(data.error || 'Fetch error');
     }
@@ -47,6 +52,36 @@ export const api = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
+        });
+        return await handleResponse(response);
+    },
+
+    getPrompts: async () => {
+        const response = await fetch(`${API_BASE}/prompts`);
+        return await handleResponse(response);
+    },
+
+    savePrompts: async (prompts) => {
+        const response = await fetch(`${API_BASE}/prompts`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompts })
+        });
+        return await handleResponse(response);
+    },
+
+    savePrompt: async (key, template) => {
+        const response = await fetch(`${API_BASE}/prompts/${key}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ template })
+        });
+        return await handleResponse(response);
+    },
+
+    resetPrompts: async () => {
+        const response = await fetch(`${API_BASE}/prompts/reset`, {
+            method: 'POST'
         });
         return await handleResponse(response);
     }

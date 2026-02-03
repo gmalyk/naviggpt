@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, MessageSquare, Info, Users, ShieldCheck } from 'lucide-react';
+import { Menu, MessageSquare, Info, Users, ShieldCheck, FileEdit } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -50,6 +50,17 @@ const HamburgerMenu = () => {
                         <Users className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_contact')}</span>
                     </a>
+                    <button
+                        onClick={() => {
+                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'prompts' });
+                            setIsOpen(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                    >
+                        <FileEdit className="w-4 h-4 text-slate-400" />
+                        <span>{t('menu_prompts')}</span>
+                    </button>
                     <a href="#terms" className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm border-t border-slate-100">
                         <ShieldCheck className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_terms')}</span>

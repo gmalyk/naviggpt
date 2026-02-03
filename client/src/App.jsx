@@ -6,6 +6,7 @@ import HomeView from './components/home/HomeView';
 import AboutView from './components/about/AboutView';
 import DiscernmentView from './components/discernment/DiscernmentView';
 import ResultView from './components/result/ResultView';
+import PromptEditorView from './components/prompts/PromptEditorView';
 
 function App() {
   const { state } = useAppState();
@@ -36,9 +37,11 @@ function App() {
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
       <Navbar />
       <div className="flex-grow pt-20">
-        {state.view !== 'about' && <HomeView />}
+        {state.view !== 'about' && state.view !== 'prompts' && <HomeView />}
 
         {state.view === 'about' && <AboutView />}
+
+        {state.view === 'prompts' && <PromptEditorView />}
 
         {(state.view === 'discernment' || state.view === 'result') && (
           <div ref={discernmentRef} className="border-t border-slate-50">
