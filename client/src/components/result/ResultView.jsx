@@ -12,6 +12,7 @@ const ResultView = () => {
     const { t } = useTranslation();
 
     const resetToHome = () => {
+        dispatch({ type: ACTIONS.SET_QUESTION, payload: '' });
         dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
         window.scrollTo(0, 0);
     };
@@ -19,6 +20,13 @@ const ResultView = () => {
     return (
         <section className="w-full bg-white py-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="px-6 max-w-4xl mx-auto w-full">
+                {state.question && (
+                    <div className="flex justify-end mb-8 animate-in fade-in duration-500">
+                        <div className="bg-slate-100 rounded-2xl px-5 py-3 max-w-[80%]">
+                            <p className="text-slate-700">{state.question}</p>
+                        </div>
+                    </div>
+                )}
                 <OptimizedResponse content={state.virgileResponse} />
                 <StandardResponse content={state.standardResponse} />
                 <FollowUpChat />

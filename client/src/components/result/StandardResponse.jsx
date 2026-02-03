@@ -11,10 +11,10 @@ const StandardResponse = ({ content }) => {
         <section className="width-full mt-10 animate-in fade-in duration-700 delay-300">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-between w-full p-6 bg-slate-50 hover:bg-slate-100/80 rounded-[24px] border border-slate-100 transition-all group"
+                className="flex items-center justify-between w-full p-6 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-100 transition-all group"
             >
                 <div className="flex items-center gap-4">
-                    <div className="p-2 bg-white rounded-xl border border-slate-200 shadow-sm">
+                    <div className="p-2 bg-white rounded-xl border border-slate-200">
                         <AlertCircle className="w-5 h-5 text-slate-400" />
                     </div>
                     <div className="text-left">
@@ -26,7 +26,7 @@ const StandardResponse = ({ content }) => {
             </button>
 
             {isOpen && (
-                <div className="mt-4 p-8 bg-white/50 rounded-[24px] border border-slate-50 animate-in slide-in-from-top-2 duration-300">
+                <div className="mt-4 p-8 bg-white/50 rounded-2xl border border-slate-50 animate-in slide-in-from-top-2 duration-300">
                     <MarkdownContent content={content} className="opacity-70 grayscale-[0.5]" />
                 </div>
             )}
