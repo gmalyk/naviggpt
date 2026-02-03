@@ -1,14 +1,18 @@
 import React from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 import HeroSection from './HeroSection';
 import SearchBar from './SearchBar';
-import ContentGrid from './ContentGrid';
 
 const HomeView = () => {
+    const { t } = useTranslation();
+
     return (
         <section className="pb-12 px-6 max-w-6xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
             <HeroSection />
             <SearchBar />
-            <ContentGrid />
+            <p className="mt-8 max-w-3xl text-center text-slate-500 text-sm leading-relaxed">
+                {t('home_description')}
+            </p>
         </section>
     );
 };

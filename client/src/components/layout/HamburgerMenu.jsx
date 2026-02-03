@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, MessageSquare, Info, Users, ShieldCheck } from 'lucide-react';
+import { useAppState } from '../../context/AppContext';
+import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
 
 const HamburgerMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const { dispatch } = useAppState();
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -32,10 +35,17 @@ const HamburgerMenu = () => {
                         <MessageSquare className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_forum')}</span>
                     </a>
-                    <a href="#about" className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm">
+                    <button
+                        onClick={() => {
+                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'about' });
+                            setIsOpen(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                    >
                         <Info className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_about')}</span>
-                    </a>
+                    </button>
                     <a href="#contact" className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm">
                         <Users className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_contact')}</span>

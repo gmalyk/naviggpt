@@ -1,5 +1,5 @@
 export const initialState = {
-    view: 'home', // 'home', 'discernment', 'result'
+    view: 'home', // 'home', 'about', 'discernment', 'result'
     language: 'fr',
     dir: 'ltr',
     profile: 'adult',

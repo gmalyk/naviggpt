@@ -112,8 +112,8 @@ Profil utilisateur : ${profile}.${faithStr}${valuesStr}
 Si l'utilisateur poursuit la discussion, conserve en mémoire ses choix mais analyse sa réaction et sauf changement de sujet, ne lui propose plus d'effectuer de nouveaux choix. Conserve, le style et le ton adopté. Continue tes réponses avec la même vigilance.
 
 Tâche : Génère deux réponses distinctes.
-1. "VIRGILE" : La réponse optimisée selon les filtres.
-2. "STANDARD" : Une réponse générique d'IA (consensus mou) pour comparaison.
+1. "VIRGILE" : La réponse optimisée selon les filtres, le profil, la tradition et les valeurs de l'utilisateur.
+2. "STANDARD" : Une réponse générique d'IA (consensus mou) pour comparaison. Cette réponse doit IGNORER TOTALEMENT tous les filtres, le profil, l'âge, la tradition/sensibilité, et les valeurs de l'utilisateur. Réponds à la question brute comme le ferait une IA classique sans aucune personnalisation.
 
 Format de réponse attendu (utilise ce séparateur exact) :
 [VIRGILE_START]
