@@ -36,7 +36,7 @@ function App() {
   return (
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
       <Navbar />
-      <div className="flex-grow pt-20">
+      <div className="flex-grow pt-20 relative z-0">
         {state.view !== 'about' && state.view !== 'prompts' && <HomeView />}
 
         {state.view === 'about' && <AboutView />}
