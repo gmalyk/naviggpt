@@ -2408,6 +2408,17 @@ Nouvelle question de l'utilisateur : "${followUp}"`;
     return c.json({ success: false, error: e.message }, 500);
   }
 });
+var requireEditorAuth = /* @__PURE__ */ __name(async (c, next) => {
+  const token = c.env.EDITOR_TOKEN;
+  if (!token) return c.json({ success: false, error: "Editor not configured" }, 500);
+  const auth = c.req.header("Authorization");
+  if (auth !== `Bearer ${token}`) {
+    return c.json({ success: false, error: "Unauthorized" }, 401);
+  }
+  await next();
+}, "requireEditorAuth");
+app.use("/api/prompts", requireEditorAuth);
+app.use("/api/prompts/*", requireEditorAuth);
 app.get("/api/prompts", async (c) => {
   try {
     const prompts = {};

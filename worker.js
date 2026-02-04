@@ -272,6 +272,19 @@ app.post('/api/followup', async (c) => {
     }
 });
 
+// Prompt Editor auth middleware
+const requireEditorAuth = async (c, next) => {
+    const token = c.env.EDITOR_TOKEN;
+    if (!token) return c.json({ success: false, error: 'Editor not configured' }, 500);
+    const auth = c.req.header('Authorization');
+    if (auth !== `Bearer ${token}`) {
+        return c.json({ success: false, error: 'Unauthorized' }, 401);
+    }
+    await next();
+};
+app.use('/api/prompts', requireEditorAuth);
+app.use('/api/prompts/*', requireEditorAuth);
+
 // Prompt Editor API routes
 
 app.get('/api/prompts', async (c) => {

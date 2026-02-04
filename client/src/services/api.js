@@ -56,32 +56,35 @@ export const api = {
         return await handleResponse(response);
     },
 
-    getPrompts: async () => {
-        const response = await fetch(`${API_BASE}/prompts`);
+    getPrompts: async (token) => {
+        const response = await fetch(`${API_BASE}/prompts`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
         return await handleResponse(response);
     },
 
-    savePrompts: async (prompts) => {
+    savePrompts: async (prompts, token) => {
         const response = await fetch(`${API_BASE}/prompts`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ prompts })
         });
         return await handleResponse(response);
     },
 
-    savePrompt: async (key, template) => {
+    savePrompt: async (key, template, token) => {
         const response = await fetch(`${API_BASE}/prompts/${key}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ template })
         });
         return await handleResponse(response);
     },
 
-    resetPrompts: async () => {
+    resetPrompts: async (token) => {
         const response = await fetch(`${API_BASE}/prompts/reset`, {
-            method: 'POST'
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         return await handleResponse(response);
     }

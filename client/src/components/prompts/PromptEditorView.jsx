@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Save, RotateCcw, ArrowLeft, Loader2 } from 'lucide-react';
+import { Save, RotateCcw, ArrowLeft, Loader2, Lock } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -10,16 +10,21 @@ const PromptEditorView = () => {
     const { dispatch } = useAppState();
     const { t } = useTranslation();
 
+    const [token, setToken] = useState(() => sessionStorage.getItem('editor_token') || '');
+    const [authenticated, setAuthenticated] = useState(false);
+    const [passwordInput, setPasswordInput] = useState('');
+    const [authError, setAuthError] = useState('');
+
     const [prompts, setPrompts] = useState(null);
     const [editedTemplates, setEditedTemplates] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState(null);
 
-    const fetchPrompts = useCallback(async () => {
+    const fetchPrompts = useCallback(async (authToken) => {
         try {
             setLoading(true);
-            const data = await api.getPrompts();
+            const data = await api.getPrompts(authToken);
             setPrompts(data);
             const templates = {};
             for (const [key, prompt] of Object.entries(data)) {
@@ -33,9 +38,33 @@ const PromptEditorView = () => {
         }
     }, []);
 
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        try {
+            await api.getPrompts(passwordInput);
+            setToken(passwordInput);
+            setAuthenticated(true);
+            sessionStorage.setItem('editor_token', passwordInput);
+            fetchPrompts(passwordInput);
+        } catch {
+            setAuthError(t('prompt_wrong_password'));
+        }
+    };
+
     useEffect(() => {
-        fetchPrompts();
-    }, [fetchPrompts]);
+        if (token) {
+            api.getPrompts(token)
+                .then(() => {
+                    setAuthenticated(true);
+                    fetchPrompts(token);
+                })
+                .catch(() => {
+                    sessionStorage.removeItem('editor_token');
+                    setToken('');
+                });
+        }
+    }, []);
 
     const hasUnsavedChanges = prompts && Object.keys(prompts).some(
         key => editedTemplates[key] !== prompts[key].currentTemplate
@@ -74,8 +103,8 @@ const PromptEditorView = () => {
             for (const [key, template] of Object.entries(editedTemplates)) {
                 toSave[key] = template;
             }
-            await api.savePrompts(toSave);
-            await fetchPrompts();
+            await api.savePrompts(toSave, token);
+            await fetchPrompts(token);
             showMessage('success', t('prompt_saved_success'));
         } catch (e) {
             showMessage('error', e.message);
@@ -88,8 +117,8 @@ const PromptEditorView = () => {
         if (!window.confirm(t('prompt_confirm_reset_all'))) return;
         try {
             setSaving(true);
-            await api.resetPrompts();
-            await fetchPrompts();
+            await api.resetPrompts(token);
+            await fetchPrompts(token);
             showMessage('success', t('prompt_reset_success'));
         } catch (e) {
             showMessage('error', e.message);
@@ -97,6 +126,55 @@ const PromptEditorView = () => {
             setSaving(false);
         }
     };
+
+    const goBack = () => {
+        if (hasUnsavedChanges && !window.confirm(t('prompt_unsaved_warning'))) return;
+        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
+    };
+
+    if (!authenticated) {
+        return (
+            <div className="max-w-md mx-auto px-4 py-16">
+                <button
+                    onClick={() => dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' })}
+                    className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back
+                </button>
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+                            <Lock className="w-5 h-5 text-slate-500" />
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-bold text-slate-900">{t('prompt_editor_title')}</h1>
+                            <p className="text-sm text-slate-500">{t('prompt_password_required')}</p>
+                        </div>
+                    </div>
+                    <form onSubmit={handleLogin}>
+                        <input
+                            type="password"
+                            value={passwordInput}
+                            onChange={(e) => setPasswordInput(e.target.value)}
+                            placeholder={t('prompt_password_placeholder')}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
+                            autoFocus
+                        />
+                        {authError && (
+                            <p className="text-sm text-red-600 mt-2">{authError}</p>
+                        )}
+                        <button
+                            type="submit"
+                            className="w-full mt-3 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            {t('prompt_login_btn')}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
 
     if (loading) {
         return (
@@ -110,10 +188,7 @@ const PromptEditorView = () => {
         <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="mb-6">
                 <button
-                    onClick={() => {
-                        if (hasUnsavedChanges && !window.confirm(t('prompt_unsaved_warning'))) return;
-                        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
-                    }}
+                    onClick={goBack}
                     className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-4 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />

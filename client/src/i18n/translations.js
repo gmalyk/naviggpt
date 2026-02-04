@@ -78,7 +78,11 @@ export const translations = {
         prompt_unsaved_warning: "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?",
         prompt_variables_label: "Variables disponibles",
         prompt_modified_badge: "Modifié",
-        prompt_confirm_reset_all: "Êtes-vous sûr de vouloir réinitialiser tous les prompts aux valeurs par défaut ?"
+        prompt_confirm_reset_all: "Êtes-vous sûr de vouloir réinitialiser tous les prompts aux valeurs par défaut ?",
+        prompt_password_required: "Mot de passe requis pour accéder à l'éditeur",
+        prompt_password_placeholder: "Entrez le mot de passe",
+        prompt_wrong_password: "Mot de passe incorrect",
+        prompt_login_btn: "Accéder"
     },
     en: {
         brand_name: "Virgil",
@@ -159,7 +163,11 @@ export const translations = {
         prompt_unsaved_warning: "You have unsaved changes. Are you sure you want to leave?",
         prompt_variables_label: "Available variables",
         prompt_modified_badge: "Modified",
-        prompt_confirm_reset_all: "Are you sure you want to reset all prompts to their defaults?"
+        prompt_confirm_reset_all: "Are you sure you want to reset all prompts to their defaults?",
+        prompt_password_required: "Password required to access the editor",
+        prompt_password_placeholder: "Enter password",
+        prompt_wrong_password: "Incorrect password",
+        prompt_login_btn: "Log in"
     },
     it: {
         brand_name: "Virgilio",
@@ -240,7 +248,11 @@ export const translations = {
         prompt_unsaved_warning: "Hai modifiche non salvate. Vuoi davvero uscire?",
         prompt_variables_label: "Variabili disponibili",
         prompt_modified_badge: "Modificato",
-        prompt_confirm_reset_all: "Sei sicuro di voler ripristinare tutti i prompt ai valori predefiniti?"
+        prompt_confirm_reset_all: "Sei sicuro di voler ripristinare tutti i prompt ai valori predefiniti?",
+        prompt_password_required: "Password richiesta per accedere all'editor",
+        prompt_password_placeholder: "Inserisci la password",
+        prompt_wrong_password: "Password errata",
+        prompt_login_btn: "Accedi"
     },
     de: {
         brand_name: "Virgil",
@@ -321,7 +333,11 @@ export const translations = {
         prompt_unsaved_warning: "Sie haben ungespeicherte Änderungen. Möchten Sie wirklich verlassen?",
         prompt_variables_label: "Verfügbare Variablen",
         prompt_modified_badge: "Geändert",
-        prompt_confirm_reset_all: "Sind Sie sicher, dass Sie alle Prompts auf die Standardwerte zurücksetzen möchten?"
+        prompt_confirm_reset_all: "Sind Sie sicher, dass Sie alle Prompts auf die Standardwerte zurücksetzen möchten?",
+        prompt_password_required: "Passwort erforderlich für den Zugriff auf den Editor",
+        prompt_password_placeholder: "Passwort eingeben",
+        prompt_wrong_password: "Falsches Passwort",
+        prompt_login_btn: "Anmelden"
     },
     es: {
         brand_name: "Virgilio",
@@ -402,7 +418,11 @@ export const translations = {
         prompt_unsaved_warning: "Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?",
         prompt_variables_label: "Variables disponibles",
         prompt_modified_badge: "Modificado",
-        prompt_confirm_reset_all: "¿Estás seguro de que quieres restablecer todos los prompts a sus valores predeterminados?"
+        prompt_confirm_reset_all: "¿Estás seguro de que quieres restablecer todos los prompts a sus valores predeterminados?",
+        prompt_password_required: "Se requiere contraseña para acceder al editor",
+        prompt_password_placeholder: "Introduce la contraseña",
+        prompt_wrong_password: "Contraseña incorrecta",
+        prompt_login_btn: "Acceder"
     },
     pt: {
         brand_name: "Virgílio",
@@ -483,7 +503,11 @@ export const translations = {
         prompt_unsaved_warning: "Tem alterações não guardadas. Tem a certeza de que deseja sair?",
         prompt_variables_label: "Variáveis disponíveis",
         prompt_modified_badge: "Modificado",
-        prompt_confirm_reset_all: "Tem a certeza de que deseja repor todos os prompts para os valores predefinidos?"
+        prompt_confirm_reset_all: "Tem a certeza de que deseja repor todos os prompts para os valores predefinidos?",
+        prompt_password_required: "Palavra-passe necessária para aceder ao editor",
+        prompt_password_placeholder: "Introduza a palavra-passe",
+        prompt_wrong_password: "Palavra-passe incorreta",
+        prompt_login_btn: "Entrar"
     },
     ru: {
         brand_name: "Виргилий",
@@ -564,7 +588,11 @@ export const translations = {
         prompt_unsaved_warning: "У вас есть несохранённые изменения. Вы уверены, что хотите уйти?",
         prompt_variables_label: "Доступные переменные",
         prompt_modified_badge: "Изменён",
-        prompt_confirm_reset_all: "Вы уверены, что хотите сбросить все промпты к значениям по умолчанию?"
+        prompt_confirm_reset_all: "Вы уверены, что хотите сбросить все промпты к значениям по умолчанию?",
+        prompt_password_required: "Для доступа к редактору требуется пароль",
+        prompt_password_placeholder: "Введите пароль",
+        prompt_wrong_password: "Неверный пароль",
+        prompt_login_btn: "Войти"
     },
     zh: {
         brand_name: "维吉尔",
@@ -645,7 +673,11 @@ export const translations = {
         prompt_unsaved_warning: "您有未保存的更改。确定要离开吗？",
         prompt_variables_label: "可用变量",
         prompt_modified_badge: "已修改",
-        prompt_confirm_reset_all: "确定要将所有提示词重置为默认值吗？"
+        prompt_confirm_reset_all: "确定要将所有提示词重置为默认值吗？",
+        prompt_password_required: "访问编辑器需要密码",
+        prompt_password_placeholder: "输入密码",
+        prompt_wrong_password: "密码错误",
+        prompt_login_btn: "登录"
     },
     ar: {
         brand_name: "فيرجيل",
@@ -726,7 +758,11 @@ export const translations = {
         prompt_unsaved_warning: "لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة؟",
         prompt_variables_label: "المتغيرات المتاحة",
         prompt_modified_badge: "معدَّل",
-        prompt_confirm_reset_all: "هل أنت متأكد أنك تريد إعادة تعيين جميع الأوامر إلى القيم الافتراضية؟"
+        prompt_confirm_reset_all: "هل أنت متأكد أنك تريد إعادة تعيين جميع الأوامر إلى القيم الافتراضية؟",
+        prompt_password_required: "كلمة المرور مطلوبة للوصول إلى المحرر",
+        prompt_password_placeholder: "أدخل كلمة المرور",
+        prompt_wrong_password: "كلمة المرور غير صحيحة",
+        prompt_login_btn: "دخول"
     },
     hi: {
         brand_name: "वर्जिल",
@@ -807,6 +843,10 @@ export const translations = {
         prompt_unsaved_warning: "आपके पास सहेजे नहीं गए परिवर्तन हैं। क्या आप वाकई बाहर निकलना चाहते हैं?",
         prompt_variables_label: "उपलब्ध चर",
         prompt_modified_badge: "संशोधित",
-        prompt_confirm_reset_all: "क्या आप वाकई सभी प्रॉम्प्ट को डिफ़ॉल्ट मानों पर रीसेट करना चाहते हैं?"
+        prompt_confirm_reset_all: "क्या आप वाकई सभी प्रॉम्प्ट को डिफ़ॉल्ट मानों पर रीसेट करना चाहते हैं?",
+        prompt_password_required: "संपादक तक पहुँचने के लिए पासवर्ड आवश्यक है",
+        prompt_password_placeholder: "पासवर्ड दर्ज करें",
+        prompt_wrong_password: "गलत पासवर्ड",
+        prompt_login_btn: "लॉग इन"
     }
 };
