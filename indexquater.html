@@ -651,7 +651,7 @@
     <!-- LOGIC -->
     <script>
         const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-        const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+        const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
         // Global State
         let currentProfile = "adult";
@@ -753,22 +753,62 @@
             return data.choices[0].message.content;
         }
 
+        // Fonction générique d'appel à l'API Gemini (Fixed 2026 EU Paid Tier)
         async function callGemini(sys, user) {
             if (!geminiKey) throw new Error("Clé Gemini manquante (Paramètres > Clé)");
             const url = `${GEMINI_API_URL}?key=${geminiKey}`;
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: sys + "\n\nUser: " + user }] }]
-                })
-            });
-            if (!res.ok) {
-                if (res.status === 400) throw new Error("Erreur Gemini 400 : Clé invalide.");
-                throw new Error("Erreur Gemini: " + res.status);
+            const promptText = sys + "\n\nUser: " + user;
+
+            try {
+                const controller = new AbortController();
+                setTimeout(() => controller.abort(), 15000);
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'ValueCompass-France/1.0'
+                    },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        generationConfig: {
+                            temperature: 0.3,
+                            maxOutputTokens: 4096,
+                            topK: 32,
+                            topP: 0.95
+                        },
+                        safetySettings: [
+                            {category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE"},
+                            {category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE"}
+                        ]
+                    }),
+                    signal: controller.signal
+                });
+
+                const text = await response.text();
+
+                console.log('🔍 Status:', response.status);
+                console.log('🔍 Response (500 chars):', text.substring(0,500));
+
+                if (response.status === 429) {
+                    throw new Error("⏳ Quota 1/min → Attendez 60 secondes");
+                }
+                if (!response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        throw new Error(`${response.status}: ${data.error?.message || data.error?.code || 'Vérifiez console F12'}`);
+                    } catch (e) {
+                        if (e.message.startsWith('4') || e.message.startsWith('5')) throw e;
+                        throw new Error(`${response.status}: ${text.substring(0,200)}... (Console F12)`);
+                    }
+                }
+
+                const data = JSON.parse(text);
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response";
+            } catch (error) {
+                if (error.name === 'AbortError') throw new Error("⏰ Timeout 15s");
+                throw error;
             }
-            const data = await res.json();
-            return data.candidates[0].content.parts[0].text;
         }
 
         // --- STEP 1: ANALYSIS ---

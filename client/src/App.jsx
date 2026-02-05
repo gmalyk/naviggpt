@@ -16,10 +16,12 @@ function App() {
   useEffect(() => {
     if (state.view === 'discernment' && discernmentRef.current) {
       setTimeout(() => {
-        discernmentRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end'
-        });
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = discernmentRef.current.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }, 100);
     } else if (state.view === 'result' && resultRef.current) {
       setTimeout(() => {

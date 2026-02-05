@@ -7,7 +7,7 @@ export const translations = {
         menu_terms: "Conditions générales",
         hero_title: "Obtenir le meilleur de <h>mon IA</h> avec <h>Virgile</h>",
         search_placeholder: "Demandez à Virgile ici...",
-        home_description: "Posez votre question à Virgile sur n'importe quel sujet. Nous allons immédiatement générer des clés de discernement. Cliquez sur vos clés et obtenez sans délai une réponse vraiment adaptée à vos choix. Virgile répond précisément à vos demandes et tient compte de vos convictions et de vos valeurs selon le contexte. Testez Virgile et constatez immédiatement la différence avec une IA généraliste.",
+        home_description: "Posez vos questions à Virgile sur n'importe quel sujet et parcourez vos clés de discernement.\nChoisissez vos clés et obtenez une réponse vraiment adaptée à vos choix et votre personnalité.\nTestez l'AI guidée par Virgile et constatez immédiatement la différence avec une IA généraliste.",
         prof_kid: "Écolier",
         prof_teen: "Adolescent",
         prof_adult: "Adulte",

@@ -20,7 +20,7 @@ export const useAI = () => {
                 profile: state.profile,
                 language: state.language,
                 provider: state.settings.provider,
-                apiKey: state.settings.provider === 'openai' ? state.settings.openaiKey : state.settings.geminiKey
+                apiKey: ''
             });
 
             dispatch({ type: ACTIONS.SET_INITIAL_ANALYSIS, payload: data });
@@ -44,7 +44,7 @@ export const useAI = () => {
                 profile: state.profile,
                 language: state.language,
                 provider: state.settings.provider,
-                apiKey: state.settings.provider === 'openai' ? state.settings.openaiKey : state.settings.geminiKey,
+                apiKey: '',
                 filters: state.selectedFilters,
                 precision: state.precision
             });
@@ -78,7 +78,7 @@ export const useAI = () => {
                 profile: state.profile,
                 language: state.language,
                 provider: state.settings.provider,
-                apiKey: state.settings.provider === 'openai' ? state.settings.openaiKey : state.settings.geminiKey
+                apiKey: ''
             });
 
             if (result.rejected) {

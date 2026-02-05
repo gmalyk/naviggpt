@@ -2181,25 +2181,112 @@ var callOpenAI = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage
   return data.choices[0].message.content;
 }, "callOpenAI");
 var callGemini = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 15e3);
   const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "ValueCompass-France/1.0"
+    },
     body: JSON.stringify({
       contents: [{
         parts: [{ text: `${systemPrompt}
 
 User Question: ${userMessage}` }]
-      }]
+      }],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 4096,
+        topK: 32,
+        topP: 0.95
+      },
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
+      ]
+    }),
+    signal: controller.signal
+  });
+  const text = await response.text();
+  console.log("Gemini Status:", response.status);
+  if (response.status === 429) throw new Error("Gemini rate limit - attendez 60 secondes");
+  if (!response.ok) {
+    try {
+      const errData = JSON.parse(text);
+      throw new Error(errData.error?.message || errData.error?.code || `Gemini Error ${response.status}`);
+    } catch (e) {
+      if (e.message.includes("Gemini")) throw e;
+      throw new Error(`Gemini Error ${response.status}: ${text.substring(0, 200)}`);
+    }
+  }
+  const data = JSON.parse(text);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini";
+}, "callGemini");
+var callClaude = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 4096,
+      system: systemPrompt,
+      messages: [
+        { role: "user", content: userMessage }
+      ],
+      temperature: 0.7
     })
   });
   const data = await response.json();
-  if (data.error) throw new Error(data.error.message || "Gemini API Error");
-  return data.candidates[0].content.parts[0].text;
-}, "callGemini");
-var callAI = /* @__PURE__ */ __name(async (provider, apiKey, systemPrompt, userMessage) => {
-  if (provider === "openai") return await callOpenAI(apiKey, systemPrompt, userMessage);
-  if (provider === "gemini") return await callGemini(apiKey, systemPrompt, userMessage);
+  if (data.error) throw new Error(data.error.message || "Claude API Error");
+  return data.content[0].text;
+}, "callClaude");
+var callMistral = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
+  const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: "mistral-small-latest",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
+      ],
+      temperature: 0.7
+    })
+  });
+  const data = await response.json();
+  if (data.error || data.message) throw new Error(data.error?.message || data.message || "Mistral API Error");
+  return data.choices[0].message.content;
+}, "callMistral");
+var callAI = /* @__PURE__ */ __name(async (provider, apiKey, env, systemPrompt, userMessage) => {
+  if (provider === "openai") {
+    const key = apiKey || env.OPENAI_API_KEY;
+    if (!key) throw new Error("No OpenAI API key provided");
+    return await callOpenAI(key, systemPrompt, userMessage);
+  }
+  if (provider === "gemini") {
+    const key = apiKey || env.GEMINI_API_KEY;
+    if (!key) throw new Error("No Gemini API key provided");
+    return await callGemini(key, systemPrompt, userMessage);
+  }
+  if (provider === "claude") {
+    const key = apiKey || env.CLAUDE_API_KEY;
+    if (!key) throw new Error("No Claude API key provided");
+    return await callClaude(key, systemPrompt, userMessage);
+  }
+  if (provider === "mistral") {
+    const key = apiKey || env.MISTRAL_API_KEY;
+    if (!key) throw new Error("No Mistral API key provided");
+    return await callMistral(key, systemPrompt, userMessage);
+  }
   throw new Error(`Unsupported AI provider: ${provider}`);
 }, "callAI");
 var PROMPT_REGISTRY = {
@@ -2340,14 +2427,35 @@ var getFollowUpGenPrompt = /* @__PURE__ */ __name(async (env, profile, lang) => 
   const template = await getPromptTemplate(env, "followUpGen");
   return interpolate(template, { profile, lang });
 }, "getFollowUpGenPrompt");
+var extractJSON = /* @__PURE__ */ __name((text) => {
+  let cleaned = text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+  }
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start !== -1 && end > start) {
+    try {
+      return JSON.parse(cleaned.substring(start, end + 1));
+    } catch {
+    }
+  }
+  return null;
+}, "extractJSON");
 var app = new Hono2();
 app.use("*", cors());
 app.post("/api/ask", async (c) => {
   try {
     const { question, profile, language, provider, apiKey } = await c.req.json();
     const systemPrompt = await getAskVirgilePrompt(c.env, profile, language);
-    const response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
-    return c.json({ success: true, data: response });
+    const response = await callAI(provider, apiKey, c.env, systemPrompt, `Question: "${question}"`);
+    const parsed = extractJSON(response);
+    if (!parsed || !Array.isArray(parsed.sections)) {
+      console.error("Failed to parse AI response as JSON:", response.substring(0, 500));
+      return c.json({ success: false, error: "AI returned invalid format. Please try again." }, 500);
+    }
+    return c.json({ success: true, data: parsed });
   } catch (e) {
     return c.json({ success: false, error: e.message }, 500);
   }
@@ -2362,8 +2470,8 @@ Pr\xE9cision: "${precision}"`;
     const standardPrompt = await getStandardPrompt(c.env, language);
     const standardMessage = `Question: "${question}"`;
     const [virgileResponse, standardResponse] = await Promise.all([
-      callAI(provider, apiKey, virgilePrompt, virgileMessage),
-      callAI(provider, apiKey, standardPrompt, standardMessage)
+      callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage),
+      callAI(provider, apiKey, c.env, standardPrompt, standardMessage)
     ]);
     return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
   } catch (e) {
@@ -2374,7 +2482,7 @@ app.post("/api/followup", async (c) => {
   try {
     const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, language, provider, apiKey } = await c.req.json();
     const checkPrompt = await getFollowUpCheckPrompt(c.env, context, followUp, language);
-    const checkResult = await callAI(provider, apiKey, "Tu es un v\xE9rificateur de contexte.", checkPrompt);
+    const checkResult = await callAI(provider, apiKey, c.env, "Tu es un v\xE9rificateur de contexte.", checkPrompt);
     if (checkResult.toUpperCase().includes("NON")) {
       return c.json({
         success: true,
@@ -2402,7 +2510,7 @@ Virgile : ${entry.ai}`;
     conversationContext += `
 
 Nouvelle question de l'utilisateur : "${followUp}"`;
-    const response = await callAI(provider, apiKey, genPrompt, conversationContext);
+    const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext);
     return c.json({ success: true, data: { rejected: false, response } });
   } catch (e) {
     return c.json({ success: false, error: e.message }, 500);

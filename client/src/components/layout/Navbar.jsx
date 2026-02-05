@@ -17,7 +17,7 @@ const Navbar = () => {
         dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
     };
 
-    const hasKey = state.settings.provider === 'openai' ? !!state.settings.openaiKey : !!state.settings.geminiKey;
+    const hasKey = true; // Keys managed server-side via env variables
 
     return (
         <>
@@ -33,7 +33,7 @@ const Navbar = () => {
                         className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full text-xs font-medium text-slate-600 cursor-pointer hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200"
                     >
                         <Settings2 className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">{state.settings.provider === 'openai' ? 'ChatGPT' : 'Gemini'}</span>
+                        <span className="hidden sm:inline">{{ openai: 'ChatGPT', gemini: 'Gemini', claude: 'Claude', mistral: 'Mistral' }[state.settings.provider]}</span>
                         <div className={`w-2 h-2 rounded-full ${hasKey ? 'bg-emerald-400' : 'bg-red-400'}`} />
                     </button>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, ShieldAlert } from 'lucide-react';
+import { X, Save } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -29,51 +29,25 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <div className="p-6 space-y-6">
                     <div className="space-y-3">
                         <label className="text-sm font-semibold text-slate-700">{t('settings_default_engine')}</label>
-                        <div className="grid grid-cols-2 gap-3">
-                            {['openai', 'gemini'].map(prov => (
+                        <div className="grid grid-cols-2 gap-2">
+                            {[
+                                { id: 'openai', label: 'ChatGPT' },
+                                { id: 'gemini', label: 'Google Gemini' },
+                                { id: 'claude', label: 'Claude' },
+                                { id: 'mistral', label: 'Mistral AI' }
+                            ].map(prov => (
                                 <button
-                                    key={prov}
-                                    onClick={() => setLocalSettings({ ...localSettings, provider: prov })}
-                                    className={`p-3 border-2 rounded-2xl text-left transition-all ${localSettings.provider === prov
+                                    key={prov.id}
+                                    onClick={() => setLocalSettings({ ...localSettings, provider: prov.id })}
+                                    className={`p-3 border-2 rounded-2xl text-left transition-all ${localSettings.provider === prov.id
                                             ? 'border-[#B88644] bg-amber-50/30'
                                             : 'border-slate-100 hover:border-slate-200'
                                         }`}
                                 >
-                                    <p className="font-bold text-sm capitalize">{prov === 'openai' ? 'ChatGPT' : 'Google Gemini'}</p>
+                                    <p className="font-bold text-sm">{prov.label}</p>
                                 </button>
                             ))}
                         </div>
-                    </div>
-
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('settings_openai_key')}</label>
-                            <input
-                                type="password"
-                                value={localSettings.openaiKey}
-                                onChange={(e) => setLocalSettings({ ...localSettings, openaiKey: e.target.value })}
-                                placeholder="sk-..."
-                                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/20 focus:border-[#B88644] transition-all text-sm font-mono"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('settings_gemini_key')}</label>
-                            <input
-                                type="password"
-                                value={localSettings.geminiKey}
-                                onChange={(e) => setLocalSettings({ ...localSettings, geminiKey: e.target.value })}
-                                placeholder="AIza..."
-                                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/20 focus:border-[#B88644] transition-all text-sm font-mono"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="bg-amber-50 p-3 rounded-2xl flex gap-3 items-start border border-amber-100">
-                        <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
-                        <p className="text-[11px] text-amber-800 leading-tight">
-                            {t('settings_security_notice')}
-                        </p>
                     </div>
                 </div>
 
