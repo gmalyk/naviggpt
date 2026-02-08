@@ -28,7 +28,7 @@ const FollowUpChat = () => {
     };
 
     return (
-        <section className="width-full mt-16 max-w-4xl mx-auto pb-12 animate-in fade-in duration-700 delay-500">
+        <section className="width-full mt-6 max-w-4xl mx-auto animate-in fade-in duration-700 delay-500">
             <div className="space-y-8 mb-12">
                 {state.followUpHistory.map((chat, idx) => (
                     <div key={idx} className="space-y-6 pt-8 border-t border-slate-100 animate-in fade-in">

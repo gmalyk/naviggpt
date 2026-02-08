@@ -9,8 +9,18 @@ export const AuthProvider = ({ children }) => {
     const [authModalOpen, setAuthModalOpen] = useState(false);
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
+        if (!supabase) {
+            setLoading(false);
+            return;
+        }
+
+        supabase.auth.getSession().then(({ data: { session }, error }) => {
+            if (error) {
+                supabase.auth.signOut();
+                setUser(null);
+            } else {
+                setUser(session?.user ?? null);
+            }
             setLoading(false);
         });
 
@@ -22,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const signOut = async () => {
-        await supabase.auth.signOut();
+        if (supabase) await supabase.auth.signOut();
     };
 
     const openAuthModal = () => setAuthModalOpen(true);

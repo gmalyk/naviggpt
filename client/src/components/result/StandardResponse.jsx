@@ -8,7 +8,7 @@ const StandardResponse = ({ content }) => {
     const { t } = useTranslation();
 
     return (
-        <section className="width-full mt-10 animate-in fade-in duration-700 delay-300">
+        <section className="width-full mt-6 animate-in fade-in duration-700 delay-300">
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center justify-between w-full p-6 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-100 transition-all group"

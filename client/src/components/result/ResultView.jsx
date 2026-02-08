@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
@@ -10,6 +10,29 @@ import FollowUpChat from './FollowUpChat';
 const ResultView = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
+    const virgileRef = useRef(null);
+
+    useEffect(() => {
+        const el = virgileRef.current;
+        if (!el) return;
+
+        let scrolled = false;
+        const doScroll = () => {
+            if (scrolled) return;
+            scrolled = true;
+            requestAnimationFrame(() => {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        };
+
+        el.addEventListener('animationend', doScroll, { once: true });
+        const fallback = setTimeout(doScroll, 1000);
+
+        return () => {
+            el.removeEventListener('animationend', doScroll);
+            clearTimeout(fallback);
+        };
+    }, []);
 
     const resetToHome = () => {
         dispatch({ type: ACTIONS.SET_QUESTION, payload: '' });
@@ -32,11 +55,11 @@ const ResultView = () => {
                         </div>
                     </div>
                 )}
-                <OptimizedResponse content={state.virgileResponse} />
+                <OptimizedResponse content={state.virgileResponse} innerRef={virgileRef} />
                 <StandardResponse content={state.standardResponse} />
                 <FollowUpChat />
 
-                <div className="mt-12 pt-12 border-t border-slate-50 flex flex-col items-center gap-8">
+                <div className="mt-4 pt-4 border-t border-slate-50 flex flex-col items-center gap-8">
                     <button
                         onClick={resetToHome}
                         className="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors py-2 px-4 rounded-full hover:bg-slate-50 font-medium text-sm"

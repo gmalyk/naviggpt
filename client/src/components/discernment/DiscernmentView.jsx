@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
@@ -13,9 +13,32 @@ const DiscernmentView = () => {
     const { state } = useAppState();
     const { submitFilters, loading } = useAI();
     const { t } = useTranslation();
+    const cardRef = useRef(null);
+
+    useEffect(() => {
+        const section = cardRef.current?.closest('section');
+        if (!section) return;
+
+        let scrolled = false;
+        const doScroll = () => {
+            if (scrolled) return;
+            scrolled = true;
+            requestAnimationFrame(() => {
+                cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        };
+
+        section.addEventListener('animationend', doScroll, { once: true });
+        const fallback = setTimeout(doScroll, 500);
+
+        return () => {
+            section.removeEventListener('animationend', doScroll);
+            clearTimeout(fallback);
+        };
+    }, []);
 
     return (
-        <section className="w-full bg-slate-50/50 py-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <section className="w-full bg-slate-50/50 py-12 pb-[50vh] animate-in fade-in slide-in-from-bottom-8 duration-300">
             <div className="px-6 max-w-6xl mx-auto w-full">
                 <div className="flex justify-end mb-6">
                     <div className="bg-slate-100 rounded-2xl px-5 py-3 max-w-[80%]">
@@ -23,7 +46,7 @@ const DiscernmentView = () => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-[24px] border border-slate-100 shadow-sm p-8 md:p-10 space-y-10 relative">
+                <div ref={cardRef} id="analysis-card" className="scroll-mt-20 bg-white rounded-[24px] border border-slate-100 shadow-sm p-8 md:p-10 space-y-10 relative">
                     <AnalysisSection />
 
                     <div className="space-y-6">

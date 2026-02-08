@@ -10,9 +10,13 @@ import { callGemini } from './gemini.js';
  */
 export const callAI = async (provider, apiKey, systemPrompt, userMessage) => {
     if (provider === 'openai') {
-        return await callOpenAI(apiKey, systemPrompt, userMessage);
+        const key = apiKey || process.env.OPENAI_API_KEY;
+        if (!key) throw new Error('No OpenAI API key configured');
+        return await callOpenAI(key, systemPrompt, userMessage);
     } else if (provider === 'gemini') {
-        return await callGemini(apiKey, systemPrompt, userMessage);
+        const key = apiKey || process.env.GEMINI_API_KEY;
+        if (!key) throw new Error('No Gemini API key configured');
+        return await callGemini(key, systemPrompt, userMessage);
     } else {
         throw new Error(`Unsupported AI provider: ${provider}`);
     }

@@ -34,6 +34,7 @@ const AuthModal = () => {
         e.preventDefault();
         setError('');
         setLoading(true);
+        if (!supabase) { setError('Auth not configured'); setLoading(false); return; }
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         setLoading(false);
         if (error) {
@@ -52,6 +53,7 @@ const AuthModal = () => {
             return;
         }
         setLoading(true);
+        if (!supabase) { setError('Auth not configured'); setLoading(false); return; }
         const { error } = await supabase.auth.signUp({ email, password });
         setLoading(false);
         if (error) {
