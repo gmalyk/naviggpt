@@ -33,7 +33,8 @@ const LanguageSelector = () => {
                 className="flex items-center gap-2 px-2.5 py-1.5 bg-slate-50 rounded-full text-xs font-medium text-slate-600 cursor-pointer hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200"
             >
                 <Globe className="w-3.5 h-3.5" />
-                <span>{currentLang.label}</span>
+                <span className="hidden sm:inline">{currentLang.label}</span>
+                <span className="sm:hidden">{currentLang.flag}</span>
                 <ChevronDown className={`w-3 h-3 ml-1 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
