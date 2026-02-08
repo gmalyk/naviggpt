@@ -2,19 +2,24 @@ import React, { useState } from 'react';
 import { Settings2 } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import Logo from '../ui/Logo';
 import LanguageSelector from './LanguageSelector';
 import HamburgerMenu from './HamburgerMenu';
 import SettingsModal from './SettingsModal';
+import AuthModal from '../auth/AuthModal';
+import UserMenu from '../auth/UserMenu';
 
 const Navbar = () => {
     const { state, dispatch } = useAppState();
+    const { user, loading: authLoading, openAuthModal } = useAuth();
     const { t } = useTranslation();
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const resetToHome = () => {
         dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const hasKey = true; // Keys managed server-side via env variables
@@ -38,6 +43,18 @@ const Navbar = () => {
                     </button>
 
                     <LanguageSelector />
+                    {!authLoading && (
+                        user ? (
+                            <UserMenu />
+                        ) : (
+                            <button
+                                onClick={openAuthModal}
+                                className="px-4 py-1.5 bg-[#B88644] text-white text-xs font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm"
+                            >
+                                {t('auth_sign_in')}
+                            </button>
+                        )
+                    )}
                     <HamburgerMenu />
                 </div>
             </nav>
@@ -46,6 +63,7 @@ const Navbar = () => {
                 isOpen={isSettingsOpen}
                 onClose={() => setIsSettingsOpen(false)}
             />
+            <AuthModal />
         </>
     );
 };

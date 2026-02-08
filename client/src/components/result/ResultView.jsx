@@ -17,6 +17,11 @@ const ResultView = () => {
         window.scrollTo(0, 0);
     };
 
+    const handleSubscribe = () => {
+        dispatch({ type: ACTIONS.SET_VIEW, payload: 'pricing' });
+        window.scrollTo(0, 0);
+    };
+
     return (
         <section className="w-full bg-white py-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="px-6 max-w-4xl mx-auto w-full">
@@ -47,7 +52,7 @@ const ResultView = () => {
                             <p className="text-slate-400 mb-8 max-w-2xl mx-auto text-sm leading-relaxed">
                                 {t('footer_text')}
                             </p>
-                            <button className="px-10 py-4 bg-white text-slate-900 font-bold rounded-full hover:scale-105 transition-all shadow-xl">
+                            <button onClick={handleSubscribe} className="px-10 py-4 bg-white text-slate-900 font-bold rounded-full hover:scale-105 transition-all shadow-xl">
                                 {t('subscribe_btn')}
                             </button>
                         </div>

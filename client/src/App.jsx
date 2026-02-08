@@ -7,6 +7,10 @@ import AboutView from './components/about/AboutView';
 import DiscernmentView from './components/discernment/DiscernmentView';
 import ResultView from './components/result/ResultView';
 import PromptEditorView from './components/prompts/PromptEditorView';
+import PricingView from './components/pricing/PricingView';
+import AccountView from './components/account/AccountView';
+import ContactView from './components/contact/ContactView';
+import ForumView from './components/forum/ForumView';
 
 function App() {
   const { state } = useAppState();
@@ -39,11 +43,19 @@ function App() {
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
       <Navbar />
       <div className="flex-grow pt-20 relative z-0">
-        {state.view !== 'about' && state.view !== 'prompts' && <HomeView />}
+        {state.view !== 'about' && state.view !== 'prompts' && state.view !== 'pricing' && state.view !== 'account' && state.view !== 'contact' && state.view !== 'forum' && <HomeView />}
 
         {state.view === 'about' && <AboutView />}
 
         {state.view === 'prompts' && <PromptEditorView />}
+
+        {state.view === 'pricing' && <PricingView />}
+
+        {state.view === 'account' && <AccountView />}
+
+        {state.view === 'contact' && <ContactView />}
+
+        {state.view === 'forum' && <ForumView />}
 
         {(state.view === 'discernment' || state.view === 'result') && (
           <div ref={discernmentRef} className="border-t border-slate-50">
