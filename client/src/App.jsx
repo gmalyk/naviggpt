@@ -11,6 +11,8 @@ import PricingView from './components/pricing/PricingView';
 import AccountView from './components/account/AccountView';
 import ContactView from './components/contact/ContactView';
 import ForumView from './components/forum/ForumView';
+import TermsView from './components/terms/TermsView';
+import CompassView from './components/compass/CompassView';
 
 function App() {
   const { state } = useAppState();
@@ -19,7 +21,7 @@ function App() {
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
       <Navbar />
       <div className="flex-grow pt-20 relative z-0">
-        {state.view !== 'about' && state.view !== 'prompts' && state.view !== 'pricing' && state.view !== 'account' && state.view !== 'contact' && state.view !== 'forum' && <HomeView />}
+        {state.view !== 'about' && state.view !== 'prompts' && state.view !== 'pricing' && state.view !== 'account' && state.view !== 'contact' && state.view !== 'forum' && state.view !== 'terms' && state.view !== 'compass' && <HomeView />}
 
         {state.view === 'about' && <AboutView />}
 
@@ -32,6 +34,10 @@ function App() {
         {state.view === 'contact' && <ContactView />}
 
         {state.view === 'forum' && <ForumView />}
+
+        {state.view === 'terms' && <TermsView />}
+
+        {state.view === 'compass' && <CompassView />}
 
         {(state.view === 'discernment' || state.view === 'result') && (
           <div className="border-t border-slate-50">

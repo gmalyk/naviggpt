@@ -29,24 +29,8 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <div className="p-6 space-y-6">
                     <div className="space-y-3">
                         <label className="text-sm font-semibold text-slate-700">{t('settings_default_engine')}</label>
-                        <div className="grid grid-cols-2 gap-2">
-                            {[
-                                { id: 'openai', label: 'ChatGPT' },
-                                { id: 'gemini', label: 'Google Gemini' },
-                                { id: 'claude', label: 'Claude' },
-                                { id: 'mistral', label: 'Mistral AI' }
-                            ].map(prov => (
-                                <button
-                                    key={prov.id}
-                                    onClick={() => setLocalSettings({ ...localSettings, provider: prov.id })}
-                                    className={`p-3 border-2 rounded-2xl text-left transition-all ${localSettings.provider === prov.id
-                                            ? 'border-[#B88644] bg-amber-50/30'
-                                            : 'border-slate-100 hover:border-slate-200'
-                                        }`}
-                                >
-                                    <p className="font-bold text-sm">{prov.label}</p>
-                                </button>
-                            ))}
+                        <div className="p-3 border-2 rounded-2xl border-[#B88644] bg-amber-50/30">
+                            <p className="font-bold text-sm">Claude</p>
                         </div>
                     </div>
                 </div>

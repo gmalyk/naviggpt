@@ -4,6 +4,7 @@ import { useAppState } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
 import { useTranslation } from '../../hooks/useTranslation';
 import MarkdownContent from '../ui/MarkdownContent';
+import CopyButton from '../ui/CopyButton';
 import Logo from '../ui/Logo';
 import Loader from '../ui/Loader';
 
@@ -43,6 +44,7 @@ const FollowUpChat = () => {
                                 <span className="text-sm font-semibold text-slate-700">Virgile</span>
                             </div>
                             <MarkdownContent content={chat.ai} />
+                            <CopyButton content={chat.ai} />
                         </div>
                     </div>
                 ))}

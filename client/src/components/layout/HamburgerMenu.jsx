@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, MessageSquare, Info, Users, ShieldCheck, FileEdit } from 'lucide-react';
+import { Menu, MessageSquare, Info, Users, ShieldCheck, Compass } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useAuth } from '../../context/AuthContext';
@@ -52,6 +52,17 @@ const HamburgerMenu = () => {
                     </button>
                     <button
                         onClick={() => {
+                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'compass' });
+                            setIsOpen(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                    >
+                        <Compass className="w-4 h-4 text-slate-400" />
+                        <span>{t('menu_compass')}</span>
+                    </button>
+                    <button
+                        onClick={() => {
                             dispatch({ type: ACTIONS.SET_VIEW, payload: 'about' });
                             setIsOpen(false);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -74,19 +85,15 @@ const HamburgerMenu = () => {
                     </button>
                     <button
                         onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'prompts' });
+                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'terms' });
                             setIsOpen(false);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left border-t border-slate-100"
                     >
-                        <FileEdit className="w-4 h-4 text-slate-400" />
-                        <span>{t('menu_prompts')}</span>
-                    </button>
-                    <a href="#terms" className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm border-t border-slate-100">
                         <ShieldCheck className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_terms')}</span>
-                    </a>
+                    </button>
                 </div>
             )}
         </div>

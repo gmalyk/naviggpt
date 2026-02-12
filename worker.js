@@ -71,7 +71,21 @@ const callGemini = async (apiKey, systemPrompt, userMessage) => {
     return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from Gemini';
 };
 
-const callClaude = async (apiKey, systemPrompt, userMessage) => {
+const callClaude = async (apiKey, systemPrompt, userMessage, options = {}) => {
+    const body = {
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        system: systemPrompt,
+        messages: [
+            { role: 'user', content: userMessage }
+        ],
+        temperature: 0.7
+    };
+
+    if (options.useWebSearch) {
+        body.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -79,19 +93,14 @@ const callClaude = async (apiKey, systemPrompt, userMessage) => {
             'x-api-key': apiKey,
             'anthropic-version': '2023-06-01'
         },
-        body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 4096,
-            system: systemPrompt,
-            messages: [
-                { role: 'user', content: userMessage }
-            ],
-            temperature: 0.7
-        })
+        body: JSON.stringify(body)
     });
     const data = await response.json();
     if (data.error) throw new Error(data.error.message || 'Claude API Error');
-    return data.content[0].text;
+    return data.content
+        .filter(block => block.type === 'text')
+        .map(block => block.text)
+        .join('\n\n');
 };
 
 const callMistral = async (apiKey, systemPrompt, userMessage) => {
@@ -115,7 +124,7 @@ const callMistral = async (apiKey, systemPrompt, userMessage) => {
     return data.choices[0].message.content;
 };
 
-const callAI = async (provider, apiKey, env, systemPrompt, userMessage) => {
+const callAI = async (provider, apiKey, env, systemPrompt, userMessage, options = {}) => {
     if (provider === 'openai') {
         const key = apiKey || env.OPENAI_API_KEY;
         if (!key) throw new Error('No OpenAI API key provided');
@@ -129,7 +138,7 @@ const callAI = async (provider, apiKey, env, systemPrompt, userMessage) => {
     if (provider === 'claude') {
         const key = apiKey || env.CLAUDE_API_KEY;
         if (!key) throw new Error('No Claude API key provided');
-        return await callClaude(key, systemPrompt, userMessage);
+        return await callClaude(key, systemPrompt, userMessage, options);
     }
     if (provider === 'mistral') {
         const key = apiKey || env.MISTRAL_API_KEY;
@@ -340,8 +349,8 @@ app.post('/api/filters', async (c) => {
 
         // Run both calls in parallel
         const [virgileResponse, standardResponse] = await Promise.all([
-            callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage),
-            callAI(provider, apiKey, c.env, standardPrompt, standardMessage)
+            callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, { useWebSearch: true }),
+            callAI(provider, apiKey, c.env, standardPrompt, standardMessage, { useWebSearch: true })
         ]);
 
         return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
@@ -382,7 +391,7 @@ app.post('/api/followup', async (c) => {
 
         conversationContext += `\n\nNouvelle question de l'utilisateur : "${followUp}"`;
 
-        const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext);
+        const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext, { useWebSearch: true });
         return c.json({ success: true, data: { rejected: false, response } });
     } catch (e) {
         return c.json({ success: false, error: e.message }, 500);
@@ -465,6 +474,50 @@ app.put('/api/prompts/:key', async (c) => {
             return c.json({ success: false, error: 'KV not available' }, 500);
         }
         await c.env.PROMPTS.put(`prompt:${key}`, template);
+        return c.json({ success: true });
+    } catch (e) {
+        return c.json({ success: false, error: e.message }, 500);
+    }
+});
+
+app.post('/api/contact', async (c) => {
+    try {
+        const { name, email, subject, message } = await c.req.json();
+        if (!name || !email || !subject || !message) {
+            return c.json({ success: false, error: 'All fields are required' }, 400);
+        }
+
+        const resendKey = c.env.RESEND_API_KEY;
+        if (!resendKey) {
+            return c.json({ success: false, error: 'Email service not configured' }, 500);
+        }
+
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${resendKey}`
+            },
+            body: JSON.stringify({
+                from: 'Virgile Contact <onboarding@resend.dev>',
+                to: 'virggilai@gmail.com',
+                subject: `[Contact] ${subject}`,
+                reply_to: email,
+                html: `<h2>New contact form message</h2>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Subject:</strong> ${subject}</p>
+                    <hr />
+                    <p>${message.replace(/\n/g, '<br />')}</p>`
+            })
+        });
+
+        if (!res.ok) {
+            const errText = await res.text();
+            console.error('Resend error:', res.status, errText);
+            return c.json({ success: false, error: `Resend ${res.status}: ${errText}` }, 500);
+        }
+
         return c.json({ success: true });
     } catch (e) {
         return c.json({ success: false, error: e.message }, 500);

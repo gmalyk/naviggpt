@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
@@ -18,6 +18,10 @@ const SearchBar = () => {
     const { t } = useTranslation();
     const { askVirgile, loading } = useAI();
     const [inputValue, setInputValue] = useState('');
+
+    useEffect(() => {
+        if (state.question === '') setInputValue('');
+    }, [state.question]);
 
     const handleSend = () => {
         if (!inputValue.trim() || loading) return;

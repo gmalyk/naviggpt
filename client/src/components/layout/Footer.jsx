@@ -1,15 +1,15 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useAppState } from '../../context/AppContext';
+import { ACTIONS } from '../../context/appReducer';
 
 const partners = [
-    { name: 'Gemini', src: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg' },
-    { name: 'OpenAI', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg' },
-    { name: 'Claude', src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Anthropic_logo.svg/1200px-Anthropic_logo.svg.png' },
-    { name: 'Mistral', src: 'https://mistral.ai/images/logo_mistral_ai.png' }
+    { name: 'Claude', src: '/Claude_AI_logo.svg.webp' }
 ];
 
 const Footer = () => {
     const { t } = useTranslation();
+    const { dispatch } = useAppState();
 
     return (
         <footer className="py-16 mt-auto">
@@ -21,12 +21,21 @@ const Footer = () => {
                             <img
                                 src={p.src}
                                 alt={p.name}
-                                className="h-4 object-contain"
+                                className="h-6 object-contain"
                             />
-                            <span className="text-xs font-semibold">{p.name === 'OpenAI' ? 'ChatGPT' : p.name}</span>
+                            {/* name already in logo */}
                         </div>
                     ))}
                 </div>
+                <button
+                    onClick={() => {
+                        dispatch({ type: ACTIONS.SET_VIEW, payload: 'terms' });
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="mt-8 text-[10px] text-slate-300 hover:text-slate-500 transition-colors"
+                >
+                    {t('menu_terms')}
+                </button>
             </div>
         </footer>
     );

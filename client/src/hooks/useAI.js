@@ -20,7 +20,8 @@ export const useAI = () => {
                 profile: state.profile,
                 language: state.language,
                 provider: state.settings.provider,
-                apiKey: ''
+                apiKey: '',
+                values: state.values
             });
 
             dispatch({ type: ACTIONS.SET_INITIAL_ANALYSIS, payload: data });
@@ -46,7 +47,8 @@ export const useAI = () => {
                 provider: state.settings.provider,
                 apiKey: '',
                 filters: state.selectedFilters,
-                precision: state.precision
+                precision: state.precision,
+                values: state.values
             });
 
             dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virgile: response.virgile, standard: response.standard } });
@@ -78,7 +80,8 @@ export const useAI = () => {
                 profile: state.profile,
                 language: state.language,
                 provider: state.settings.provider,
-                apiKey: ''
+                apiKey: '',
+                values: state.values
             });
 
             if (result.rejected) {

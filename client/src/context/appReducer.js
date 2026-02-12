@@ -1,6 +1,6 @@
 export const initialState = {
     view: 'home', // 'home', 'about', 'discernment', 'result', 'prompts'
-    language: 'fr',
+    language: 'en',
     dir: 'ltr',
     profile: 'adult',
     faith: null,
@@ -15,9 +15,7 @@ export const initialState = {
     followUpHistory: [],
     loading: false,
     settings: {
-        provider: localStorage.getItem('virgile_provider') || 'openai',
-        openaiKey: localStorage.getItem('virgile_openai_key') || '',
-        geminiKey: localStorage.getItem('virgile_gemini_key') || ''
+        provider: 'claude'
     }
 };
 
@@ -82,11 +80,7 @@ export function appReducer(state, action) {
         case ACTIONS.SET_LOADING:
             return { ...state, loading: action.payload };
         case ACTIONS.UPDATE_SETTINGS:
-            const newSettings = { ...state.settings, ...action.payload };
-            if (action.payload.provider) localStorage.setItem('virgile_provider', action.payload.provider);
-            if (action.payload.openaiKey !== undefined) localStorage.setItem('virgile_openai_key', action.payload.openaiKey);
-            if (action.payload.geminiKey !== undefined) localStorage.setItem('virgile_gemini_key', action.payload.geminiKey);
-            return { ...state, settings: newSettings };
+            return { ...state, settings: { ...state.settings, ...action.payload } };
         default:
             return state;
     }

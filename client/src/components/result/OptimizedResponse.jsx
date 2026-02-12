@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo from '../ui/Logo';
 import MarkdownContent from '../ui/MarkdownContent';
+import CopyButton from '../ui/CopyButton';
 
 const OptimizedResponse = ({ content, innerRef }) => {
     return (
@@ -10,6 +11,7 @@ const OptimizedResponse = ({ content, innerRef }) => {
                 <span className="text-sm font-semibold text-slate-700">Virgile</span>
             </div>
             <MarkdownContent content={content} />
+            <CopyButton content={content} />
         </section>
     );
 };

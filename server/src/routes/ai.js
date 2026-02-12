@@ -12,9 +12,29 @@ router.post('/ask', async (req, res) => {
 
     try {
         const systemPrompt = getAskVirgilePrompt(profile, faith, values, language);
-        const response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
+        let response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
 
-        // The response is expected to be JSON as per the system prompt instructions
+        // Server-side safety net: filter out any age-related sections
+        // that the LLM may have generated despite prompt instructions
+        try {
+            const parsed = JSON.parse(response);
+            if (parsed.sections && Array.isArray(parsed.sections)) {
+                const ageKeywords = [
+                    'age', 'âge', "tranche d'âge", 'profil générationnel',
+                    'scolaire', 'niveau scolaire', 'age group', 'school level',
+                    'edad', 'nivel escolar', 'età', 'alter',
+                    'возраст', '年龄', 'العمر', 'उम्र'
+                ];
+                parsed.sections = parsed.sections.filter(section => {
+                    const title = (section.title || '').toLowerCase();
+                    return !ageKeywords.some(kw => title.includes(kw.toLowerCase()));
+                });
+                response = JSON.stringify(parsed);
+            }
+        } catch (_e) {
+            // If response isn't valid JSON, pass through as-is
+        }
+
         res.json({ success: true, data: response });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -36,8 +56,8 @@ router.post('/filters', async (req, res) => {
 
         // Run both calls in parallel
         const [virgileResponse, standardResponse] = await Promise.all([
-            callAI(provider, apiKey, virgilePrompt, virgileMessage),
-            callAI(provider, apiKey, standardPrompt, standardMessage)
+            callAI(provider, apiKey, virgilePrompt, virgileMessage, { useWebSearch: true }),
+            callAI(provider, apiKey, standardPrompt, standardMessage, { useWebSearch: true })
         ]);
 
         res.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
@@ -73,7 +93,7 @@ router.post('/followup', async (req, res) => {
 
         conversationContext += `\n\nNouvelle question de l'utilisateur : "${followUp}"`;
 
-        const response = await callAI(provider, apiKey, genPrompt, conversationContext);
+        const response = await callAI(provider, apiKey, genPrompt, conversationContext, { useWebSearch: true });
 
         res.json({ success: true, data: { rejected: false, response } });
     } catch (error) {
