@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [authModalOpen, setAuthModalOpen] = useState(false);
+    const [authModalTab, setAuthModalTab] = useState('sign_in');
 
     useEffect(() => {
         if (!supabase) {
@@ -24,8 +25,12 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         });
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             setUser(session?.user ?? null);
+            if (event === 'PASSWORD_RECOVERY') {
+                setAuthModalTab('update_password');
+                setAuthModalOpen(true);
+            }
         });
 
         return () => subscription.unsubscribe();
@@ -35,11 +40,14 @@ export const AuthProvider = ({ children }) => {
         if (supabase) await supabase.auth.signOut();
     };
 
-    const openAuthModal = () => setAuthModalOpen(true);
+    const openAuthModal = (tab = 'sign_in') => {
+        setAuthModalTab(tab);
+        setAuthModalOpen(true);
+    };
     const closeAuthModal = () => setAuthModalOpen(false);
 
     return (
-        <AuthContext.Provider value={{ user, loading, signOut, authModalOpen, openAuthModal, closeAuthModal }}>
+        <AuthContext.Provider value={{ user, loading, signOut, authModalOpen, authModalTab, setAuthModalTab, openAuthModal, closeAuthModal }}>
             {children}
         </AuthContext.Provider>
     );

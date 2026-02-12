@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, Check, Info } from 'lucide-react';
+import { Compass, Check, Info, Users, BookOpen, Smile, Heart } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -8,18 +8,22 @@ import { compassData } from '../../data/compassData';
 const MAX_PER_CATEGORY = 2;
 
 const categoryColors = {
-    relations: { bg: 'bg-rose-50', border: 'border-rose-200', accent: 'text-rose-600', selected: 'bg-rose-600' },
-    travail: { bg: 'bg-blue-50', border: 'border-blue-200', accent: 'text-blue-600', selected: 'bg-blue-600' },
-    loisirs: { bg: 'bg-amber-50', border: 'border-amber-200', accent: 'text-amber-600', selected: 'bg-amber-600' },
-    sante: { bg: 'bg-emerald-50', border: 'border-emerald-200', accent: 'text-emerald-600', selected: 'bg-emerald-600' }
+    relations: { bg: 'bg-rose-50', border: 'border-rose-200', accent: 'text-rose-600', selected: 'bg-rose-600', icon: Users },
+    travail: { bg: 'bg-blue-50', border: 'border-blue-200', accent: 'text-blue-600', selected: 'bg-blue-600', icon: BookOpen },
+    loisirs: { bg: 'bg-amber-50', border: 'border-amber-200', accent: 'text-amber-600', selected: 'bg-amber-600', icon: Smile },
+    sante: { bg: 'bg-emerald-50', border: 'border-emerald-200', accent: 'text-emerald-600', selected: 'bg-emerald-600', icon: Heart }
 };
 
 const CompassView = () => {
     const { state, dispatch } = useAppState();
     const { t, language } = useTranslation();
+
+    // Local state for age group, initialized from global state.profile
+    const [selectedAge, setSelectedAge] = useState(state.profile || 'adult');
+
     const [selections, setSelections] = useState(() => {
         const init = {};
-        const profileData = compassData[state.profile];
+        const profileData = compassData[state.profile || 'adult'];
         if (profileData) {
             profileData.categories.forEach(cat => {
                 init[cat.key] = state.values.filter(v =>
@@ -32,8 +36,18 @@ const CompassView = () => {
     const [hoveredValue, setHoveredValue] = useState(null);
     const [saved, setSaved] = useState(false);
 
-    const profileData = compassData[state.profile];
+    const profileData = compassData[selectedAge];
     if (!profileData) return null;
+
+    const handleAgeChange = (age) => {
+        if (age === selectedAge) return;
+        setSelectedAge(age);
+        // Reset selections when age group changes
+        const empty = {};
+        compassData[age].categories.forEach(cat => { empty[cat.key] = []; });
+        setSelections(empty);
+        setSaved(false);
+    };
 
     const getLabel = (frenchName) => {
         for (const cat of profileData.categories) {
@@ -57,6 +71,7 @@ const CompassView = () => {
 
     const handleSave = () => {
         const allValues = Object.values(selections).flat();
+        dispatch({ type: ACTIONS.SET_PROFILE, payload: selectedAge });
         dispatch({ type: ACTIONS.SET_VALUES, payload: allValues });
         setSaved(true);
         setTimeout(() => setSaved(false), 2500);
@@ -72,6 +87,13 @@ const CompassView = () => {
 
     const totalSelected = Object.values(selections).flat().length;
 
+    const ageGroups = [
+        { id: 'kid', label: t('prof_kid') },
+        { id: 'teen', label: t('prof_teen') },
+        { id: 'adult', label: t('prof_adult') },
+        { id: 'senior', label: t('prof_senior') }
+    ];
+
     return (
         <section className="py-12 px-4 md:px-6 max-w-4xl mx-auto w-full animate-in fade-in duration-500">
             <div className="text-center mb-8">
@@ -79,7 +101,23 @@ const CompassView = () => {
                     <Compass className="w-7 h-7 text-slate-400" />
                 </div>
                 <h1 className="text-2xl font-bold text-slate-900 mb-2">{t('compass_title')}</h1>
-                <p className="text-sm text-slate-500 max-w-lg mx-auto">{t('compass_subtitle')}</p>
+                <p className="text-sm text-slate-500 max-w-lg mx-auto mb-6">{t('compass_subtitle')}</p>
+
+                {/* Age Selection Row */}
+                <div className="flex flex-wrap justify-center gap-2 mb-8 bg-slate-50 p-1.5 rounded-full border border-slate-200 w-fit mx-auto">
+                    {ageGroups.map(group => (
+                        <button
+                            key={group.id}
+                            onClick={() => handleAgeChange(group.id)}
+                            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedAge === group.id
+                                ? 'bg-slate-900 text-white shadow-md'
+                                : 'text-slate-600 hover:bg-slate-200'
+                                }`}
+                        >
+                            {group.label}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -87,6 +125,7 @@ const CompassView = () => {
                     const colors = categoryColors[category.key];
                     const selected = selections[category.key] || [];
                     const remaining = MAX_PER_CATEGORY - selected.length;
+                    const CategoryIcon = colors.icon;
 
                     return (
                         <div
@@ -95,7 +134,8 @@ const CompassView = () => {
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <div>
-                                    <h2 className={`font-semibold text-sm ${colors.accent}`}>
+                                    <h2 className={`font-semibold text-sm ${colors.accent} flex items-center gap-2`}>
+                                        <CategoryIcon className="w-4 h-4" />
                                         {t(category.titleKey)}
                                     </h2>
                                     <p className="text-xs text-slate-400 mt-0.5">{category.subtitle?.[language] || category.subtitle?.fr || category.subtitle}</p>
@@ -171,11 +211,10 @@ const CompassView = () => {
                     <div className="flex gap-2">
                         <button
                             onClick={handleSave}
-                            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                                saved
-                                    ? 'bg-emerald-500 text-white'
-                                    : 'bg-[#B88644] text-white hover:bg-[#A07538]'
-                            }`}
+                            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${saved
+                                ? 'bg-emerald-500 text-white'
+                                : 'bg-[#B88644] text-white hover:bg-[#A07538]'
+                                }`}
                         >
                             {saved ? t('compass_saved') : t('compass_save')}
                         </button>

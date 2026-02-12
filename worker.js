@@ -46,8 +46,8 @@ const callGemini = async (apiKey, systemPrompt, userMessage) => {
                 topP: 0.95
             },
             safetySettings: [
-                {category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE"},
-                {category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE"}
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
             ]
         }),
         signal: controller.signal
@@ -153,11 +153,21 @@ const PROMPT_REGISTRY = {
     askVirgile: {
         name: 'Initial Analysis & Cognitive Framing',
         description: 'Used when a user first asks a question. Analyzes the question and generates discernment key sections.',
-        variables: ['profile', 'lang'],
+        variables: ['profileLabel', 'profileKey', 'values', 'lang'],
         defaultTemplate: `RÔLE
 Tu agis comme un module d'analyse préalable et de cadrage cognitif.
 Ton objectif n'est PAS de répondre à la question, mais de préparer les conditions d'une réponse de très haute qualité.
-Profil utilisateur : {{profile}}. Adapte ton analyse et tes suggestions à ce profil.
+Profil utilisateur : {{profileLabel}} ({{profileKey}}). 
+Valeurs fondamentales de l'utilisateur : {{values}}.
+
+INSTRUCTIONS DE PROFILAGE (À RESPECTER EN PRIORITÉ) :
+{{safetyInstructions}}
+- Écolier (kid) : Utilise un langage simple et bienveillant. Focalise sur les relations (famille, copains), le corps, l'école et le jeu.
+- Adolescent (teen) : Adopte un ton authentique mais équilibré. Aborde les questions d'avenir, d'identité, d'émotions et de relations aux pairs.
+- Adulte (adult) : Focalise sur le discernement, l'équilibre vie pro/perso, la prise de décision et la transmission.
+- Senior (senior) : Valorise la sagesse, l'héritage, la santé et la sérénité.
+
+IMPORTANT : Ton analyse et tes propositions DOIVENT être directement inspirées par les valeurs "{{values}}" de l'utilisateur. Elles constituent le socle de sa vision du monde.
 
 PRINCIPES FONDAMENTAUX
 - Tu ne réponds jamais directement à la question initiale.
@@ -186,12 +196,12 @@ B. Définition des clés de discernement
 
 C. Construction du formulaire de clarification
 - Tu dois produire AU MINIMUM 5 sections distinctes pour couvrir 5 colonnes d'affichage.
-- Chaque section contient un titre clair et une liste d'options courtes.
+- Chaque section contient un titre clair et une liste d'options courtes (3 à 5 mots max).
 - Les sections doivent être pertinentes (Profilage, Angle, Style, Contexte, Objectif, etc.).
 
 FORMAT DE SORTIE — STRICTEMENT JSON
 {
-  "analysis": "Analyse fonctionnelle et concise...",
+  "analysis": "Analyse fonctionnelle et concise (adaptée au profil)...",
   "sections": [
     {
       "title": "Nom de la catégorie",
@@ -206,10 +216,20 @@ Langue de sortie : {{lang}}`
     submitFilters: {
         name: 'Virgile Response with Filters',
         description: 'Used when the user submits their selected discernment filters. Generates the main Virgile response.',
-        variables: ['profile', 'lang'],
+        variables: ['profileLabel', 'profileKey', 'values', 'lang'],
         defaultTemplate: `Tu es Virgile. Ta mission est de répondre en appliquant strictement les filtres choisis par l'utilisateur (sans les lister).
 La réponse doit être honnête, bousculer les idées reçues et encourager la réflexion profonde.
-Profil utilisateur : {{profile}}.
+Profil utilisateur : {{profileLabel}} ({{profileKey}}).
+Valeurs sélectionnées : {{values}}.
+
+CONSIGNES DE TON ET POSTURE (À RESPECTER EN PRIORITÉ) :
+{{safetyInstructions}}
+- Écolier (kid) : Langage simple, ton pédagogique et encourageant. Focus sur l'action et la gentillesse.
+- Adolescent (teen) : Ton authentique et respectueux. Valorise l'introspection et la responsabilité.
+- Adulte (adult) : Profondeur intellectuelle et pratique. Équilibre entre efficacité et sens.
+- Senior (senior) : Ton apaisant et sage. Focus sur le maintien de l'essentiel et la transmission.
+
+MISSION : Ta réponse doit être une application concrète du sujet à la lumière des valeurs "{{values}}" et du profil {{profileLabel}}. Ne te contente pas de généralités.
 
 Si l'utilisateur poursuit la discussion, conserve en mémoire ses choix mais analyse sa réaction et sauf changement de sujet, ne lui propose plus d'effectuer de nouveaux choix. Conserve, le style et le ton adopté. Continue tes réponses avec la même vigilance.
 
@@ -242,10 +262,18 @@ Réponds OUI ou NON. Si NON, traduis ce message dans la langue {{lang}} :
     followUpGen: {
         name: 'Follow-Up Generation',
         description: 'Used to generate a follow-up response continuing the conversation with the same style and filters.',
-        variables: ['profile', 'lang'],
+        variables: ['profileLabel', 'profileKey', 'values', 'lang'],
         defaultTemplate: `Tu es Virgile. Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
 Ta réponse doit rester honnête, bousculer les idées reçues et encourager la réflexion profonde.
-Profil utilisateur : {{profile}}.
+Profil utilisateur : {{profileLabel}} ({{profileKey}}).
+Valeurs sélectionnées : {{values}}.
+
+CONSIGNES DE TON ET POSTURE (À RESPECTER EN PRIORITÉ) :
+{{safetyInstructions}}
+- Écolier (kid) : Langage simple, ton pédagogique et encourageant. Focus sur l'action et la gentillesse.
+- Adolescent (teen) : Ton authentique et respectueux. Valorise l'introspection et la responsabilité.
+- Adulte (adult) : Profondeur intellectuelle et pratique. Équilibre entre efficacité et sens.
+- Senior (senior) : Ton apaisant et sage. Focus sur le maintien de l'essentiel et la transmission.
 
 Conserve la même vigilance que dans tes réponses précédentes. Si l'utilisateur change de sujet, rappelle-lui gentiment que Virgile est là pour approfondir le discernement sur le thème initial.
 
@@ -273,14 +301,22 @@ const getPromptTemplate = async (env, key) => {
 };
 
 // Prompt functions (async, KV-backed)
-const getAskVirgilePrompt = async (env, profile, lang) => {
+const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
     const template = await getPromptTemplate(env, 'askVirgile');
-    return interpolate(template, { profile, lang });
+    const safetyInstructions = profileKey === 'kid'
+        ? "SÉCURITÉ ENFANT : Interdiction formelle de suggérer du contenu inapproprié, violent, effrayant ou d'horreur. Utilise un langage très simple et bienveillant. Focalise sur les relations (famille, copains), le corps, l'école et le jeu."
+        : "";
+    const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune spécifiée';
+    return interpolate(template, { profileLabel, profileKey, values, lang, safetyInstructions });
 };
 
-const getSubmitFiltersPrompt = async (env, profile, lang) => {
+const getSubmitFiltersPrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
     const template = await getPromptTemplate(env, 'submitFilters');
-    return interpolate(template, { profile, lang });
+    const safetyInstructions = profileKey === 'kid'
+        ? "SÉCURITÉ ENFANT : Ne suggère JAMAIS de films d'horreur, de contenu violent ou traumatisant. Reste dans un cadre éducatif et positif."
+        : "";
+    const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune spécifiée';
+    return interpolate(template, { profileLabel, profileKey, values, lang, safetyInstructions });
 };
 
 const getStandardPrompt = async (env, lang) => {
@@ -293,9 +329,13 @@ const getFollowUpCheckPrompt = async (env, context, newQ, lang) => {
     return interpolate(template, { context, newQ, lang });
 };
 
-const getFollowUpGenPrompt = async (env, profile, lang) => {
+const getFollowUpGenPrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
     const template = await getPromptTemplate(env, 'followUpGen');
-    return interpolate(template, { profile, lang });
+    const safetyInstructions = profileKey === 'kid'
+        ? "SÉCURITÉ ENFANT : Garde un ton protecteur. Évite tout sujet inapproprié."
+        : "";
+    const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune spécifiée';
+    return interpolate(template, { profileLabel, profileKey, values, lang, safetyInstructions });
 };
 
 // Extract JSON object from AI response text (handles markdown fences, surrounding text)
@@ -303,12 +343,12 @@ const extractJSON = (text) => {
     // Strip markdown fences
     let cleaned = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
     // Try direct parse first
-    try { return JSON.parse(cleaned); } catch {}
+    try { return JSON.parse(cleaned); } catch { }
     // Find first { and last } to extract embedded JSON
     const start = cleaned.indexOf('{');
     const end = cleaned.lastIndexOf('}');
     if (start !== -1 && end > start) {
-        try { return JSON.parse(cleaned.substring(start, end + 1)); } catch {}
+        try { return JSON.parse(cleaned.substring(start, end + 1)); } catch { }
     }
     return null;
 };
@@ -316,38 +356,52 @@ const extractJSON = (text) => {
 const app = new Hono();
 app.use('*', cors());
 
+// Request logger for entry
+app.use('*', async (c, next) => {
+    console.log(`[Worker] INCOMING: ${c.req.method} ${c.req.path}`);
+    await next();
+});
+
+// Error handler to capture stack traces in logs
+app.onError((err, c) => {
+    console.error(`[Worker Error] ${err.message}`, err.stack);
+    return c.json({ success: false, error: err.message }, 500);
+});
+
 app.post('/api/ask', async (c) => {
     try {
-        const { question, profile, language, provider, apiKey } = await c.req.json();
-        const systemPrompt = await getAskVirgilePrompt(c.env, profile, language);
+        const body = await c.req.json();
+        const { question, profile, profileKey, language, provider, apiKey, values } = body;
+        console.log(`[Worker] ask - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(', ') : 'none'}`);
+
+        const systemPrompt = await getAskVirgilePrompt(c.env, profile, profileKey, values, language);
         const response = await callAI(provider, apiKey, c.env, systemPrompt, `Question: "${question}"`);
 
-        // Parse JSON from AI response, ensuring sections array exists
         const parsed = extractJSON(response);
         if (!parsed || !Array.isArray(parsed.sections)) {
             console.error('Failed to parse AI response as JSON:', response.substring(0, 500));
-            return c.json({ success: false, error: 'AI returned invalid format. Please try again.' }, 500);
+            return c.json({ success: false, error: 'AI returned invalid format.' }, 500);
         }
 
         return c.json({ success: true, data: parsed });
     } catch (e) {
+        console.error('[Worker] /api/ask error:', e);
         return c.json({ success: false, error: e.message }, 500);
     }
 });
 
 app.post('/api/filters', async (c) => {
     try {
-        const { question, profile, language, provider, apiKey, filters, precision } = await c.req.json();
+        const body = await c.req.json();
+        const { question, profile, profileKey, language, provider, apiKey, filters, precision, values } = body;
+        console.log(`[Worker] filters - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(', ') : 'none'}`);
 
-        // Virgile response: full context with filters and profile
-        const virgilePrompt = await getSubmitFiltersPrompt(c.env, profile, language);
-        const virgileMessage = `Question: "${question}"\nFiltres: ${filters.join(', ')}\nPrécision: "${precision}"`;
+        const virgilePrompt = await getSubmitFiltersPrompt(c.env, profile, profileKey, values, language);
+        const virgileMessage = `Question: "${question}"\nFiltres: ${filters ? filters.join(', ') : 'none'}\nPrécision: "${precision}"`;
 
-        // Standard response: raw question only, no filters/profile/context
         const standardPrompt = await getStandardPrompt(c.env, language);
         const standardMessage = `Question: "${question}"`;
 
-        // Run both calls in parallel
         const [virgileResponse, standardResponse] = await Promise.all([
             callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, { useWebSearch: true }),
             callAI(provider, apiKey, c.env, standardPrompt, standardMessage, { useWebSearch: true })
@@ -355,13 +409,16 @@ app.post('/api/filters', async (c) => {
 
         return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
     } catch (e) {
+        console.error('[Worker] /api/filters error:', e);
         return c.json({ success: false, error: e.message }, 500);
     }
 });
 
 app.post('/api/followup', async (c) => {
     try {
-        const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, language, provider, apiKey } = await c.req.json();
+        const body = await c.req.json();
+        const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, profileKey, language, provider, apiKey, values } = body;
+        console.log(`[Worker] followup - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(', ') : 'none'}`);
 
         // 1. Check Context
         const checkPrompt = await getFollowUpCheckPrompt(c.env, context, followUp, language);
@@ -378,7 +435,7 @@ app.post('/api/followup', async (c) => {
         }
 
         // 2. Generate — include full conversation history
-        const genPrompt = await getFollowUpGenPrompt(c.env, profile, language);
+        const genPrompt = await getFollowUpGenPrompt(c.env, profile, profileKey, values, language);
 
         let conversationContext = `Question initiale : "${question}"\nFiltres : ${filters ? filters.join(', ') : 'aucun'}\nPrécision : "${precision || ''}"\n\nRéponse de Virgile :\n${virgileResponse || ''}`;
 
@@ -394,6 +451,7 @@ app.post('/api/followup', async (c) => {
         const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext, { useWebSearch: true });
         return c.json({ success: true, data: { rejected: false, response } });
     } catch (e) {
+        console.error('[Worker] /api/followup error:', e);
         return c.json({ success: false, error: e.message }, 500);
     }
 });
@@ -536,6 +594,13 @@ app.post('/api/prompts/reset', async (c) => {
     } catch (e) {
         return c.json({ success: false, error: e.message }, 500);
     }
+});
+// Fallback to serve index.html for SPA routing (excluding API routes)
+app.get('*', async (c) => {
+    if (c.req.path.startsWith('/api/')) {
+        return c.notFound();
+    }
+    return c.env.ASSETS.fetch(new Request(new URL('/', c.req.url)));
 });
 
 export default app;

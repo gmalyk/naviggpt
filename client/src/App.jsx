@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppState } from './context/AppContext';
+import { ACTIONS } from './context/appReducer';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomeView from './components/home/HomeView';
@@ -15,7 +16,13 @@ import TermsView from './components/terms/TermsView';
 import CompassView from './components/compass/CompassView';
 
 function App() {
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
+
+  useEffect(() => {
+    if (window.location.pathname === '/edit') {
+      dispatch({ type: ACTIONS.SET_VIEW, payload: 'prompts' });
+    }
+  }, [dispatch]);
 
   return (
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>

@@ -129,6 +129,7 @@ const PromptEditorView = () => {
 
     const goBack = () => {
         if (hasUnsavedChanges && !window.confirm(t('prompt_unsaved_warning'))) return;
+        window.history.pushState({}, '', '/');
         dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
     };
 
@@ -136,7 +137,10 @@ const PromptEditorView = () => {
         return (
             <div className="max-w-md mx-auto px-4 py-16">
                 <button
-                    onClick={() => dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' })}
+                    onClick={() => {
+                        window.history.pushState({}, '', '/');
+                        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
+                    }}
                     className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
@@ -199,11 +203,10 @@ const PromptEditorView = () => {
             </div>
 
             {message && (
-                <div className={`mb-4 px-4 py-3 rounded-lg text-sm ${
-                    message.type === 'success'
+                <div className={`mb-4 px-4 py-3 rounded-lg text-sm ${message.type === 'success'
                         ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-red-50 text-red-700 border border-red-200'
-                }`}>
+                    }`}>
                     {message.text}
                 </div>
             )}

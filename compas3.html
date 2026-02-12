@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boussole de Valeurs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff;
+        }
+
+        .category-card {
+            transition: all 0.3s ease;
+        }
+
+        .value-btn {
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .value-btn.selected {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+        }
+
+        .age-btn {
+            transition: all 0.2s;
+        }
+        .age-btn.active {
+            background-color: #0f172a;
+            color: white;
+        }
+
+        .tooltip-container {
+            min-height: 80px;
+        }
+        
+        /* Styles pour les icônes dorées minimalistes */
+        .gold-icon {
+            stroke: #D4AF37; /* Couleur dorée */
+            stroke-width: 2.5px; /* Trait épais */
+            fill: none;
+            width: 28px;
+            height: 28px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Animation d'apparition */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-5xl font-bold text-slate-800 mb-2 tracking-tight">
+                Élabore ta boussole de valeurs
+            </h1>
+            <p class="text-slate-500 text-lg">Choisis 2 valeurs importantes pour toi dans chaque domaine.</p>
+        </header>
+
+        <!-- Age Selection -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8 bg-white p-2 rounded-full shadow-sm w-fit mx-auto border border-slate-200">
+            <button onclick="setAge('enfant')" id="btn-enfant" class="age-btn px-6 py-2 rounded-full text-slate-600 hover:bg-slate-100 font-medium">Enfant</button>
+            <button onclick="setAge('ado')" id="btn-ado" class="age-btn px-6 py-2 rounded-full text-slate-600 hover:bg-slate-100 font-medium">Ado</button>
+            <button onclick="setAge('adulte')" id="btn-adulte" class="age-btn px-6 py-2 rounded-full text-slate-600 hover:bg-slate-100 font-medium active">Adulte</button>
+            <button onclick="setAge('senior')" id="btn-senior" class="age-btn px-6 py-2 rounded-full text-slate-600 hover:bg-slate-100 font-medium">Senior</button>
+        </div>
+
+        <!-- Tooltip display area -->
+        <div id="info-panel" class="tooltip-container bg-white border-l-4 border-blue-500 rounded-r-xl p-4 mb-8 shadow-sm flex items-center justify-center text-center italic text-slate-700 text-lg">
+            Survolez une valeur pour voir ce qu'elle signifie...
+        </div>
+
+        <!-- The Compass Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            
+            <!-- Relations -->
+            <div class="category-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md">
+                <h2 class="text-xl font-bold text-slate-700 mb-4 flex items-center gap-3" id="title-relations">
+                    <!-- Icon will be injected here -->
+                </h2>
+                <div class="flex flex-wrap gap-2" id="btns-relations"></div>
+            </div>
+
+            <!-- Travail / École -->
+            <div class="category-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md">
+                <h2 class="text-xl font-bold text-slate-700 mb-4 flex items-center gap-3" id="title-travail">
+                    <!-- Icon will be injected here -->
+                </h2>
+                <div class="flex flex-wrap gap-2" id="btns-travail"></div>
+            </div>
+
+            <!-- Loisirs -->
+            <div class="category-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md">
+                <h2 class="text-xl font-bold text-slate-700 mb-4 flex items-center gap-3" id="title-loisirs">
+                    <!-- Icon will be injected here -->
+                </h2>
+                <div class="flex flex-wrap gap-2" id="btns-loisirs"></div>
+            </div>
+
+            <!-- Santé -->
+            <div class="category-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md">
+                <h2 class="text-xl font-bold text-slate-700 mb-4 flex items-center gap-3" id="title-sante">
+                    <!-- Icon will be injected here -->
+                </h2>
+                <div class="flex flex-wrap gap-2" id="btns-sante"></div>
+            </div>
+
+        </div>
+
+        <!-- Final Summary -->
+        <div class="bg-slate-800 rounded-3xl p-8 text-white shadow-2xl">
+            <h3 class="text-2xl font-bold mb-8 text-center border-b border-slate-700 pb-4">Ma Boussole Personnelle</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="compass-display">
+                <div class="space-y-3 bg-slate-700/50 p-4 rounded-xl"><p class="text-blue-400 font-bold uppercase text-xs tracking-wider" id="disp-title-relations">RELATIONS</p><ul id="list-relations" class="text-lg font-medium"></ul></div>
+                <div class="space-y-3 bg-slate-700/50 p-4 rounded-xl"><p class="text-emerald-400 font-bold uppercase text-xs tracking-wider" id="disp-title-travail">TRAVAIL</p><ul id="list-travail" class="text-lg font-medium"></ul></div>
+                <div class="space-y-3 bg-slate-700/50 p-4 rounded-xl"><p class="text-amber-400 font-bold uppercase text-xs tracking-wider" id="disp-title-loisirs">LOISIRS</p><ul id="list-loisirs" class="text-lg font-medium"></ul></div>
+                <div class="space-y-3 bg-slate-700/50 p-4 rounded-xl"><p class="text-rose-400 font-bold uppercase text-xs tracking-wider" id="disp-title-sante">SANTÉ</p><ul id="list-sante" class="text-lg font-medium"></ul></div>
+            </div>
+
+            <div class="mt-10 flex flex-col md:flex-row items-center justify-center gap-4">
+                <button onclick="downloadCompass()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                    Sauvegarder ma boussole pour Virgile
+                </button>
+                <button onclick="resetCompass()" class="text-slate-400 hover:text-white underline text-sm transition">
+                    Réinitialiser tout
+                </button>
+            </div>
+        </div>
+        
+        <footer class="text-center text-slate-400 text-sm mt-12 mb-4">
+            Outil inspiré par la Thérapie d'Acceptation et d'Engagement (ACT), Boris Cyrulnik et la CNV.
+        </footer>
+    </div>
+
+    <script>
+        // --- ICÔNES SVG MINIMALISTES DORÉES ---
+        const icons = {
+            relations: `<svg class="gold-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
+            travail: `<svg class="gold-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
+            loisirs: `<svg class="gold-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+            sante: `<svg class="gold-icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`
+        };
+
+        // --- DONNÉES PAR ÂGE ---
+        const databases = {
+            enfant: {
+                titles: { relations: "Famille & Copains", travail: "École & Apprentissage", loisirs: "Jeux & Temps Libre", sante: "Mon Corps" },
+                data: {
+                    relations: [
+                        { n: "Politesse", d: "Les bases pour bien vivre ensemble (bonjour, merci)." },
+                        { n: "Partage", d: "Prêter ses jouets et ne pas penser qu'à soi." },
+                        { n: "Écoute", d: "Ouvrir ses oreilles et accueillir la parole de l'autre." },
+                        { n: "Fraternité", d: "Se sentir membre d'un groupe, comme des frères et sœurs." },
+                        { n: "Confiance", d: "Croire en l'adulte et se sentir protégé." },
+                        { n: "Gentillesse", d: "Faire du bien aux autres gratuitement." },
+                        { n: "Sincérité", d: "Ne pas cacher ce que je ressens." },
+                        { n: "Sécurité", d: "Savoir demander de l'aide quand j'ai peur." }
+                    ],
+                    travail: [
+                        { n: "Curiosité", d: "L'envie de découvrir et de poser des questions." },
+                        { n: "Application", d: "Prendre soin de ce que je fais." },
+                        { n: "Patience", d: "Accepter que les choses prennent du temps." },
+                        { n: "Imagination", d: "Inventer des histoires et créer dans sa tête." },
+                        { n: "Concentration", d: "Être tout entier à ce que je fais maintenant." },
+                        { n: "Entraide", d: "Apprendre ensemble et aider les copains." },
+                        { n: "Fierté", d: "Être content de ses efforts et de son travail." },
+                        { n: "Éveil", d: "Ouvrir grand ses yeux sur le monde." }
+                    ],
+                    loisirs: [
+                        { n: "Joie", d: "Célébrer le moment présent avec le sourire." },
+                        { n: "Jeu", d: "Explorer le monde pour le plaisir, sans but précis." },
+                        { n: "Spontanéité", d: "Laisser sortir son élan naturel." },
+                        { n: "Humour", d: "Savoir rire et prendre de la distance." },
+                        { n: "Découverte", d: "Oser essayer quelque chose de nouveau." },
+                        { n: "Camaraderie", d: "Le plaisir simple d'être avec les copains." },
+                        { n: "Enthousiasme", d: "Avoir de l'énergie et de l'envie." },
+                        { n: "Émerveillement", d: "Trouver les choses belles et magiques." }
+                    ],
+                    sante: [
+                        { n: "Calme", d: "Savoir revenir à soi et s'apaiser." },
+                        { n: "Vitalité", d: "Courir, bouger, sentir son énergie." },
+                        { n: "Propreté", d: "Prendre soin de son corps et se laver." },
+                        { n: "Expression des besoins", d: "Savoir dire 'j'ai faim', 'j'ai froid', 'je suis fatigué'." },
+                        { n: "Douceur", d: "Être gentil avec soi-même." },
+                        { n: "Rythme", d: "Respecter ses temps de repos et d'activité." },
+                        { n: "Sécurité intérieure", d: "Se sentir solide à l'intérieur de soi." },
+                        { n: "Plénitude", d: "Se sentir bien et rempli de bonnes choses." }
+                    ]
+                }
+            },
+            ado: {
+                titles: { relations: "Potes & Famille", travail: "Lycée & Avenir", loisirs: "Kifs & Passions", sante: "Mon Style & Corps" },
+                data: {
+                    relations: [
+                        { n: "Authenticité", d: "Oser être soi-même sans masque." },
+                        { n: "Empathie", d: "Comprendre et ressentir ce que l'autre vit." },
+                        { n: "Honnêteté", d: "Dire sa vérité avec courage." },
+                        { n: "Respect du consentement", d: "Respecter le 'oui' et le 'non' de l'autre." },
+                        { n: "Altérité", d: "Accepter et respecter nos différences." },
+                        { n: "Solidarité", d: "S'engager collectivement pour les autres." },
+                        { n: "Loyauté", d: "Être fidèle à ses engagements et à ses proches." },
+                        { n: "Responsabilité relationnelle", d: "Assumer sa part dans la relation." }
+                    ],
+                    travail: [
+                        { n: "Esprit critique", d: "Savoir remettre en question et réfléchir par soi-même." },
+                        { n: "Autonomie", d: "Faire par soi-même et se gérer." },
+                        { n: "Persévérance", d: "Continuer même face à l'échec ou la difficulté." },
+                        { n: "Ambition personnelle", d: "Avoir un projet qui a du sens pour soi." },
+                        { n: "Rigueur", d: "Rechercher la précision et le travail bien fait." },
+                        { n: "Coopération", d: "Savoir travailler en équipe." },
+                        { n: "Intégrité intellectuelle", d: "Être honnête dans sa réflexion." },
+                        { n: "Adaptabilité", d: "Savoir faire preuve de souplesse mentale." }
+                    ],
+                    loisirs: [
+                        { n: "Liberté", d: "Choisir ses activités sans contrainte." },
+                        { n: "Expression", d: "Trouver sa propre voix et sa voie." },
+                        { n: "Passion", d: "S'investir profondément dans ce qu'on aime." },
+                        { n: "Autodérision", d: "Savoir rire de soi pour rebondir." },
+                        { n: "Audace", d: "Oser essayer, oser se lancer." },
+                        { n: "Appartenance", d: "Trouver sa tribu, son groupe." },
+                        { n: "Dépassement de soi", d: "Aller au-delà de ses limites perçues." },
+                        { n: "Engagement", d: "S'impliquer dans un loisir utile ou associatif." }
+                    ],
+                    sante: [
+                        { n: "Sérénité", d: "Apprendre à gérer son stress et ses angoisses." },
+                        { n: "Respect de soi", d: "Connaître et respecter ses limites physiques." },
+                        { n: "Hygiène de vie", d: "Prendre soin de son sommeil et de sa nutrition." },
+                        { n: "Introspection", d: "Apprendre à se connaître soi-même." },
+                        { n: "Acceptation", d: "Accueillir son corps qui change." },
+                        { n: "Équilibre", d: "Trouver le juste milieu entre travail et vie perso." },
+                        { n: "Courage émotionnel", d: "Oser affronter ses peurs." },
+                        { n: "Résilience", d: "Prendre soin de ses blessures pour avancer." }
+                    ]
+                }
+            },
+            adulte: {
+                titles: { relations: "Relations", travail: "Travail & Apprentissage", loisirs: "Loisirs", sante: "Santé & Croissance" },
+                data: { // Reprise des données précédentes
+                    relations: [
+                        { n: "Authenticité", d: "Être vrai et sans masque dans ses échanges." },
+                        { n: "Bienveillance", d: "Agir avec gentillesse et soin envers autrui." },
+                        { n: "Compassion", d: "Soutenir les autres dans leurs épreuves." },
+                        { n: "Coopération", d: "Valoriser le travail d'équipe et l'harmonie." },
+                        { n: "Honnêteté", d: "L'intégrité et la vérité guident tes paroles." },
+                        { n: "Inspiration", d: "Élever les autres par son exemple." },
+                        { n: "Loyauté", d: "Être un pilier fidèle pour ses proches." },
+                        { n: "Respect", d: "Honorer la dignité et les limites de chacun." }
+                    ],
+                    travail: [
+                        { n: "Créativité", d: "Innover et apporter sa touche personnelle." },
+                        { n: "Curiosité", d: "Explorer de nouveaux savoirs sans cesse." },
+                        { n: "Efficacité", d: "Obtenir des résultats concrets." },
+                        { n: "Excellence", d: "Viser la plus haute qualité possible." },
+                        { n: "Foi/Sens", d: "Aligner son travail sur ses convictions profondes." },
+                        { n: "Influence", d: "Guider les autres vers une vision commune." },
+                        { n: "Persévérance", d: "Ne rien lâcher face aux obstacles." },
+                        { n: "Transmission", d: "Enseigner et partager son expérience." }
+                    ],
+                    loisirs: [
+                        { n: "Aventure", d: "Sortir de sa zone de confort." },
+                        { n: "Calme", d: "Rechercher la paix et le silence." },
+                        { n: "Connexion", d: "Partager avec ses proches." },
+                        { n: "Contemplation", d: "Observer la beauté du monde sans juger." },
+                        { n: "Contribution", d: "Donner de son temps pour une cause." },
+                        { n: "Découverte", d: "L'apprentissage comme divertissement." },
+                        { n: "Humour", d: "La légèreté et le jeu comme moteurs." },
+                        { n: "Liberté", d: "Spontanéité totale et absence de contraintes." }
+                    ],
+                    sante: [
+                        { n: "Discipline", d: "Maîtriser ses impulsions pour un but supérieur." },
+                        { n: "Autonomie", d: "Préserver son indépendance physique." },
+                        { n: "Conscience", d: "Être à l'écoute fine de ses sensations." },
+                        { n: "Douceur", d: "Traiter son corps comme un ami précieux." },
+                        { n: "Équilibre", d: "Harmoniser repos et activité." },
+                        { n: "Prévention", d: "Agir aujourd'hui pour protéger son futur." },
+                        { n: "Vitalité", d: "Cultiver une énergie physique débordante." }
+                    ]
+                }
+            },
+            senior: {
+                titles: { relations: "Famille & Racines", travail: "Transmission & Héritage", loisirs: "Douceur de vivre", sante: "Maintien & Sérénité" },
+                data: {
+                    relations: [
+                        { n: "Transmission", d: "Offrir son histoire pour éclairer celle des autres." },
+                        { n: "Bienveillance", d: "Poser un regard doux et sans jugement sur les siens." },
+                        { n: "Pardon", d: "Apaiser les vieilles blessures pour libérer le présent." },
+                        { n: "Réconciliation", d: "Retisser les liens distendus et pacifier." },
+                        { n: "Gratitude", d: "Remercier pour les rencontres qui ont jalonné la vie." },
+                        { n: "Écoute", d: "Offrir une présence totale et silencieuse." },
+                        { n: "Racines", d: "Honorer ceux qui nous précèdent, consolider la fondation." },
+                        { n: "Tendresse", d: "Exprimer l'affection par des gestes simples et vrais." }
+                    ],
+                    travail: [ // Focus Contribution/Héritage
+                        { n: "Héritage", d: "Construire ce qui restera de positif après soi." },
+                        { n: "Sagesse", d: "Partager les leçons apprises par l'expérience." },
+                        { n: "Service", d: "Être utile à la communauté sans attendre de retour." },
+                        { n: "Mentorat", d: "Guider les plus jeunes avec humilité et patience." },
+                        { n: "Éthique", d: "Rester fidèle à ses principes jusqu'au bout." },
+                        { n: "Détachement", d: "Agir pour le bien commun, sans s'accrocher au pouvoir." },
+                        { n: "Vocation", d: "Continuer à œuvrer là où le cœur nous appelle." },
+                        { n: "Générosité", d: "Donner de son temps et de son savoir sans compter." }
+                    ],
+                    loisirs: [
+                        { n: "Contemplation", d: "S'émerveiller devant la beauté simple du monde." },
+                        { n: "Paix", d: "Rechercher la tranquillité de l'esprit avant tout." },
+                        { n: "Beauté", d: "Nourrir son âme par l'art, la musique ou la nature." },
+                        { n: "Spiritualité", d: "Un temps pour le sacré, la prière ou le silence intérieur." },
+                        { n: "Joie simple", d: "Savourer l'instant présent (un rayon de soleil, un repas)." },
+                        { n: "Curiosité", d: "Garder l'esprit ouvert et apprendre encore." },
+                        { n: "Jardinage", d: "Cultiver la vie, respecter les saisons et la terre." },
+                        { n: "Lecture", d: "Voyager par l'esprit et dialoguer avec les auteurs." }
+                    ],
+                    sante: [
+                        { n: "Sérénité", d: "Accepter avec calme ce qu'on ne peut plus changer." },
+                        { n: "Dignité", d: "Respecter son corps quelles que soient ses fragilités." },
+                        { n: "Acceptation", d: "Accueillir le vieillissement comme une étape naturelle." },
+                        { n: "Résilience", d: "S'adapter aux changements physiques avec courage." },
+                        { n: "Lâcher-prise", d: "Cesser de lutter contre le temps pour mieux le vivre." },
+                        { n: "Plénitude", d: "Sentir que la vie a été remplie et complète." },
+                        { n: "Espérance", d: "Garder confiance en la vie, ici et maintenant." },
+                        { n: "Rythme", d: "Écouter son corps et ralentir sans culpabilité." }
+                    ]
+                }
+            }
+        };
+
+        // État global
+        let currentAge = 'adulte';
+        let selections = { relations: [], travail: [], loisirs: [], sante: [] };
+
+        const infoPanel = document.getElementById('info-panel');
+
+        // Initialisation
+        window.onload = () => {
+            render();
+        };
+
+        function setAge(age) {
+            currentAge = age;
+            // Mise à jour visuelle des boutons d'âge
+            document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${age}`).classList.add('active');
+            
+            // Reset des sélections quand on change d'âge pour éviter les mélanges
+            selections = { relations: [], travail: [], loisirs: [], sante: [] };
+            
+            render();
+            // Petit feedback visuel
+            infoPanel.innerHTML = "Mode " + age.toUpperCase() + " activé. Les valeurs ont été mises à jour.";
+        }
+
+        function showInfo(title, text) {
+            infoPanel.innerHTML = `<div class="animate-fade"><strong class="text-blue-600">${title} :</strong> <span class="text-slate-600">${text}</span></div>`;
+        }
+
+        function toggleValue(category, valueObj) {
+            const valueName = valueObj.n;
+            const index = selections[category].findIndex(item => item.n === valueName);
+            
+            if (index > -1) {
+                // Remove
+                selections[category].splice(index, 1);
+            } else {
+                // Add if limit not reached
+                if (selections[category].length < 2) {
+                    selections[category].push(valueObj);
+                } else {
+                    // Replace the first one (FIFO)
+                    selections[category].shift();
+                    selections[category].push(valueObj);
+                }
+            }
+            render();
+        }
+
+        function resetCompass() {
+            selections = { relations: [], travail: [], loisirs: [], sante: [] };
+            render();
+            infoPanel.innerText = "Boussole réinitialisée.";
+        }
+
+        function render() {
+            const db = databases[currentAge];
+            
+            // Mise à jour des titres de section avec les nouvelles icônes SVG
+            document.getElementById('title-relations').innerHTML = `${icons.relations} ${db.titles.relations}`;
+            document.getElementById('title-travail').innerHTML = `${icons.travail} ${db.titles.travail}`;
+            document.getElementById('title-loisirs').innerHTML = `${icons.loisirs} ${db.titles.loisirs}`;
+            document.getElementById('title-sante').innerHTML = `${icons.sante} ${db.titles.sante}`;
+
+            document.getElementById('disp-title-relations').innerText = db.titles.relations;
+            document.getElementById('disp-title-travail').innerText = db.titles.travail;
+            document.getElementById('disp-title-loisirs').innerText = db.titles.loisirs;
+            document.getElementById('disp-title-sante').innerText = db.titles.sante;
+
+            // Génération des boutons
+            Object.keys(db.data).forEach(cat => {
+                const container = document.getElementById(`btns-${cat}`);
+                container.innerHTML = '';
+                
+                db.data[cat].forEach(val => {
+                    const isSelected = selections[cat].some(item => item.n === val.n);
+                    const btn = document.createElement('button');
+                    btn.className = `value-btn px-4 py-2 m-1 rounded-full border text-sm font-medium ${isSelected ? 'selected shadow-md' : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-white'}`;
+                    btn.innerText = val.n;
+                    
+                    // Support tactile et souris pour l'info
+                    btn.onmouseover = () => showInfo(val.n, val.d);
+                    btn.onclick = () => toggleValue(cat, val);
+                    
+                    container.appendChild(btn);
+                });
+
+                // Mise à jour du résumé
+                const list = document.getElementById(`list-${cat}`);
+                list.innerHTML = '';
+                if (selections[cat].length === 0) {
+                    list.innerHTML = '<li class="text-slate-400 text-sm italic font-normal">...</li>';
+                } else {
+                    selections[cat].forEach(v => {
+                        const li = document.createElement('li');
+                        li.className = "flex items-center gap-2 mb-1 animate-fade";
+                        li.innerHTML = `<span class="text-blue-300">✓</span> ${v.n}`;
+                        list.appendChild(li);
+                    });
+                }
+            });
+        }
+
+        function downloadCompass() {
+            const db = databases[currentAge];
+            let content = `BOUSSOLE DE VALEURS (Version ${currentAge.toUpperCase()})\n`;
+            content += `Généré pour Virgile\n\n`;
+            content += `--------------------------------\n`;
+            
+            const categories = ['relations', 'travail', 'loisirs', 'sante'];
+            
+            categories.forEach(cat => {
+                content += `${db.titles[cat].toUpperCase()}\n`;
+                if (selections[cat].length === 0) {
+                    content += "  - Aucune valeur sélectionnée\n";
+                } else {
+                    selections[cat].forEach(v => {
+                        content += `  [x] ${v.n} : ${v.d}\n`;
+                    });
+                }
+                content += `\n`;
+            });
+            
+            content += `--------------------------------\n`;
+            content += `Gardez le cap !`;
+
+            // Création du blob et téléchargement
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'boussole_virgile.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

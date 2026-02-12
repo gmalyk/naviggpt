@@ -2297,11 +2297,21 @@ var PROMPT_REGISTRY = {
   askVirgile: {
     name: "Initial Analysis & Cognitive Framing",
     description: "Used when a user first asks a question. Analyzes the question and generates discernment key sections.",
-    variables: ["profile", "lang"],
+    variables: ["profileLabel", "profileKey", "values", "lang"],
     defaultTemplate: `R\xD4LE
 Tu agis comme un module d'analyse pr\xE9alable et de cadrage cognitif.
 Ton objectif n'est PAS de r\xE9pondre \xE0 la question, mais de pr\xE9parer les conditions d'une r\xE9ponse de tr\xE8s haute qualit\xE9.
-Profil utilisateur : {{profile}}. Adapte ton analyse et tes suggestions \xE0 ce profil.
+Profil utilisateur : {{profileLabel}} ({{profileKey}}). 
+Valeurs fondamentales de l'utilisateur : {{values}}.
+
+INSTRUCTIONS DE PROFILAGE (\xC0 RESPECTER EN PRIORIT\xC9) :
+{{safetyInstructions}}
+- \xC9colier (kid) : Utilise un langage simple et bienveillant. Focalise sur les relations (famille, copains), le corps, l'\xE9cole et le jeu.
+- Adolescent (teen) : Adopte un ton authentique mais \xE9quilibr\xE9. Aborde les questions d'avenir, d'identit\xE9, d'\xE9motions et de relations aux pairs.
+- Adulte (adult) : Focalise sur le discernement, l'\xE9quilibre vie pro/perso, la prise de d\xE9cision et la transmission.
+- Senior (senior) : Valorise la sagesse, l'h\xE9ritage, la sant\xE9 et la s\xE9r\xE9nit\xE9.
+
+IMPORTANT : Ton analyse et tes propositions DOIVENT \xEAtre directement inspir\xE9es par les valeurs "{{values}}" de l'utilisateur. Elles constituent le socle de sa vision du monde.
 
 PRINCIPES FONDAMENTAUX
 - Tu ne r\xE9ponds jamais directement \xE0 la question initiale.
@@ -2330,12 +2340,12 @@ B. D\xE9finition des cl\xE9s de discernement
 
 C. Construction du formulaire de clarification
 - Tu dois produire AU MINIMUM 5 sections distinctes pour couvrir 5 colonnes d'affichage.
-- Chaque section contient un titre clair et une liste d'options courtes.
+- Chaque section contient un titre clair et une liste d'options courtes (3 \xE0 5 mots max).
 - Les sections doivent \xEAtre pertinentes (Profilage, Angle, Style, Contexte, Objectif, etc.).
 
 FORMAT DE SORTIE \u2014 STRICTEMENT JSON
 {
-  "analysis": "Analyse fonctionnelle et concise...",
+  "analysis": "Analyse fonctionnelle et concise (adapt\xE9e au profil)...",
   "sections": [
     {
       "title": "Nom de la cat\xE9gorie",
@@ -2350,10 +2360,20 @@ Langue de sortie : {{lang}}`
   submitFilters: {
     name: "Virgile Response with Filters",
     description: "Used when the user submits their selected discernment filters. Generates the main Virgile response.",
-    variables: ["profile", "lang"],
+    variables: ["profileLabel", "profileKey", "values", "lang"],
     defaultTemplate: `Tu es Virgile. Ta mission est de r\xE9pondre en appliquant strictement les filtres choisis par l'utilisateur (sans les lister).
 La r\xE9ponse doit \xEAtre honn\xEAte, bousculer les id\xE9es re\xE7ues et encourager la r\xE9flexion profonde.
-Profil utilisateur : {{profile}}.
+Profil utilisateur : {{profileLabel}} ({{profileKey}}).
+Valeurs s\xE9lectionn\xE9es : {{values}}.
+
+CONSIGNES DE TON ET POSTURE (\xC0 RESPECTER EN PRIORIT\xC9) :
+{{safetyInstructions}}
+- \xC9colier (kid) : Langage simple, ton p\xE9dagogique et encourageant. Focus sur l'action et la gentillesse.
+- Adolescent (teen) : Ton authentique et respectueux. Valorise l'introspection et la responsabilit\xE9.
+- Adulte (adult) : Profondeur intellectuelle et pratique. \xC9quilibre entre efficacit\xE9 et sens.
+- Senior (senior) : Ton apaisant et sage. Focus sur le maintien de l'essentiel et la transmission.
+
+MISSION : Ta r\xE9ponse doit \xEAtre une application concr\xE8te du sujet \xE0 la lumi\xE8re des valeurs "{{values}}" et du profil {{profileLabel}}. Ne te contente pas de g\xE9n\xE9ralit\xE9s.
 
 Si l'utilisateur poursuit la discussion, conserve en m\xE9moire ses choix mais analyse sa r\xE9action et sauf changement de sujet, ne lui propose plus d'effectuer de nouveaux choix. Conserve, le style et le ton adopt\xE9. Continue tes r\xE9ponses avec la m\xEAme vigilance.
 
@@ -2386,10 +2406,18 @@ R\xE9ponds OUI ou NON. Si NON, traduis ce message dans la langue {{lang}} :
   followUpGen: {
     name: "Follow-Up Generation",
     description: "Used to generate a follow-up response continuing the conversation with the same style and filters.",
-    variables: ["profile", "lang"],
+    variables: ["profileLabel", "profileKey", "values", "lang"],
     defaultTemplate: `Tu es Virgile. Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
 Ta r\xE9ponse doit rester honn\xEAte, bousculer les id\xE9es re\xE7ues et encourager la r\xE9flexion profonde.
-Profil utilisateur : {{profile}}.
+Profil utilisateur : {{profileLabel}} ({{profileKey}}).
+Valeurs s\xE9lectionn\xE9es : {{values}}.
+
+CONSIGNES DE TON ET POSTURE (\xC0 RESPECTER EN PRIORIT\xC9) :
+{{safetyInstructions}}
+- \xC9colier (kid) : Langage simple, ton p\xE9dagogique et encourageant. Focus sur l'action et la gentillesse.
+- Adolescent (teen) : Ton authentique et respectueux. Valorise l'introspection et la responsabilit\xE9.
+- Adulte (adult) : Profondeur intellectuelle et pratique. \xC9quilibre entre efficacit\xE9 et sens.
+- Senior (senior) : Ton apaisant et sage. Focus sur le maintien de l'essentiel et la transmission.
 
 Conserve la m\xEAme vigilance que dans tes r\xE9ponses pr\xE9c\xE9dentes. Si l'utilisateur change de sujet, rappelle-lui gentiment que Virgile est l\xE0 pour approfondir le discernement sur le th\xE8me initial.
 
@@ -2411,13 +2439,17 @@ var getPromptTemplate = /* @__PURE__ */ __name(async (env, key) => {
   }
   return PROMPT_REGISTRY[key].defaultTemplate;
 }, "getPromptTemplate");
-var getAskVirgilePrompt = /* @__PURE__ */ __name(async (env, profile, lang) => {
+var getAskVirgilePrompt = /* @__PURE__ */ __name(async (env, profileLabel, profileKey, valuesArr, lang) => {
   const template = await getPromptTemplate(env, "askVirgile");
-  return interpolate(template, { profile, lang });
+  const safetyInstructions = profileKey === "kid" ? "S\xC9CURIT\xC9 ENFANT : Interdiction formelle de sugg\xE9rer du contenu inappropri\xE9, violent, effrayant ou d'horreur. Utilise un langage tr\xE8s simple et bienveillant. Focalise sur les relations (famille, copains), le corps, l'\xE9cole et le jeu." : "";
+  const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(", ") : "aucune sp\xE9cifi\xE9e";
+  return interpolate(template, { profileLabel, profileKey, values, lang, safetyInstructions });
 }, "getAskVirgilePrompt");
-var getSubmitFiltersPrompt = /* @__PURE__ */ __name(async (env, profile, lang) => {
+var getSubmitFiltersPrompt = /* @__PURE__ */ __name(async (env, profileLabel, profileKey, valuesArr, lang) => {
   const template = await getPromptTemplate(env, "submitFilters");
-  return interpolate(template, { profile, lang });
+  const safetyInstructions = profileKey === "kid" ? "S\xC9CURIT\xC9 ENFANT : Ne sugg\xE8re JAMAIS de films d'horreur, de contenu violent ou traumatisant. Reste dans un cadre \xE9ducatif et positif." : "";
+  const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(", ") : "aucune sp\xE9cifi\xE9e";
+  return interpolate(template, { profileLabel, profileKey, values, lang, safetyInstructions });
 }, "getSubmitFiltersPrompt");
 var getStandardPrompt = /* @__PURE__ */ __name(async (env, lang) => {
   const template = await getPromptTemplate(env, "standard");
@@ -2427,9 +2459,11 @@ var getFollowUpCheckPrompt = /* @__PURE__ */ __name(async (env, context, newQ, l
   const template = await getPromptTemplate(env, "followUpCheck");
   return interpolate(template, { context, newQ, lang });
 }, "getFollowUpCheckPrompt");
-var getFollowUpGenPrompt = /* @__PURE__ */ __name(async (env, profile, lang) => {
+var getFollowUpGenPrompt = /* @__PURE__ */ __name(async (env, profileLabel, profileKey, valuesArr, lang) => {
   const template = await getPromptTemplate(env, "followUpGen");
-  return interpolate(template, { profile, lang });
+  const safetyInstructions = profileKey === "kid" ? "S\xC9CURIT\xC9 ENFANT : Garde un ton protecteur. \xC9vite tout sujet inappropri\xE9." : "";
+  const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(", ") : "aucune sp\xE9cifi\xE9e";
+  return interpolate(template, { profileLabel, profileKey, values, lang, safetyInstructions });
 }, "getFollowUpGenPrompt");
 var extractJSON = /* @__PURE__ */ __name((text) => {
   let cleaned = text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
@@ -2449,27 +2483,40 @@ var extractJSON = /* @__PURE__ */ __name((text) => {
 }, "extractJSON");
 var app = new Hono2();
 app.use("*", cors());
+app.use("*", async (c, next) => {
+  console.log(`[Worker] INCOMING: ${c.req.method} ${c.req.path}`);
+  await next();
+});
+app.onError((err, c) => {
+  console.error(`[Worker Error] ${err.message}`, err.stack);
+  return c.json({ success: false, error: err.message }, 500);
+});
 app.post("/api/ask", async (c) => {
   try {
-    const { question, profile, language, provider, apiKey } = await c.req.json();
-    const systemPrompt = await getAskVirgilePrompt(c.env, profile, language);
+    const body = await c.req.json();
+    const { question, profile, profileKey, language, provider, apiKey, values } = body;
+    console.log(`[Worker] ask - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(", ") : "none"}`);
+    const systemPrompt = await getAskVirgilePrompt(c.env, profile, profileKey, values, language);
     const response = await callAI(provider, apiKey, c.env, systemPrompt, `Question: "${question}"`);
     const parsed = extractJSON(response);
     if (!parsed || !Array.isArray(parsed.sections)) {
       console.error("Failed to parse AI response as JSON:", response.substring(0, 500));
-      return c.json({ success: false, error: "AI returned invalid format. Please try again." }, 500);
+      return c.json({ success: false, error: "AI returned invalid format." }, 500);
     }
     return c.json({ success: true, data: parsed });
   } catch (e) {
+    console.error("[Worker] /api/ask error:", e);
     return c.json({ success: false, error: e.message }, 500);
   }
 });
 app.post("/api/filters", async (c) => {
   try {
-    const { question, profile, language, provider, apiKey, filters, precision } = await c.req.json();
-    const virgilePrompt = await getSubmitFiltersPrompt(c.env, profile, language);
+    const body = await c.req.json();
+    const { question, profile, profileKey, language, provider, apiKey, filters, precision, values } = body;
+    console.log(`[Worker] filters - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(", ") : "none"}`);
+    const virgilePrompt = await getSubmitFiltersPrompt(c.env, profile, profileKey, values, language);
     const virgileMessage = `Question: "${question}"
-Filtres: ${filters.join(", ")}
+Filtres: ${filters ? filters.join(", ") : "none"}
 Pr\xE9cision: "${precision}"`;
     const standardPrompt = await getStandardPrompt(c.env, language);
     const standardMessage = `Question: "${question}"`;
@@ -2479,12 +2526,15 @@ Pr\xE9cision: "${precision}"`;
     ]);
     return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
   } catch (e) {
+    console.error("[Worker] /api/filters error:", e);
     return c.json({ success: false, error: e.message }, 500);
   }
 });
 app.post("/api/followup", async (c) => {
   try {
-    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, language, provider, apiKey } = await c.req.json();
+    const body = await c.req.json();
+    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, profileKey, language, provider, apiKey, values } = body;
+    console.log(`[Worker] followup - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(", ") : "none"}`);
     const checkPrompt = await getFollowUpCheckPrompt(c.env, context, followUp, language);
     const checkResult = await callAI(provider, apiKey, c.env, "Tu es un v\xE9rificateur de contexte.", checkPrompt);
     if (checkResult.toUpperCase().includes("NON")) {
@@ -2496,7 +2546,7 @@ app.post("/api/followup", async (c) => {
         }
       });
     }
-    const genPrompt = await getFollowUpGenPrompt(c.env, profile, language);
+    const genPrompt = await getFollowUpGenPrompt(c.env, profile, profileKey, values, language);
     let conversationContext = `Question initiale : "${question}"
 Filtres : ${filters ? filters.join(", ") : "aucun"}
 Pr\xE9cision : "${precision || ""}"
@@ -2517,6 +2567,7 @@ Nouvelle question de l'utilisateur : "${followUp}"`;
     const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext, { useWebSearch: true });
     return c.json({ success: true, data: { rejected: false, response } });
   } catch (e) {
+    console.error("[Worker] /api/followup error:", e);
     return c.json({ success: false, error: e.message }, 500);
   }
 });
@@ -2647,6 +2698,12 @@ app.post("/api/prompts/reset", async (c) => {
     return c.json({ success: false, error: e.message }, 500);
   }
 });
+app.get("*", async (c) => {
+  if (c.req.path.startsWith("/api/")) {
+    return c.notFound();
+  }
+  return c.env.ASSETS.fetch(new Request(new URL("/", c.req.url)));
+});
 var worker_default = app;
 
 // ../../.nvm/versions/node/v18.20.5/lib/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
@@ -2690,7 +2747,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-aNlmJE/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-CVoWly/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -2722,7 +2779,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-aNlmJE/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-CVoWly/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
