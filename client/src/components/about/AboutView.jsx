@@ -14,7 +14,7 @@ const AboutView = () => {
     return (
         <section className="pt-0 pb-12 px-6 max-w-3xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
             <div className="flex justify-center mb-6">
-                <div className="w-24 h-24 flex items-center justify-center overflow-hidden rounded-full">
+                <div className="w-36 h-36 flex items-center justify-center overflow-hidden rounded-full">
                     <img
                         src={virgilImage}
                         alt="Virgil"
