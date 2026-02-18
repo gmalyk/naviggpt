@@ -49,5 +49,5 @@ export const callClaude = async (apiKey, systemPrompt, userMessage, options = {}
     return data.content
         .filter(block => block.type === 'text')
         .map(block => block.text)
-        .join('\n\n');
+        .join('');
 };

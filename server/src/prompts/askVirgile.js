@@ -1,30 +1,12 @@
 /**
- * Maps profile IDs to descriptive labels in the user's language
- */
-const profileLabels = {
-  kid: { fr: 'Écolier (enfant de 6-11 ans) - NE PAS REDEMANDER L\'ÂGE', en: 'School child (6-11 years) - DO NOT ASK ABOUT AGE', it: 'Scolaro (6-11 anni)', de: 'Schulkind (6-11 Jahre)', es: 'Escolar (6-11 años)', pt: 'Escolar (6-11 anos)', ru: 'Школьник (6-11 лет)', zh: '在校生 (6-11岁)', ar: 'تلميذ (6-11 سنة)', hi: 'स्कूली (6-11 वर्ष)' },
-  teen: { fr: 'Adolescent (12-17 ans) - NE PAS REDEMANDER L\'ÂGE', en: 'Teenager (12-17 years) - DO NOT ASK ABOUT AGE', it: 'Adolescente (12-17 anni)', de: 'Teenager (12-17 Jahre)', es: 'Adolescente (12-17 años)', pt: 'Adolescente (12-17 anos)', ru: 'Подросток (12-17 лет)', zh: '青少年 (12-17岁)', ar: 'مراهق (12-17 سنة)', hi: 'किशोर (12-17 वर्ष)' },
-  adult: { fr: 'Adulte (18-64 ans) - NE PAS REDEMANDER L\'ÂGE', en: 'Adult (18-64 years) - DO NOT ASK ABOUT AGE', it: 'Adulto (18-64 anni)', de: 'Erwachsener (18-64 Jahre)', es: 'Adulto (18-64 años)', pt: 'Adulto (18-64 anos)', ru: 'Взрослый (18-64 лет)', zh: '成年人 (18-64岁)', ar: 'بالغ (18-64 سنة)', hi: 'वयस्क (18-64 वर्ष)' },
-  senior: { fr: 'Senior (65 ans et plus) - NE PAS REDEMANDER L\'ÂGE', en: 'Senior (65+ years) - DO NOT ASK ABOUT AGE', it: 'Senior (65+ anni)', de: 'Senior (65+ Jahre)', es: 'Senior (65+ años)', pt: 'Sênior (65+ anos)', ru: 'Пожилой (65+ лет)', zh: '老年人 (65岁以上)', ar: 'كبير السن (65+ سنة)', hi: 'वरिष्ठ (65+ वर्ष)' }
-};
-
-const getProfileLabel = (profileId, lang) => {
-  const labels = profileLabels[profileId] || profileLabels['adult'];
-  return labels[lang] || labels['fr'];
-};
-
-/**
  * System prompt for Step 1: Initial Analysis & Profiling
- * @param {object} faith - Selected faith/tradition
+ * @param {string} profile - Profile key (kid, teen, adult, senior)
+ * @param {object} faith - Selected faith/tradition (unused, kept for API compat)
  * @param {Array} values - Selected ACT values
  * @param {string} lang - Selected language code
  * @returns {string} The formatted system prompt
  */
 export const getAskVirgilePrompt = (profile, faith, values, lang) => {
-  const profileLabel = getProfileLabel(profile, lang);
-  const faithStr = faith ? `\nTradition/Sensibilité : ${faith.label}` : '';
-  const valuesStr = values && values.length > 0 ? `\nValeurs/Domaines (ACT) : ${values.join(', ')}` : '';
-
   const staticPrompt = `ROLE
 Tu agis comme un module d'analyse prealable et de cadrage cognitif.
 Ton objectif inital n'est PAS de repondre a la question, mais de preparer les conditions d'une reponse de tres haute qualite sauf si la question est de type fermee, c'est a dire qu'elle appelle une reponse tres simple, non polemique, et peut se resumer en un oui ou un non ou une information tres precise (une date, un nombre, un nom, une heure). (exemple de questions fermees : <example> "en quelle annee a eu lieu la revolution francaise ?" </example>, <example> "combien de pays membres dans l'Union europeenne ?"</example>)
@@ -85,11 +67,16 @@ FORMAT DE SORTIE -- STRICTEMENT JSON
     }
     // ... au minimum 5 sections
   ]
-}`;
+}
 
-  const dynamicPrompt = `Profil utilisateur : ${profileLabel}${faithStr}${valuesStr}. Adapte ton analyse et tes suggestions a ce profil.
+SECURITE ENFANT : Si le profil de l'utilisateur est "kid", applique strictement ces regles :
+- Interdiction formelle de suggerer du contenu inapproprie, violent, effrayant ou d'horreur.
+- Utilise un langage tres simple et bienveillant.
+- Focalise sur les relations (famille, copains), le corps, l'ecole et le jeu.`;
 
-Langue de sortie : ${lang}`;
+  const dynamicPrompt = `Profil : ${profile}.
+Valeurs : ${values && values.length > 0 ? values.join(', ') : 'aucune specifiee'}.
+Langue : ${lang}.`;
 
   return { staticPrompt, dynamicPrompt };
 };

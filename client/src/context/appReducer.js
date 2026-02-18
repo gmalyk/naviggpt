@@ -13,6 +13,7 @@ export const initialState = {
     virgileResponse: '',
     standardResponse: '',
     followUpHistory: [],
+    returnToView: null,
     loading: false,
     settings: {
         provider: 'claude'
@@ -32,6 +33,7 @@ export const ACTIONS = {
     SET_FINAL_RESPONSES: 'SET_FINAL_RESPONSES',
     ADD_FOLLOW_UP: 'ADD_FOLLOW_UP',
     SET_LOADING: 'SET_LOADING',
+    SET_RETURN_TO_VIEW: 'SET_RETURN_TO_VIEW',
     UPDATE_SETTINGS: 'UPDATE_SETTINGS'
 };
 
@@ -77,6 +79,8 @@ export function appReducer(state, action) {
                 ...state,
                 followUpHistory: [...state.followUpHistory, action.payload]
             };
+        case ACTIONS.SET_RETURN_TO_VIEW:
+            return { ...state, returnToView: action.payload };
         case ACTIONS.SET_LOADING:
             return { ...state, loading: action.payload };
         case ACTIONS.UPDATE_SETTINGS:

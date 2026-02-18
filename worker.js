@@ -110,7 +110,7 @@ const callClaude = async (apiKey, systemPrompt, userMessage, options = {}) => {
     return data.content
         .filter(block => block.type === 'text')
         .map(block => block.text)
-        .join('\n\n');
+        .join('');
 };
 
 const callMistral = async (apiKey, systemPrompt, userMessage) => {
@@ -167,7 +167,7 @@ const PROMPT_REGISTRY = {
     askVirgile: {
         name: 'Initial Analysis & Cognitive Framing',
         description: 'Used when a user first asks a question. Analyzes the question and generates discernment key sections.',
-        variables: ['profileLabel', 'profileKey', 'values', 'lang', 'safetyInstructions'],
+        variables: ['profileKey', 'values', 'lang'],
         cacheable: true,
         staticTemplate: `ROLE
 Tu agis comme un module d'analyse prealable et de cadrage cognitif.
@@ -229,13 +229,15 @@ FORMAT DE SORTIE -- STRICTEMENT JSON
     }
     // ... au minimum 5 sections
   ]
-}`,
-        dynamicTemplate: `Profil utilisateur : {{profileLabel}} ({{profileKey}}).
-Valeurs fondamentales de l'utilisateur : {{values}}.
-{{safetyInstructions}}
-Adapte ton analyse et tes suggestions a ce profil.
+}
 
-Langue de sortie : {{lang}}`,
+SECURITE ENFANT : Si le profil de l'utilisateur est "kid", applique strictement ces regles :
+- Interdiction formelle de suggerer du contenu inapproprie, violent, effrayant ou d'horreur.
+- Utilise un langage tres simple et bienveillant.
+- Focalise sur les relations (famille, copains), le corps, l'ecole et le jeu.`,
+        dynamicTemplate: `Profil : {{profileKey}}.
+Valeurs : {{values}}.
+Langue : {{lang}}.`,
         get defaultTemplate() {
             return this.staticTemplate + '\n\n' + this.dynamicTemplate;
         }
@@ -243,7 +245,7 @@ Langue de sortie : {{lang}}`,
     submitFilters: {
         name: 'Virgile Response with Filters',
         description: 'Used when the user submits their selected discernment filters. Generates the main Virgile response.',
-        variables: ['profileLabel', 'profileKey', 'values', 'lang', 'safetyInstructions'],
+        variables: ['profileKey', 'values', 'lang'],
         cacheable: true,
         staticTemplate: `- Ta mission est de repondre a la question initiale en appliquant strictement "les cles de discernement" (filtres de discernement) choisies par l'utilisateur (sans les lister, sans les repeter, sans les rappeler) et les valeurs choisies sauf si ces dernieres sont negatives (exemples de valeurs negatives : cynisme, cruaute, hypocrisie, mechancete, amateurisme) ou extremistes (exemples de valeurs extremistes : islamisme, communisme, anarchisme, fascisme, nazisme, satanisme).
 - Des que la question est d'ordre culturel, politique, historique, societale, environnementale, comportementale, educative, ou que ton avis est demande, tu es systematiquement guide par tes propres valeurs qui sont : la bienveillance (agir avec gentillesse et soin vis a vis de l'utilisateur), l'inspiration (Elever l'utilisateur), le sens (aligner tes reponses avec tes valeurs), l'influence (guider l'utilisateur vers une vision commune), la connexion (le partage avec l'utilisateur), la charite (le fait d'encourager le bien a autrui), la paix (aider l'utilisateur a eviter les conflits et a les regler pacifiquement), la discipline (encourager l'utilisateur a se maitriser pour mieux atteindre ses objectifs nobles), la prevention (encourager l'utilisateur a prendre les devants et a prevenir ses soucis de sante, ses mauvaises routines mentales, ses pensees noires, ses relations nefastes, ses occupations nuisibles, ses mauvaises habitudes alimentaires, son environnement polue). A aucun moment, tu n'enonces explicitement tes valeurs.
@@ -272,11 +274,13 @@ SOURCES ET LIENS : A la fin de ta reponse, ajoute toujours une section "Sources"
 - Pour tout autre sujet : liens vers les sources d'information fiables utilisees.
 Fournis des liens reels et verifiables. Utilise le format markdown [texte](url).
 
-AIDE MEMOIRE : A la fin de ta reponse, si la question etait vague ou large propose de generer un quiz, ou de poser quelques questions a l'utilisateur sur le meme theme pour l'aider a memoriser les reponses.`,
-        dynamicTemplate: `Profil utilisateur : {{profileLabel}} ({{profileKey}}).
-Valeurs selectionnees : {{values}}.
-{{safetyInstructions}}
+AIDE MEMOIRE : A la fin de ta reponse, si la question etait vague ou large propose de generer un quiz, ou de poser quelques questions a l'utilisateur sur le meme theme pour l'aider a memoriser les reponses.
 
+SECURITE ENFANT : Si le profil de l'utilisateur est "kid", applique strictement ces regles :
+- Ne suggere JAMAIS de films d'horreur, de contenu violent ou traumatisant.
+- Reste dans un cadre educatif et positif.`,
+        dynamicTemplate: `Profil : {{profileKey}}.
+Valeurs : {{values}}.
 Langue : {{lang}}.`,
         get defaultTemplate() {
             return this.staticTemplate + '\n\n' + this.dynamicTemplate;
@@ -304,7 +308,7 @@ Réponds OUI ou NON. Si NON, traduis ce message dans la langue {{lang}} :
     followUpGen: {
         name: 'Follow-Up Generation',
         description: 'Used to generate a follow-up response continuing the conversation with the same style and filters.',
-        variables: ['profileLabel', 'profileKey', 'values', 'lang', 'safetyInstructions'],
+        variables: ['profileKey', 'values', 'lang'],
         cacheable: true,
         staticTemplate: `Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
 Ta reponse doit rester honnete, bousculer les idees recues et encourager la reflexion profonde.
@@ -318,11 +322,13 @@ SOURCES ET LIENS : A la fin de ta reponse, ajoute toujours une section "Sources"
 - Pour un restaurant/lieu : lien vers Google Maps, le site officiel, ou TripAdvisor.
 - Pour un livre : lien vers la page de l'editeur, Amazon, ou Fnac.
 - Pour tout autre sujet : liens vers les sources d'information fiables utilisees.
-Fournis des liens reels et verifiables. Utilise le format markdown [texte](url).`,
-        dynamicTemplate: `Profil utilisateur : {{profileLabel}} ({{profileKey}}).
-Valeurs selectionnees : {{values}}.
-{{safetyInstructions}}
+Fournis des liens reels et verifiables. Utilise le format markdown [texte](url).
 
+SECURITE ENFANT : Si le profil de l'utilisateur est "kid", applique strictement ces regles :
+- Garde un ton protecteur.
+- Evite tout sujet inapproprie.`,
+        dynamicTemplate: `Profil : {{profileKey}}.
+Valeurs : {{values}}.
 Langue : {{lang}}.`,
         get defaultTemplate() {
             return this.staticTemplate + '\n\n' + this.dynamicTemplate;
@@ -344,11 +350,8 @@ const getPromptTemplate = async (env, key) => {
 
 // Prompt functions (async, KV-backed)
 const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
-    const safetyInstructions = profileKey === 'kid'
-        ? "SECURITE ENFANT : Interdiction formelle de suggerer du contenu inapproprie, violent, effrayant ou d'horreur. Utilise un langage tres simple et bienveillant. Focalise sur les relations (famille, copains), le corps, l'ecole et le jeu."
-        : "";
     const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune specifiee';
-    const vars = { profile: profileLabel, profileLabel, profileKey, values, lang, safetyInstructions };
+    const vars = { profileKey, values, lang };
 
     if (env.PROMPTS) {
         const override = await env.PROMPTS.get('prompt:askVirgile');
@@ -374,11 +377,8 @@ const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lan
 };
 
 const getSubmitFiltersPrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
-    const safetyInstructions = profileKey === 'kid'
-        ? "SECURITE ENFANT : Ne suggere JAMAIS de films d'horreur, de contenu violent ou traumatisant. Reste dans un cadre educatif et positif."
-        : "";
     const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune specifiee';
-    const vars = { profile: profileLabel, profileLabel, profileKey, values, lang, safetyInstructions };
+    const vars = { profileKey, values, lang };
 
     if (env.PROMPTS) {
         const override = await env.PROMPTS.get('prompt:submitFilters');
@@ -414,11 +414,8 @@ const getFollowUpCheckPrompt = async (env, context, newQ, lang) => {
 };
 
 const getFollowUpGenPrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
-    const safetyInstructions = profileKey === 'kid'
-        ? "SECURITE ENFANT : Garde un ton protecteur. Evite tout sujet inapproprie."
-        : "";
     const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune specifiee';
-    const vars = { profile: profileLabel, profileLabel, profileKey, values, lang, safetyInstructions };
+    const vars = { profileKey, values, lang };
 
     if (env.PROMPTS) {
         const override = await env.PROMPTS.get('prompt:followUpGen');

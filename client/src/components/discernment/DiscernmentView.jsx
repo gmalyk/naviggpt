@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, Compass } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
+import { ACTIONS } from '../../context/appReducer';
 import { useAI } from '../../hooks/useAI';
 import { useTranslation } from '../../hooks/useTranslation';
 import QuestionBar from './QuestionBar';
@@ -10,10 +11,16 @@ import PrecisionInput from './PrecisionInput';
 import LogoSpinner from '../ui/LogoSpinner';
 
 const DiscernmentView = () => {
-    const { state } = useAppState();
+    const { state, dispatch } = useAppState();
     const { submitFilters, loading } = useAI();
     const { t } = useTranslation();
     const cardRef = useRef(null);
+
+    const handleDefineValues = () => {
+        dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: 'discernment' });
+        dispatch({ type: ACTIONS.SET_VIEW, payload: 'compass' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     useEffect(() => {
         const section = cardRef.current?.closest('section');
@@ -56,7 +63,18 @@ const DiscernmentView = () => {
 
                     <PrecisionInput />
 
-                    <div className="flex justify-end pt-4">
+                    <div className="flex items-center justify-between pt-4">
+                        <div className="flex items-center gap-3">
+                            <button onClick={handleDefineValues} className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#B88644] border border-[#B88644]/30 rounded-full hover:bg-[#B88644]/5 transition-all">
+                                <Compass className="w-4 h-4" />
+                                <span>{state.values.length > 0 ? t('edit_my_values') : t('define_my_values')}</span>
+                            </button>
+                            {state.values.length > 0 && (
+                                <span className="text-xs text-slate-400">
+                                    {state.values.length} {t('values_selected_count')}
+                                </span>
+                            )}
+                        </div>
                         <button
                             onClick={submitFilters}
                             disabled={loading || state.selectedFilters.length === 0}

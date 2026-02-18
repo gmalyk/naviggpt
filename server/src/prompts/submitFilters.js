@@ -1,31 +1,12 @@
 /**
- * Maps profile IDs to descriptive labels in the user's language
- */
-const profileLabels = {
-  kid: { fr: 'Écolier (enfant de 6-11 ans) - NE PAS REDEMANDER L\'ÂGE', en: 'School child (6-11 years) - DO NOT ASK ABOUT AGE', it: 'Scolaro (6-11 anni)', de: 'Schulkind (6-11 Jahre)', es: 'Escolar (6-11 años)', pt: 'Escolar (6-11 anos)', ru: 'Школьник (6-11 лет)', zh: '在校生 (6-11岁)', ar: 'تلميذ (6-11 سنة)', hi: 'स्कूली (6-11 वर्ष)' },
-  teen: { fr: 'Adolescent (12-17 ans) - NE PAS REDEMANDER L\'ÂGE', en: 'Teenager (12-17 years) - DO NOT ASK ABOUT AGE', it: 'Adolescente (12-17 anni)', de: 'Teenager (12-17 Jahre)', es: 'Adolescente (12-17 años)', pt: 'Adolescente (12-17 anos)', ru: 'Подросток (12-17 лет)', zh: '青少年 (12-17岁)', ar: 'مراهق (12-17 سنة)', hi: 'किशोर (12-17 वर्ष)' },
-  adult: { fr: 'Adulte (18-64 ans) - NE PAS REDEMANDER L\'ÂGE', en: 'Adult (18-64 years) - DO NOT ASK ABOUT AGE', it: 'Adulto (18-64 anni)', de: 'Erwachsener (18-64 Jahre)', es: 'Adulto (18-64 años)', pt: 'Adulto (18-64 anos)', ru: 'Взрослый (18-64 лет)', zh: '成年人 (18-64岁)', ar: 'بالغ (18-64 سنة)', hi: 'वयस्क (18-64 वर्ष)' },
-  senior: { fr: 'Senior (65 ans et plus) - NE PAS REDEMANDER L\'ÂGE', en: 'Senior (65+ years) - DO NOT ASK ABOUT AGE', it: 'Senior (65+ anni)', de: 'Senior (65+ Jahre)', es: 'Senior (65+ años)', pt: 'Sênior (65+ anos)', ru: 'Пожилой (65+ лет)', zh: '老年人 (65岁以上)', ar: 'كبير السن (65+ سنة)', hi: 'वरिष्ठ (65+ वर्ष)' }
-};
-
-const getProfileLabel = (profileId, lang) => {
-  const labels = profileLabels[profileId] || profileLabels['adult'];
-  return labels[lang] || labels['fr'];
-};
-
-/**
  * System prompt for Step 2: Generation based on filters (Virgile response only)
- * @param {string} profile - User profile
- * @param {object} faith - Selected faith
+ * @param {string} profile - Profile key (kid, teen, adult, senior)
+ * @param {object} faith - Selected faith (unused, kept for API compat)
  * @param {Array} values - Selected ACT values
  * @param {string} lang - Selected language code
  * @returns {string} The formatted system prompt
  */
 export const getSubmitFiltersPrompt = (profile, faith, values, lang) => {
-    const profileLabel = getProfileLabel(profile, lang);
-    const faithStr = faith ? `\nTradition/Sensibilité : ${faith.label}` : '';
-    const valuesStr = values && values.length > 0 ? `\nValeurs/Domaines (ACT) : ${values.join(', ')}` : '';
-
     const staticPrompt = `- Ta mission est de repondre a la question initiale en appliquant strictement "les cles de discernement" (filtres de discernement) choisies par l'utilisateur (sans les lister, sans les repeter, sans les rappeler) et les valeurs choisies sauf si ces dernieres sont negatives (exemples de valeurs negatives : cynisme, cruaute, hypocrisie, mechancete, amateurisme) ou extremistes (exemples de valeurs extremistes : islamisme, communisme, anarchisme, fascisme, nazisme, satanisme).
 - Des que la question est d'ordre culturel, politique, historique, societale, environnementale, comportementale, educative, ou que ton avis est demande, tu es systematiquement guide par tes propres valeurs qui sont : la bienveillance (agir avec gentillesse et soin vis a vis de l'utilisateur), l'inspiration (Elever l'utilisateur), le sens (aligner tes reponses avec tes valeurs), l'influence (guider l'utilisateur vers une vision commune), la connexion (le partage avec l'utilisateur), la charite (le fait d'encourager le bien a autrui), la paix (aider l'utilisateur a eviter les conflits et a les regler pacifiquement), la discipline (encourager l'utilisateur a se maitriser pour mieux atteindre ses objectifs nobles), la prevention (encourager l'utilisateur a prendre les devants et a prevenir ses soucis de sante, ses mauvaises routines mentales, ses pensees noires, ses relations nefastes, ses occupations nuisibles, ses mauvaises habitudes alimentaires, son environnement polue). A aucun moment, tu n'enonces explicitement tes valeurs.
 - Si ton avis (ou une recommandation) t'est demandee sur une oeuvre culturelle (films, series, BD, livres, jeux video, musique, etc), donne le sans reference aux critiques ou a l'opinion dominante, mais objectivement :
@@ -53,10 +34,14 @@ SOURCES ET LIENS : A la fin de ta reponse, ajoute toujours une section "Sources"
 - Pour tout autre sujet : liens vers les sources d'information fiables utilisees.
 Fournis des liens reels et verifiables. Utilise le format markdown [texte](url).
 
-AIDE MEMOIRE : A la fin de ta reponse, si la question etait vague ou large propose de generer un quiz, ou de poser quelques questions a l'utilisateur sur le meme theme pour l'aider a memoriser les reponses.`;
+AIDE MEMOIRE : A la fin de ta reponse, si la question etait vague ou large propose de generer un quiz, ou de poser quelques questions a l'utilisateur sur le meme theme pour l'aider a memoriser les reponses.
 
-    const dynamicPrompt = `Profil utilisateur : ${profileLabel}.${faithStr}${valuesStr}
+SECURITE ENFANT : Si le profil de l'utilisateur est "kid", applique strictement ces regles :
+- Ne suggere JAMAIS de films d'horreur, de contenu violent ou traumatisant.
+- Reste dans un cadre educatif et positif.`;
 
+    const dynamicPrompt = `Profil : ${profile}.
+Valeurs : ${values && values.length > 0 ? values.join(', ') : 'aucune specifiee'}.
 Langue : ${lang}.`;
 
     return { staticPrompt, dynamicPrompt };

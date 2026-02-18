@@ -73,8 +73,15 @@ const CompassView = () => {
         const allValues = Object.values(selections).flat();
         dispatch({ type: ACTIONS.SET_PROFILE, payload: selectedAge });
         dispatch({ type: ACTIONS.SET_VALUES, payload: allValues });
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2500);
+        if (state.returnToView) {
+            const returnView = state.returnToView;
+            dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: null });
+            dispatch({ type: ACTIONS.SET_VIEW, payload: returnView });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2500);
+        }
     };
 
     const handleReset = () => {
@@ -86,6 +93,7 @@ const CompassView = () => {
     };
 
     const totalSelected = Object.values(selections).flat().length;
+    const compact = !!state.returnToView;
 
     const ageGroups = [
         { id: 'kid', label: t('prof_kid') },
@@ -95,16 +103,18 @@ const CompassView = () => {
     ];
 
     return (
-        <section className="pt-4 pb-12 px-4 md:px-6 max-w-4xl mx-auto w-full animate-in fade-in duration-500">
-            <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                    <Compass className="w-7 h-7 text-[#B88644]" />
-                </div>
-                <h1 className="text-2xl font-bold text-slate-900 mb-2">{t('compass_title')}</h1>
-                <p className="text-sm text-slate-500 max-w-lg mx-auto mb-6">{t('compass_subtitle')}</p>
+        <section className={`pt-4 px-4 md:px-6 mx-auto w-full animate-in fade-in duration-500 ${compact ? 'pb-6 max-w-6xl' : 'pb-12 max-w-4xl'}`}>
+            <div className={`text-center ${compact ? 'mb-4' : 'mb-8'}`}>
+                {!compact && (
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
+                        <Compass className="w-7 h-7 text-[#B88644]" />
+                    </div>
+                )}
+                <h1 className={`font-bold text-slate-900 ${compact ? 'text-lg mb-1' : 'text-2xl mb-2'}`}>{t('compass_title')}</h1>
+                <p className={`text-sm text-slate-500 max-w-lg mx-auto ${compact ? 'mb-3' : 'mb-6'}`}>{t('compass_subtitle')}</p>
 
                 {/* Age Selection Row */}
-                <div className="flex flex-wrap justify-center gap-2 mb-8 bg-slate-50 p-1.5 rounded-full border border-slate-200 w-fit mx-auto">
+                <div className={`flex flex-wrap justify-center gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200 w-fit mx-auto ${compact ? 'mb-4' : 'mb-8'}`}>
                     {ageGroups.map(group => (
                         <button
                             key={group.id}
@@ -120,7 +130,7 @@ const CompassView = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${compact ? 'mb-4' : 'mb-8'}`}>
                 {profileData.categories.map(category => {
                     const colors = categoryColors[category.key];
                     const selected = selections[category.key] || [];
@@ -130,15 +140,15 @@ const CompassView = () => {
                     return (
                         <div
                             key={category.key}
-                            className={`rounded-2xl border ${colors.border} ${colors.bg} p-5 transition-all`}
+                            className={`rounded-2xl border ${colors.border} ${colors.bg} ${compact ? 'p-3' : 'p-5'} transition-all`}
                         >
-                            <div className="flex items-center justify-between mb-3">
+                            <div className={`flex items-center justify-between ${compact ? 'mb-2' : 'mb-3'}`}>
                                 <div>
                                     <h2 className={`font-semibold text-sm ${colors.accent} flex items-center gap-2`}>
                                         <CategoryIcon className="w-4 h-4" />
                                         {t(category.titleKey)}
                                     </h2>
-                                    <p className="text-xs text-slate-400 mt-0.5">{category.subtitle?.[language] || category.subtitle?.fr || category.subtitle}</p>
+                                    {!compact && <p className="text-xs text-slate-400 mt-0.5">{category.subtitle?.[language] || category.subtitle?.fr || category.subtitle}</p>}
                                 </div>
                                 <span className={`text-xs px-2 py-0.5 rounded-full ${remaining > 0 ? 'bg-white/70 text-slate-500' : `${colors.selected} text-white`}`}>
                                     {selected.length}/{MAX_PER_CATEGORY}
@@ -188,12 +198,12 @@ const CompassView = () => {
             )}
 
             {totalSelected > 0 && (
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
-                    <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm ${compact ? 'p-4 mb-3' : 'p-6 mb-6'}`}>
+                    <h3 className={`text-sm font-semibold text-slate-700 flex items-center gap-2 ${compact ? 'mb-2' : 'mb-3'}`}>
                         <Compass className="w-4 h-4 text-slate-400" />
                         {t('compass_title')}
                     </h3>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className={`flex flex-wrap gap-2 ${compact ? 'mb-3' : 'mb-4'}`}>
                         {Object.entries(selections).map(([catKey, values]) =>
                             values.map(v => {
                                 const colors = categoryColors[catKey];
@@ -216,7 +226,7 @@ const CompassView = () => {
                                 : 'bg-[#B88644] text-white hover:bg-[#A07538]'
                                 }`}
                         >
-                            {saved ? t('compass_saved') : t('compass_save')}
+                            {saved ? t('compass_saved') : state.returnToView ? t('compass_save_and_return') : t('compass_save')}
                         </button>
                         <button
                             onClick={handleReset}
@@ -232,6 +242,22 @@ const CompassView = () => {
                 <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                 <p>{t('compass_pick_2')}</p>
             </div>
+
+            {state.returnToView && (
+                <div className="text-center mt-3">
+                    <button
+                        onClick={() => {
+                            const returnView = state.returnToView;
+                            dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: null });
+                            dispatch({ type: ACTIONS.SET_VIEW, payload: returnView });
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="text-sm text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
+                    >
+                        {t('compass_cancel_return')}
+                    </button>
+                </div>
+            )}
         </section>
     );
 };
