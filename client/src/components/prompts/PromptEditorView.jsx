@@ -28,7 +28,14 @@ const PromptEditorView = () => {
             setPrompts(data);
             const templates = {};
             for (const [key, prompt] of Object.entries(data)) {
-                templates[key] = prompt.currentTemplate;
+                if (prompt.cacheable) {
+                    templates[key] = {
+                        staticTemplate: prompt.currentStaticTemplate,
+                        dynamicTemplate: prompt.currentDynamicTemplate
+                    };
+                } else {
+                    templates[key] = prompt.currentTemplate;
+                }
             }
             setEditedTemplates(templates);
         } catch (e) {
@@ -66,9 +73,15 @@ const PromptEditorView = () => {
         }
     }, []);
 
-    const hasUnsavedChanges = prompts && Object.keys(prompts).some(
-        key => editedTemplates[key] !== prompts[key].currentTemplate
-    );
+    const hasUnsavedChanges = prompts && Object.keys(prompts).some(key => {
+        const prompt = prompts[key];
+        const edited = editedTemplates[key];
+        if (prompt.cacheable) {
+            return edited?.staticTemplate !== prompt.currentStaticTemplate ||
+                   edited?.dynamicTemplate !== prompt.currentDynamicTemplate;
+        }
+        return edited !== prompt.currentTemplate;
+    });
 
     useEffect(() => {
         const handler = (e) => {
@@ -92,7 +105,18 @@ const PromptEditorView = () => {
 
     const handleResetToDefault = (key) => {
         if (prompts[key]) {
-            setEditedTemplates(prev => ({ ...prev, [key]: prompts[key].defaultTemplate }));
+            const prompt = prompts[key];
+            if (prompt.cacheable) {
+                setEditedTemplates(prev => ({
+                    ...prev,
+                    [key]: {
+                        staticTemplate: prompt.defaultStaticTemplate,
+                        dynamicTemplate: prompt.defaultDynamicTemplate
+                    }
+                }));
+            } else {
+                setEditedTemplates(prev => ({ ...prev, [key]: prompt.defaultTemplate }));
+            }
         }
     };
 

@@ -6,7 +6,11 @@ const PromptCard = ({ promptKey, prompt, editedTemplate, onChange, onResetToDefa
     const [expanded, setExpanded] = useState(false);
     const { t } = useTranslation();
 
-    const isModified = editedTemplate !== prompt.currentTemplate;
+    const isCacheable = prompt.cacheable;
+
+    const isModified = isCacheable
+        ? (editedTemplate?.staticTemplate !== prompt.currentStaticTemplate || editedTemplate?.dynamicTemplate !== prompt.currentDynamicTemplate)
+        : editedTemplate !== prompt.currentTemplate;
     const isOverridden = prompt.isOverridden || isModified;
 
     return (
@@ -24,6 +28,11 @@ const PromptCard = ({ promptKey, prompt, editedTemplate, onChange, onResetToDefa
                         <div className="flex items-center gap-2">
                             <span className="font-medium text-slate-800">{prompt.name}</span>
                             <span className="text-xs text-slate-400 font-mono">{promptKey}</span>
+                            {isCacheable && (
+                                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                                    cache
+                                </span>
+                            )}
                             {isOverridden && (
                                 <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">
                                     {t('prompt_modified_badge')}
@@ -36,22 +45,68 @@ const PromptCard = ({ promptKey, prompt, editedTemplate, onChange, onResetToDefa
             </button>
 
             {expanded && (
-                <div className="px-5 pb-5 space-y-3">
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-medium text-slate-500">{t('prompt_variables_label')}:</span>
-                        {prompt.variables.map(v => (
-                            <code key={v} className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
-                                {`{{${v}}}`}
-                            </code>
-                        ))}
-                    </div>
+                <div className="px-5 pb-5 space-y-4">
+                    {isCacheable ? (
+                        <>
+                            {/* Static template - cached */}
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm font-medium text-slate-700">
+                                        {t('prompt_static_label')}
+                                    </label>
+                                    <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                                        {t('prompt_cache_hint')}
+                                    </span>
+                                </div>
+                                <textarea
+                                    value={editedTemplate?.staticTemplate || ''}
+                                    onChange={(e) => onChange(promptKey, { ...editedTemplate, staticTemplate: e.target.value })}
+                                    className="w-full h-64 p-3 border border-slate-200 rounded-lg font-mono text-sm text-slate-800 bg-white resize-y focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
+                                    spellCheck={false}
+                                />
+                            </div>
 
-                    <textarea
-                        value={editedTemplate}
-                        onChange={(e) => onChange(promptKey, e.target.value)}
-                        className="w-full h-64 p-3 border border-slate-200 rounded-lg font-mono text-sm text-slate-800 bg-white resize-y focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
-                        spellCheck={false}
-                    />
+                            {/* Dynamic template - per-request */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">
+                                    {t('prompt_dynamic_label')}
+                                </label>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-xs font-medium text-slate-500">{t('prompt_variables_label')}:</span>
+                                    {prompt.variables.map(v => (
+                                        <code key={v} className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                                            {`{{${v}}}`}
+                                        </code>
+                                    ))}
+                                </div>
+                                <textarea
+                                    value={editedTemplate?.dynamicTemplate || ''}
+                                    onChange={(e) => onChange(promptKey, { ...editedTemplate, dynamicTemplate: e.target.value })}
+                                    className="w-full h-32 p-3 border border-slate-200 rounded-lg font-mono text-sm text-slate-800 bg-white resize-y focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
+                                    spellCheck={false}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {/* Single textarea for non-cacheable prompts */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-xs font-medium text-slate-500">{t('prompt_variables_label')}:</span>
+                                {prompt.variables.map(v => (
+                                    <code key={v} className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono">
+                                        {`{{${v}}}`}
+                                    </code>
+                                ))}
+                            </div>
+
+                            <textarea
+                                value={editedTemplate}
+                                onChange={(e) => onChange(promptKey, e.target.value)}
+                                className="w-full h-64 p-3 border border-slate-200 rounded-lg font-mono text-sm text-slate-800 bg-white resize-y focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
+                                spellCheck={false}
+                            />
+                        </>
+                    )}
 
                     <div className="flex justify-end">
                         <button

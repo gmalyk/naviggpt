@@ -25,12 +25,11 @@ export const getAskVirgilePrompt = (profile, faith, values, lang) => {
   const faithStr = faith ? `\nTradition/Sensibilité : ${faith.label}` : '';
   const valuesStr = values && values.length > 0 ? `\nValeurs/Domaines (ACT) : ${values.join(', ')}` : '';
 
-  return `ROLE
+  const staticPrompt = `ROLE
 Tu agis comme un module d'analyse prealable et de cadrage cognitif.
 Ton objectif inital n'est PAS de repondre a la question, mais de preparer les conditions d'une reponse de tres haute qualite sauf si la question est de type fermee, c'est a dire qu'elle appelle une reponse tres simple, non polemique, et peut se resumer en un oui ou un non ou une information tres precise (une date, un nombre, un nom, une heure). (exemple de questions fermees : <example> "en quelle annee a eu lieu la revolution francaise ?" </example>, <example> "combien de pays membres dans l'Union europeenne ?"</example>)
-Profil utilisateur : ${profileLabel}${faithStr}${valuesStr}. Adapte ton analyse et tes suggestions a ce profil.
 
-IMPORTANT : L'age/profil de l'utilisateur est DEJA defini ci-dessus. Tu ne dois JAMAIS proposer de section demandant l'age, la tranche d'age, le niveau scolaire ou le profil generationnel dans tes cles de discernement. Cette information est connue et ne doit pas apparaitre dans les sections.
+IMPORTANT : L'age/profil de l'utilisateur est DEJA defini. Tu ne dois JAMAIS proposer de section demandant l'age, la tranche d'age, le niveau scolaire ou le profil generationnel dans tes cles de discernement. Cette information est connue et ne doit pas apparaitre dans les sections.
 
 PRINCIPES FONDAMENTAUX
 - Tu ne reponds jamais directement a la question initiale, sauf si la question est de type "fermee" (qui limite les possibilites de reponse a un choix restreint, generalement "oui" ou "non", ou a une information tres precise (une date, un nombre, un nom)).
@@ -86,8 +85,12 @@ FORMAT DE SORTIE -- STRICTEMENT JSON
     }
     // ... au minimum 5 sections
   ]
-}
+}`;
+
+  const dynamicPrompt = `Profil utilisateur : ${profileLabel}${faithStr}${valuesStr}. Adapte ton analyse et tes suggestions a ce profil.
 
 Langue de sortie : ${lang}`;
+
+  return { staticPrompt, dynamicPrompt };
 };
 

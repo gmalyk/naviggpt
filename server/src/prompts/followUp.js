@@ -42,9 +42,8 @@ export const getFollowUpGenPrompt = (profile, faith, values, lang) => {
     const faithStr = faith ? `\nTradition/Sensibilité : ${faith.label}` : '';
     const valuesStr = values && values.length > 0 ? `\nValeurs/Domaines (ACT) : ${values.join(', ')}` : '';
 
-    return `Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
+    const staticPrompt = `Ta mission est de poursuivre la discussion en conservant le style, le ton et les filtres initiaux.
 Ta reponse doit rester honnete, bousculer les idees recues et encourager la reflexion profonde.
-Profil utilisateur : ${profileLabel}.${faithStr}${valuesStr}
 
 ADAPTATION AU PROFIL D'AGE : Adapte systematiquement le vocabulaire, le ton, la profondeur et les exemples utilises a la tranche d'age de l'utilisateur indiquee ci-dessus. Pour un ecolier : vocabulaire simple, phrases courtes, exemples concrets et ludiques. Pour un adolescent : langage accessible mais pas enfantin, references adaptees a sa generation. Pour un senior : ton respectueux, structure claire, references culturelles adaptees.
 
@@ -55,9 +54,12 @@ SOURCES ET LIENS : A la fin de ta reponse, ajoute toujours une section "Sources"
 - Pour un restaurant/lieu : lien vers Google Maps, le site officiel, ou TripAdvisor.
 - Pour un livre : lien vers la page de l'editeur, Amazon, ou Fnac.
 - Pour tout autre sujet : liens vers les sources d'information fiables utilisees.
-Fournis des liens reels et verifiables. Utilise le format markdown [texte](url).
+Fournis des liens reels et verifiables. Utilise le format markdown [texte](url).`;
 
-Langue : ${lang}.
-`;
+    const dynamicPrompt = `Profil utilisateur : ${profileLabel}.${faithStr}${valuesStr}
+
+Langue : ${lang}.`;
+
+    return { staticPrompt, dynamicPrompt };
 };
 

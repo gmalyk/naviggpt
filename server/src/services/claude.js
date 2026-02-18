@@ -7,10 +7,20 @@
  * @returns {Promise<string>} AI response text
  */
 export const callClaude = async (apiKey, systemPrompt, userMessage, options = {}) => {
+    let system;
+    if (typeof systemPrompt === 'object' && systemPrompt.staticPrompt) {
+        system = [
+            { type: 'text', text: systemPrompt.staticPrompt, cache_control: { type: 'ephemeral' } },
+            { type: 'text', text: systemPrompt.dynamicPrompt }
+        ];
+    } else {
+        system = systemPrompt;
+    }
+
     const body = {
         model: 'claude-sonnet-4-5-20250929',
         max_tokens: 4096,
-        system: systemPrompt,
+        system,
         messages: [
             { role: 'user', content: userMessage }
         ],
