@@ -9,7 +9,7 @@ const HeroSection = () => {
         return parts.map((part, i) => {
             const match = part.match(/^<h>(.*)<\/h>$/);
             if (match) {
-                return <span key={i} className="bg-gradient-to-r from-[#B88644] via-[#E6C15A] to-[#B88644] bg-clip-text text-transparent">{match[1]}</span>;
+                return <span key={i} className="text-slate-600 font-medium">{match[1]}</span>;
             }
             return part;
         });

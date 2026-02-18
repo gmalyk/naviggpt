@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 
 const MarkdownContent = ({ content, className = "" }) => {
     return (
-        <div className={`prose prose-lg prose-slate max-w-none prose-headings:text-slate-800 prose-h3:text-lg prose-h3:font-bold prose-p:leading-relaxed prose-strong:text-[#B88644] prose-a:text-[#B88644] prose-a:underline hover:prose-a:text-[#966E2E] ${className}`}>
+        <div className={`prose prose-base prose-slate max-w-none prose-headings:text-slate-800 prose-headings:mt-5 prose-headings:mb-2 prose-h3:text-lg prose-h3:font-bold prose-p:my-2 prose-p:leading-relaxed prose-strong:text-slate-900 prose-a:text-slate-700 prose-a:underline hover:prose-a:text-slate-900 ${className}`}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{

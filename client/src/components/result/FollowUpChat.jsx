@@ -6,7 +6,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import MarkdownContent from '../ui/MarkdownContent';
 import CopyButton from '../ui/CopyButton';
 import Logo from '../ui/Logo';
-import Loader from '../ui/Loader';
+import LogoSpinner from '../ui/LogoSpinner';
 
 const FollowUpChat = () => {
     const { state } = useAppState();
@@ -48,6 +48,12 @@ const FollowUpChat = () => {
                         </div>
                     </div>
                 ))}
+                {loading && (
+                    <div className="flex items-center gap-3 pt-8 border-t border-slate-100 animate-in fade-in">
+                        <LogoSpinner className="w-6 h-6" />
+                        <span className="text-sm text-slate-400">{t('status_in_progress')}…</span>
+                    </div>
+                )}
             </div>
 
             <div className="relative flex items-center">
@@ -64,7 +70,7 @@ const FollowUpChat = () => {
                     disabled={loading || !inputValue.trim()}
                     className="absolute right-3 p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
                 >
-                    {loading ? <Loader className="w-4 h-4 border-white/30 border-t-white" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
+                    {loading ? <LogoSpinner className="w-4 h-4" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
                 </button>
             </div>
         </section>

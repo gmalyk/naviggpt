@@ -8,10 +8,10 @@ import { compassData } from '../../data/compassData';
 const MAX_PER_CATEGORY = 2;
 
 const categoryColors = {
-    relations: { bg: 'bg-rose-50', border: 'border-rose-200', accent: 'text-rose-600', selected: 'bg-rose-600', icon: Users },
-    travail: { bg: 'bg-blue-50', border: 'border-blue-200', accent: 'text-blue-600', selected: 'bg-blue-600', icon: BookOpen },
-    loisirs: { bg: 'bg-amber-50', border: 'border-amber-200', accent: 'text-amber-600', selected: 'bg-amber-600', icon: Smile },
-    sante: { bg: 'bg-emerald-50', border: 'border-emerald-200', accent: 'text-emerald-600', selected: 'bg-emerald-600', icon: Heart }
+    relations: { bg: 'bg-[#B88644]/5', border: 'border-[#B88644]/20', accent: 'text-[#8C622D]', selected: 'bg-[#B88644]', icon: Users },
+    travail: { bg: 'bg-[#E6C15A]/5', border: 'border-[#E6C15A]/20', accent: 'text-[#C49A3D]', selected: 'bg-[#E6C15A]', icon: BookOpen },
+    loisirs: { bg: 'bg-[#D49078]/5', border: 'border-[#D49078]/20', accent: 'text-[#B36D56]', selected: 'bg-[#D49078]', icon: Smile },
+    sante: { bg: 'bg-[#A39656]/5', border: 'border-[#A39656]/20', accent: 'text-[#82773F]', selected: 'bg-[#A39656]', icon: Heart }
 };
 
 const CompassView = () => {
@@ -95,10 +95,10 @@ const CompassView = () => {
     ];
 
     return (
-        <section className="py-12 px-4 md:px-6 max-w-4xl mx-auto w-full animate-in fade-in duration-500">
+        <section className="pt-4 pb-12 px-4 md:px-6 max-w-4xl mx-auto w-full animate-in fade-in duration-500">
             <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                    <Compass className="w-7 h-7 text-slate-400" />
+                    <Compass className="w-7 h-7 text-[#B88644]" />
                 </div>
                 <h1 className="text-2xl font-bold text-slate-900 mb-2">{t('compass_title')}</h1>
                 <p className="text-sm text-slate-500 max-w-lg mx-auto mb-6">{t('compass_subtitle')}</p>

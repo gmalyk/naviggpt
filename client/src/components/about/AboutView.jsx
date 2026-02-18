@@ -1,7 +1,5 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import virgilBust from '../../assets/images/virgil_bust.png';
-
 const AboutView = () => {
     const { t } = useTranslation();
 
@@ -13,13 +11,13 @@ const AboutView = () => {
     ];
 
     return (
-        <section className="py-12 px-6 max-w-3xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
-            <div className="flex justify-center mb-8">
-                <div className="bg-white rounded-full p-1 shadow-xl ring-8 ring-white w-28 h-28 flex items-center justify-center overflow-hidden border border-slate-100">
+        <section className="pt-0 pb-12 px-6 max-w-3xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
+            <div className="flex justify-center mb-6">
+                <div className="w-24 h-24 flex items-center justify-center overflow-hidden rounded-full">
                     <img
-                        src={virgilBust}
+                        src="/virgil.webp"
                         alt="Virgil"
-                        className="w-24 h-24 object-contain"
+                        className="w-full h-full object-cover"
                     />
                 </div>
             </div>

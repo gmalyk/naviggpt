@@ -25,11 +25,14 @@ html {
   text-align: right;
 }
 
-/* Custom Metallic Gradients */
-.text-gold {
-  background: linear-gradient(to right, #B88644 0%, #E6C15A 50%, #B88644 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Logo Spinner Animation */
+@keyframes logo-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Shimmer Animation */

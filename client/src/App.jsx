@@ -18,6 +18,12 @@ import CompassView from './components/compass/CompassView';
 function App() {
   const { state, dispatch } = useAppState();
 
+  // Scroll to top on page refresh
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (window.location.pathname === '/edit') {
       dispatch({ type: ACTIONS.SET_VIEW, payload: 'prompts' });

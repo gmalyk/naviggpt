@@ -7,7 +7,7 @@ import QuestionBar from './QuestionBar';
 import AnalysisSection from './AnalysisSection';
 import FilterForm from './FilterForm';
 import PrecisionInput from './PrecisionInput';
-import Loader from '../ui/Loader';
+import LogoSpinner from '../ui/LogoSpinner';
 
 const DiscernmentView = () => {
     const { state } = useAppState();
@@ -62,7 +62,7 @@ const DiscernmentView = () => {
                             disabled={loading || state.selectedFilters.length === 0}
                             className="flex items-center gap-3 px-8 py-3 bg-[#0F172A] text-white text-sm font-bold rounded-full transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-30"
                         >
-                            {loading ? <Loader className="border-white/30 border-t-white" /> : (
+                            {loading ? <LogoSpinner className="w-5 h-5" /> : (
                                 <>
                                     <span>{t('submit_btn_long')}</span>
                                     <ArrowRight className="w-4 h-4 rtl:scale-x-[-1]" />
@@ -70,6 +70,14 @@ const DiscernmentView = () => {
                             )}
                         </button>
                     </div>
+
+                    {loading && (
+                        <div className="flex flex-col items-center gap-3 pt-6 animate-in fade-in duration-500">
+                            <LogoSpinner className="w-12 h-12" />
+                            <span className="text-sm text-slate-400">{t('status_in_progress')}…</span>
+                        </div>
+                    )}
+
                 </div>
             </div>
         </section>

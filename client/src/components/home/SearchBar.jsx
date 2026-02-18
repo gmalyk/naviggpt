@@ -4,7 +4,7 @@ import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAI } from '../../hooks/useAI';
-import Loader from '../ui/Loader';
+import LogoSpinner from '../ui/LogoSpinner';
 
 const profiles = [
     { id: 'kid', labelKey: 'prof_kid' },
@@ -51,7 +51,7 @@ const SearchBar = () => {
                             disabled={loading || !inputValue.trim()}
                             className="p-2 text-[#B88644] hover:bg-[#B88644]/10 rounded-full transition-all disabled:opacity-30"
                         >
-                            {loading ? <Loader /> : <Send className="w-6 h-6 rtl:scale-x-[-1]" />}
+                            {loading ? <LogoSpinner className="w-6 h-6" /> : <Send className="w-6 h-6 rtl:scale-x-[-1]" />}
                         </button>
                     </div>
                 </div>
