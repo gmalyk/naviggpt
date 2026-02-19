@@ -71,46 +71,35 @@ const callGemini = async (apiKey, systemPrompt, userMessage) => {
     return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from Gemini';
 };
 
-const callClaude = async (apiKey, systemPrompt, userMessage, options = {}) => {
-    let system;
+const callPerplexity = async (apiKey, systemPrompt, userMessage, options = {}) => {
+    let systemContent;
     if (typeof systemPrompt === 'object' && systemPrompt.staticPrompt) {
-        system = [
-            { type: 'text', text: systemPrompt.staticPrompt, cache_control: { type: 'ephemeral' } },
-            { type: 'text', text: systemPrompt.dynamicPrompt }
-        ];
+        systemContent = systemPrompt.staticPrompt + '\n\n' + systemPrompt.dynamicPrompt;
     } else {
-        system = systemPrompt;
+        systemContent = systemPrompt;
     }
 
     const body = {
-        model: 'claude-sonnet-4-20250514',
+        model: 'sonar-pro',
         max_tokens: 4096,
-        system,
         messages: [
+            { role: 'system', content: systemContent },
             { role: 'user', content: userMessage }
         ],
         temperature: 0.7
     };
 
-    if (options.useWebSearch) {
-        body.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
-    }
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01'
+            'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify(body)
     });
     const data = await response.json();
-    if (data.error) throw new Error(data.error.message || 'Claude API Error');
-    return data.content
-        .filter(block => block.type === 'text')
-        .map(block => block.text)
-        .join('');
+    if (data.error) throw new Error(data.error.message || 'Perplexity API Error');
+    return data.choices[0].message.content;
 };
 
 const callMistral = async (apiKey, systemPrompt, userMessage) => {
@@ -149,10 +138,10 @@ const callAI = async (provider, apiKey, env, systemPrompt, userMessage, options 
         if (!key) throw new Error('No Gemini API key provided');
         return await callGemini(key, flatPrompt, userMessage);
     }
-    if (provider === 'claude') {
-        const key = apiKey || env.CLAUDE_API_KEY;
-        if (!key) throw new Error('No Claude API key provided');
-        return await callClaude(key, systemPrompt, userMessage, options);
+    if (provider === 'perplexity') {
+        const key = apiKey || env.PERPLEXITY_API_KEY;
+        if (!key) throw new Error('No Perplexity API key provided');
+        return await callPerplexity(key, systemPrompt, userMessage, options);
     }
     if (provider === 'mistral') {
         const key = apiKey || env.MISTRAL_API_KEY;

@@ -30,7 +30,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     <div className="space-y-3">
                         <label className="text-sm font-semibold text-slate-700">{t('settings_default_engine')}</label>
                         <div className="p-3 border-2 rounded-2xl border-[#B88644] bg-amber-50/30">
-                            <p className="font-bold text-sm">Claude</p>
+                            <p className="font-bold text-sm">Perplexity</p>
                         </div>
                     </div>
                 </div>

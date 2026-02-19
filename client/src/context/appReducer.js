@@ -16,7 +16,7 @@ export const initialState = {
     returnToView: null,
     loading: false,
     settings: {
-        provider: 'claude'
+        provider: 'perplexity'
     }
 };
 

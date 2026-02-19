@@ -4,7 +4,7 @@ import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 
 const partners = [
-    { name: 'Claude', src: '/Claude_AI_logo.svg.webp' }
+    { name: 'Perplexity', src: '/Perplexity_AI_logo.svg.png' }
 ];
 
 const Footer = () => {

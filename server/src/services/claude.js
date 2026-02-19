@@ -1,53 +1,42 @@
 /**
- * Calls Anthropic Claude API
+ * Calls Perplexity API (OpenAI-compatible format with built-in web search)
  * @param {string} apiKey - API key
  * @param {string} systemPrompt - System instructions
  * @param {string} userMessage - User input
- * @param {object} options - Optional settings (e.g. { useWebSearch: true })
+ * @param {object} options - Optional settings (unused, kept for interface compatibility)
  * @returns {Promise<string>} AI response text
  */
-export const callClaude = async (apiKey, systemPrompt, userMessage, options = {}) => {
-    let system;
+export const callPerplexity = async (apiKey, systemPrompt, userMessage, options = {}) => {
+    let systemContent;
     if (typeof systemPrompt === 'object' && systemPrompt.staticPrompt) {
-        system = [
-            { type: 'text', text: systemPrompt.staticPrompt, cache_control: { type: 'ephemeral' } },
-            { type: 'text', text: systemPrompt.dynamicPrompt }
-        ];
+        systemContent = systemPrompt.staticPrompt + '\n\n' + systemPrompt.dynamicPrompt;
     } else {
-        system = systemPrompt;
+        systemContent = systemPrompt;
     }
 
     const body = {
-        model: 'claude-sonnet-4-5-20250929',
+        model: 'sonar-pro',
         max_tokens: 4096,
-        system,
         messages: [
+            { role: 'system', content: systemContent },
             { role: 'user', content: userMessage }
         ],
         temperature: 0.7
     };
 
-    if (options.useWebSearch) {
-        body.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
-    }
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01'
+            'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify(body)
     });
 
     const data = await response.json();
     if (data.error) {
-        throw new Error(data.error.message || 'Claude API Error');
+        throw new Error(data.error.message || 'Perplexity API Error');
     }
 
-    return data.content
-        .filter(block => block.type === 'text')
-        .map(block => block.text)
-        .join('');
+    return data.choices[0].message.content;
 };
