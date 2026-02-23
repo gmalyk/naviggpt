@@ -14,6 +14,7 @@ html {
 
 :root {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color-scheme: light only;
 }
 
 @theme {
@@ -55,6 +56,19 @@ html {
 /* Base resets */
 body {
   @apply bg-white antialiased overflow-x-hidden;
+}
+
+/* Prevent Android Chrome forced dark mode from altering colors */
+html, body, #root {
+  forced-color-adjust: none;
+  -webkit-forced-color-adjust: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #ffffff !important;
+    color-scheme: light only !important;
+  }
 }
 
 /* Custom scrollbar */

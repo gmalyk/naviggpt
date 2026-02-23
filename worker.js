@@ -338,7 +338,33 @@ const getPromptTemplate = async (env, key) => {
 };
 
 // Prompt functions (async, KV-backed)
-const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lang) => {
+const patchFilterCount = (staticPrompt, filterCount) => {
+    const fc = filterCount !== undefined && filterCount !== null ? filterCount : 5;
+    let patched = staticPrompt;
+
+    if (fc === 0) {
+        // Replace section count instruction with "no sections" instruction
+        patched = patched.replace(
+            'Tu dois produire en tout 5 sections distinctes pour couvrir 5 colonnes d\'affichage (ni plus, ni moins).',
+            'L\'utilisateur a choisi de ne pas utiliser de cles de discernement. Tu ne dois produire AUCUNE section. Le tableau "sections" doit etre vide.'
+        );
+    } else {
+        patched = patched.replace(
+            'en tout 5 sections distinctes pour couvrir 5 colonnes d\'affichage',
+            `en tout ${fc} sections distinctes pour couvrir ${fc} colonnes d'affichage`
+        );
+    }
+
+    // Patch the JSON format comment
+    patched = patched.replace(
+        '// ... au minimum 5 sections',
+        fc > 0 ? `// ... exactement ${fc} sections` : '// tableau vide, pas de sections'
+    );
+
+    return patched;
+};
+
+const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lang, filterCount = 5) => {
     const values = valuesArr && valuesArr.length > 0 ? valuesArr.join(', ') : 'aucune specifiee';
     const vars = { profileKey, values, lang };
 
@@ -349,7 +375,7 @@ const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lan
                 const parsed = JSON.parse(override);
                 if (parsed.staticTemplate && parsed.dynamicTemplate) {
                     return {
-                        staticPrompt: parsed.staticTemplate,
+                        staticPrompt: patchFilterCount(parsed.staticTemplate, filterCount),
                         dynamicPrompt: interpolate(parsed.dynamicTemplate, vars)
                     };
                 }
@@ -360,7 +386,7 @@ const getAskVirgilePrompt = async (env, profileLabel, profileKey, valuesArr, lan
 
     const entry = PROMPT_REGISTRY.askVirgile;
     return {
-        staticPrompt: entry.staticTemplate,
+        staticPrompt: patchFilterCount(entry.staticTemplate, filterCount),
         dynamicPrompt: interpolate(entry.dynamicTemplate, vars)
     };
 };
@@ -462,10 +488,10 @@ app.onError((err, c) => {
 app.post('/api/ask', async (c) => {
     try {
         const body = await c.req.json();
-        const { question, profile, profileKey, language, provider, apiKey, values } = body;
-        console.log(`[Worker] ask - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(', ') : 'none'}`);
+        const { question, profile, profileKey, language, provider, apiKey, values, filterCount } = body;
+        console.log(`[Worker] ask - Profile: ${profileKey} (${profile}), Values: ${values ? values.join(', ') : 'none'}, FilterCount: ${filterCount}`);
 
-        const systemPrompt = await getAskVirgilePrompt(c.env, profile, profileKey, values, language);
+        const systemPrompt = await getAskVirgilePrompt(c.env, profile, profileKey, values, language, filterCount);
         const response = await callAI(provider, apiKey, c.env, systemPrompt, `Question: "${question}"`);
 
         const parsed = extractJSON(response);

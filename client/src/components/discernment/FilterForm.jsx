@@ -15,9 +15,14 @@ const FilterForm = () => {
         dispatch({ type: ACTIONS.SET_SELECTED_FILTERS, payload: newList });
     };
 
+    const sections = state.sections.slice(0, state.filterCount);
+    const gridCols = state.filterCount <= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-5';
+
+    if (sections.length === 0) return null;
+
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-4 w-full animate-in slide-in-from-bottom-4 duration-500">
-            {state.sections.map((section, sIdx) => (
+        <div className={`grid grid-cols-2 md:grid-cols-3 ${gridCols} gap-x-6 gap-y-4 w-full animate-in slide-in-from-bottom-4 duration-500`}>
+            {sections.map((section, sIdx) => (
                 <div key={sIdx} className="space-y-3">
                     <h4 className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">
                         {section.title}

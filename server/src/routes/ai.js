@@ -8,10 +8,10 @@ const router = express.Router();
 
 // POST /api/ask - Initial analysis stage
 router.post('/ask', async (req, res) => {
-    const { question, profile, faith, values, language, provider, apiKey } = req.body;
+    const { question, profile, faith, values, language, provider, apiKey, filterCount } = req.body;
 
     try {
-        const systemPrompt = getAskVirgilePrompt(profile, faith, values, language);
+        const systemPrompt = getAskVirgilePrompt(profile, faith, values, language, filterCount);
         let response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
 
         // Server-side safety net: filter out any age-related sections

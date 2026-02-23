@@ -52,7 +52,7 @@ function App() {
 
         {state.view === 'compass' && <CompassView />}
 
-        {(state.view === 'discernment' || state.view === 'result') && (
+        {(state.view === 'discernment' || state.view === 'result') && state.filterCount > 0 && (
           <div className="border-t border-slate-50">
             <DiscernmentView />
           </div>

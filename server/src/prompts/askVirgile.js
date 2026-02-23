@@ -6,7 +6,7 @@
  * @param {string} lang - Selected language code
  * @returns {string} The formatted system prompt
  */
-export const getAskVirgilePrompt = (profile, faith, values, lang) => {
+export const getAskVirgilePrompt = (profile, faith, values, lang, filterCount = 5) => {
   const staticPrompt = `ROLE
 Tu agis comme un module d'analyse prealable et de cadrage cognitif.
 Ton objectif inital n'est PAS de repondre a la question, mais de preparer les conditions d'une reponse de tres haute qualite sauf si la question est de type fermee, c'est a dire qu'elle appelle une reponse tres simple, non polemique, et peut se resumer en un oui ou un non ou une information tres precise (une date, un nombre, un nom, une heure). (exemple de questions fermees : <example> "en quelle annee a eu lieu la revolution francaise ?" </example>, <example> "combien de pays membres dans l'Union europeenne ?"</example>)
@@ -49,11 +49,11 @@ B. Definition des cles de discernement
 - Quels parametres peuvent modifier le ton, la profondeur ou la forme ?
 
 C. Construction du formulaire de clarification
-- Tu dois produire en tout 5 sections distinctes pour couvrir 5 colonnes d'affichage (ni plus, ni moins).
+${filterCount > 0 ? `- Tu dois produire en tout ${filterCount} sections distinctes pour couvrir ${filterCount} colonnes d'affichage (ni plus, ni moins).
 - Chaque section contient un titre clair et une liste d'options courtes en un ou deux mots (pas d'articles grammaticaux au debut du premier mot).
 - Les sections doivent etre pertinentes (Angle, Style, Contexte, Objectif, etc.).
 - Aucune des sections ne doit porter sur la religion, les opinions ou les valeurs de l'utilisateur (cette information doit etre communiquee uniquement via la fenetre "precisions supplementaires" ou la boussole de valeur).
-- INTERDIT : Aucune des sections ne doit porter sur l'age, la tranche d'age, le profil generationnel ou le niveau scolaire de l'utilisateur. Cette information est deja connue via le profil.
+- INTERDIT : Aucune des sections ne doit porter sur l'age, la tranche d'age, le profil generationnel ou le niveau scolaire de l'utilisateur. Cette information est deja connue via le profil.` : `- L'utilisateur a choisi de ne pas utiliser de cles de discernement. Tu ne dois produire AUCUNE section. Le tableau "sections" doit etre vide.`}
 - Si la question est d'ordre culturel, politique, historique, societale, environnementale, comportementale, educative, demande systematiquement a l'utilisateur de preciser ses valeurs et ou sa croyance religieuse dans la fenetre "precisions supplementaires", sauf si la question est extremement precise et ne demande aucune analyse. Propose egalement a l'utilisateur de remplir une boussole de valeur (dans le menu principal) pour augmenter la qualite des reponses.
 - Si la question implique de savoir ou a grandi ou bien ou se trouve l'utilisateur, demande systematiquement a l'utilisateur de preciser cette information dans la fenetre "precisions supplementaires".
 
@@ -61,11 +61,11 @@ FORMAT DE SORTIE -- STRICTEMENT JSON
 {
   "analysis": "Analyse fonctionnelle et concise...",
   "sections": [
-    {
+    ${filterCount > 0 ? `{
       "title": "Nom de la categorie",
       "options": ["Option 1", "Option 2", "Option 3"]
     }
-    // ... au minimum 5 sections
+    // ... exactement ${filterCount} sections` : `// tableau vide, pas de sections`}
   ]
 }
 

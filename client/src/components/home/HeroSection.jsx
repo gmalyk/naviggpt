@@ -9,7 +9,15 @@ const HeroSection = () => {
         return parts.map((part, i) => {
             const match = part.match(/^<h>(.*)<\/h>$/);
             if (match) {
-                return <span key={i} className="text-slate-600 font-medium">{match[1]}</span>;
+                return (
+                    <span
+                        key={i}
+                        className="bg-clip-text text-transparent"
+                        style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)' }}
+                    >
+                        {match[1]}
+                    </span>
+                );
             }
             return part;
         });

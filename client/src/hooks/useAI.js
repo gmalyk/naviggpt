@@ -22,24 +22,47 @@ export const useAI = () => {
             : label;
     };
 
+    const callSubmitFilters = async (questionOverride) => {
+        const response = await api.submitFilters({
+            question: questionOverride || state.question,
+            profile: formatProfile(state.profile, state.values),
+            profileKey: state.profile,
+            language: state.language,
+            provider: state.settings.provider,
+            apiKey: '',
+            filters: state.selectedFilters,
+            precision: state.precision,
+            values: state.values
+        });
+
+        dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virgile: response.virgile, standard: response.standard } });
+        dispatch({ type: ACTIONS.SET_VIEW, payload: 'result' });
+    };
+
     const askVirgile = async (question) => {
         setLoading(true);
         dispatch({ type: ACTIONS.SET_LOADING, payload: true });
         dispatch({ type: ACTIONS.SET_QUESTION, payload: question });
 
         try {
-            const data = await api.ask({
-                question,
-                profile: formatProfile(state.profile, state.values),
-                profileKey: state.profile,
-                language: state.language,
-                provider: state.settings.provider,
-                apiKey: '',
-                values: state.values
-            });
+            if (state.filterCount === 0) {
+                // Skip analysis entirely, go straight to final response
+                await callSubmitFilters(question);
+            } else {
+                const data = await api.ask({
+                    question,
+                    profile: formatProfile(state.profile, state.values),
+                    profileKey: state.profile,
+                    language: state.language,
+                    provider: state.settings.provider,
+                    apiKey: '',
+                    values: state.values,
+                    filterCount: state.filterCount
+                });
 
-            dispatch({ type: ACTIONS.SET_INITIAL_ANALYSIS, payload: data });
-            dispatch({ type: ACTIONS.SET_VIEW, payload: 'discernment' });
+                dispatch({ type: ACTIONS.SET_INITIAL_ANALYSIS, payload: data });
+                dispatch({ type: ACTIONS.SET_VIEW, payload: 'discernment' });
+            }
         } catch (error) {
             console.error(error);
             alert(error.message);
@@ -54,20 +77,7 @@ export const useAI = () => {
         dispatch({ type: ACTIONS.SET_LOADING, payload: true });
 
         try {
-            const response = await api.submitFilters({
-                question: state.question,
-                profile: formatProfile(state.profile, state.values),
-                profileKey: state.profile,
-                language: state.language,
-                provider: state.settings.provider,
-                apiKey: '',
-                filters: state.selectedFilters,
-                precision: state.precision,
-                values: state.values
-            });
-
-            dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virgile: response.virgile, standard: response.standard } });
-            dispatch({ type: ACTIONS.SET_VIEW, payload: 'result' });
+            await callSubmitFilters();
         } catch (error) {
             console.error(error);
             alert(error.message);

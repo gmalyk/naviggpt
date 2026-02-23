@@ -13,6 +13,8 @@ const profiles = [
     { id: 'senior', labelKey: 'prof_senior' }
 ];
 
+const filterCountCycle = [5, 3, 0];
+
 const SearchBar = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
@@ -49,7 +51,7 @@ const SearchBar = () => {
                         <button
                             onClick={handleSend}
                             disabled={loading || !inputValue.trim()}
-                            className="p-2 text-[#B88644] hover:bg-[#B88644]/10 rounded-full transition-all disabled:opacity-30"
+                            className={`p-2 text-[#B88644] hover:bg-[#B88644]/10 rounded-full transition-all ${loading ? '' : 'disabled:opacity-30'}`}
                         >
                             {loading ? <LogoSpinner className="w-6 h-6" /> : <Send className="w-6 h-6 rtl:scale-x-[-1]" />}
                         </button>
@@ -69,6 +71,24 @@ const SearchBar = () => {
                             {t(p.labelKey)}
                         </button>
                     ))}
+                    <span className="text-[10px] text-slate-400 self-center ml-auto mr-1">{t('filter_count_label')}</span>
+                    <button
+                        onClick={() => {
+                            const currentIndex = filterCountCycle.indexOf(state.filterCount);
+                            const nextValue = filterCountCycle[(currentIndex + 1) % filterCountCycle.length];
+                            dispatch({ type: ACTIONS.SET_FILTER_COUNT, payload: nextValue });
+                        }}
+                        className="px-4 py-1.5 rounded-full text-xs transition-all border border-[#B88644] bg-white shadow-sm"
+                    >
+                        {filterCountCycle.map((val, i) => (
+                            <span key={val}>
+                                <span className={state.filterCount === val ? 'text-[#B88644] font-bold' : 'text-slate-300'}>
+                                    {val}
+                                </span>
+                                {i < filterCountCycle.length - 1 && <span className="text-slate-300 mx-0.5">·</span>}
+                            </span>
+                        ))}
+                    </button>
                 </div>
             </div>
             <p className="text-center text-[10px] text-slate-400 mt-2 italic">{t('beta_notice')}</p>
