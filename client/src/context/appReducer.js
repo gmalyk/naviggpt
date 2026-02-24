@@ -17,7 +17,7 @@ export const initialState = {
     returnToView: null,
     loading: false,
     settings: {
-        provider: 'perplexity'
+        provider: 'grok'
     }
 };
 

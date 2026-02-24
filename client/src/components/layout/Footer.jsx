@@ -4,7 +4,7 @@ import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 
 const partners = [
-    { name: 'Perplexity', src: '/Perplexity_AI_logo.svg.png' }
+    { name: 'Grok', src: '/grok-ai-icon.webp' }
 ];
 
 const Footer = () => {

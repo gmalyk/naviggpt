@@ -81,29 +81,26 @@ const callGemini = async (apiKey, systemPrompt, userMessage) => {
     return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from Gemini';
 };
 
-// --- Perplexity (sonar-pro) ---
-// sonar-pro fait automatiquement de la recherche web (pas besoin d'option supplementaire)
-const callPerplexity = async (apiKey, systemPrompt, userMessage) => {
-    const body = {
-        model: 'sonar-pro',
-        max_tokens: 4096,
-        messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userMessage }
-        ],
-        temperature: 0.7
-    };
-
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
+// --- Grok (xAI) ---
+// API compatible OpenAI (meme format system/user messages)
+const callGrok = async (apiKey, systemPrompt, userMessage) => {
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+            model: 'grok-3-mini-fast',
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userMessage }
+            ],
+            temperature: 0.7
+        })
     });
     const data = await response.json();
-    if (data.error) throw new Error(data.error.message || 'Perplexity API Error');
+    if (data.error) throw new Error(data.error.message || 'Grok API Error');
     return data.choices[0].message.content;
 };
 
@@ -154,10 +151,10 @@ const callAI = async (provider, apiKey, env, systemPrompt, userMessage) => {
         if (!key) throw new Error('No Gemini API key provided');
         return await callGemini(key, flatPrompt, userMessage);
     }
-    if (provider === 'perplexity') {
-        const key = apiKey || env.PERPLEXITY_API_KEY;
-        if (!key) throw new Error('No Perplexity API key provided');
-        return await callPerplexity(key, flatPrompt, userMessage);
+    if (provider === 'grok') {
+        const key = apiKey || env.XAI_API_KEY;
+        if (!key) throw new Error('No Grok API key provided');
+        return await callGrok(key, flatPrompt, userMessage);
     }
     if (provider === 'mistral') {
         const key = apiKey || env.MISTRAL_API_KEY;
@@ -173,7 +170,7 @@ const callAI = async (provider, apiKey, env, systemPrompt, userMessage) => {
 // ║  Contient les 5 prompts du systeme, chacun avec :                           ║
 // ║  - name/description : metadata pour l'editeur de prompts                    ║
 // ║  - variables : liste des {{placeholders}} utilises                          ║
-// ║  - cacheable : true si le prompt a une partie statique (caching Perplexity) ║
+// ║  - cacheable : true si le prompt a une partie statique (caching provider) ║
 // ║  - staticTemplate : partie fixe du prompt (regles, instructions)            ║
 // ║  - dynamicTemplate : partie variable (profil, valeurs, langue)              ║
 // ║  - defaultTemplate : concatenation static + dynamic (getter)                ║

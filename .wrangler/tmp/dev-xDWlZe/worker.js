@@ -2224,28 +2224,26 @@ User Question: ${userMessage}` }]
   const data = JSON.parse(text);
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini";
 }, "callGemini");
-var callPerplexity = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
-  const body = {
-    model: "sonar-pro",
-    max_tokens: 4096,
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userMessage }
-    ],
-    temperature: 0.7
-  };
-  const response = await fetch("https://api.perplexity.ai/chat/completions", {
+var callGrok = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
+  const response = await fetch("https://api.x.ai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify({
+      model: "grok-3-mini-fast",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
+      ],
+      temperature: 0.7
+    })
   });
   const data = await response.json();
-  if (data.error) throw new Error(data.error.message || "Perplexity API Error");
+  if (data.error) throw new Error(data.error.message || "Grok API Error");
   return data.choices[0].message.content;
-}, "callPerplexity");
+}, "callGrok");
 var callMistral = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
   const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
     method: "POST",
@@ -2278,10 +2276,10 @@ var callAI = /* @__PURE__ */ __name(async (provider, apiKey, env, systemPrompt, 
     if (!key) throw new Error("No Gemini API key provided");
     return await callGemini(key, flatPrompt, userMessage);
   }
-  if (provider === "perplexity") {
-    const key = apiKey || env.PERPLEXITY_API_KEY;
-    if (!key) throw new Error("No Perplexity API key provided");
-    return await callPerplexity(key, flatPrompt, userMessage);
+  if (provider === "grok") {
+    const key = apiKey || env.XAI_API_KEY;
+    if (!key) throw new Error("No Grok API key provided");
+    return await callGrok(key, flatPrompt, userMessage);
   }
   if (provider === "mistral") {
     const key = apiKey || env.MISTRAL_API_KEY;
@@ -2972,7 +2970,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-rrikyl/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-RTIHCD/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -3004,7 +3002,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-rrikyl/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-RTIHCD/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
