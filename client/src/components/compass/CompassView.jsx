@@ -80,7 +80,11 @@ const CompassView = () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             setSaved(true);
-            setTimeout(() => setSaved(false), 2500);
+            setTimeout(() => {
+                setSaved(false);
+                dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 500);
         }
     };
 

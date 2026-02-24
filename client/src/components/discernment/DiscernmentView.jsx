@@ -45,7 +45,7 @@ const DiscernmentView = () => {
     }, []);
 
     return (
-        <section className="w-full bg-slate-50/50 py-12 pb-[50vh] animate-in fade-in slide-in-from-bottom-8 duration-300">
+        <section className={`w-full bg-slate-50/50 py-12 animate-in fade-in slide-in-from-bottom-8 duration-300 ${state.view === 'result' ? 'pb-6' : 'pb-[50vh]'}`}>
             <div className="px-6 max-w-6xl mx-auto w-full">
                 <div className="flex justify-end mb-6">
                     <div className="bg-slate-100 rounded-2xl px-5 py-3 max-w-[80%]">
@@ -53,7 +53,7 @@ const DiscernmentView = () => {
                     </div>
                 </div>
 
-                <div ref={cardRef} id="analysis-card" className="scroll-mt-20 bg-white rounded-[24px] border border-slate-100 shadow-sm p-8 md:p-10 space-y-10 relative">
+                <div ref={cardRef} id="analysis-card" className="scroll-mt-20 bg-white rounded-[24px] border border-slate-100 shadow-sm p-8 md:p-10 space-y-5 relative">
                     <AnalysisSection />
 
                     <div className="space-y-6">

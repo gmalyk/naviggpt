@@ -1,20 +1,41 @@
-import React from 'react';
-import { Check } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, Loader2 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAuth } from '../../context/AuthContext';
+import { api } from '../../services/api';
 
 const PricingView = () => {
     const { t } = useTranslation();
     const { user, openAuthModal } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleChoosePlan = () => {
+    const handleChoosePlan = async (planType) => {
         if (!user) {
             openAuthModal();
+            return;
+        }
+
+        setLoading(true);
+        setSuccessMessage('');
+        setErrorMessage('');
+
+        try {
+            await api.choosePlan(planType, user.email);
+            setSuccessMessage(t('pricing_success'));
+            setTimeout(() => setSuccessMessage(''), 5000);
+        } catch (e) {
+            setErrorMessage(t('pricing_error'));
+            setTimeout(() => setErrorMessage(''), 5000);
+        } finally {
+            setLoading(false);
         }
     };
 
     const plans = [
         {
+            key: 'individual',
             name: t('pricing_individual'),
             price: t('pricing_individual_price'),
             description: t('pricing_individual_desc'),
@@ -25,6 +46,7 @@ const PricingView = () => {
             buttonClass: 'bg-[#B88644] hover:bg-[#a6763b] text-white',
         },
         {
+            key: 'institution',
             name: t('pricing_institution'),
             price: t('pricing_institution_price'),
             description: t('pricing_institution_desc'),
@@ -45,10 +67,21 @@ const PricingView = () => {
                 {t('pricing_title')}
             </h1>
 
+            {successMessage && (
+                <p className="mb-6 text-center text-sm text-green-600 animate-in fade-in duration-300">
+                    {successMessage}
+                </p>
+            )}
+            {errorMessage && (
+                <p className="mb-6 text-center text-sm text-red-600 animate-in fade-in duration-300">
+                    {errorMessage}
+                </p>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {plans.map((plan, idx) => (
+                {plans.map((plan) => (
                     <div
-                        key={idx}
+                        key={plan.key}
                         className="rounded-3xl border border-slate-200 bg-white p-8 flex flex-col hover:shadow-lg transition-shadow"
                     >
                         <h2 className="text-xl font-bold text-slate-900 mb-1">
@@ -71,10 +104,18 @@ const PricingView = () => {
                         </ul>
 
                         <button
-                            onClick={handleChoosePlan}
-                            className={`w-full py-3 rounded-full font-semibold transition-colors ${plan.buttonClass}`}
+                            onClick={() => handleChoosePlan(plan.key)}
+                            disabled={loading}
+                            className={`w-full py-3 rounded-full font-semibold transition-colors flex items-center justify-center gap-2 ${plan.buttonClass} ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
                         >
-                            {t('pricing_choose')}
+                            {loading ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    {t('pricing_sending')}
+                                </>
+                            ) : (
+                                t('pricing_choose')
+                            )}
                         </button>
                     </div>
                 ))}

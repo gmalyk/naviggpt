@@ -81,6 +81,15 @@ export const api = {
         return await handleResponse(response);
     },
 
+    choosePlan: async (plan, email) => {
+        const response = await fetch(`${API_BASE}/plan/choose`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plan, email })
+        });
+        return await handleResponse(response);
+    },
+
     resetPrompts: async (token) => {
         const response = await fetch(`${API_BASE}/prompts/reset`, {
             method: 'POST',

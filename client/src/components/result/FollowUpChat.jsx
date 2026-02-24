@@ -28,6 +28,8 @@ const FollowUpChat = () => {
         }
     };
 
+    const hasReachedLimit = state.followUpHistory.length >= 1;
+
     return (
         <section className="width-full mt-6 max-w-4xl mx-auto animate-in fade-in duration-700 delay-500">
             <div className="space-y-8 mb-12">
@@ -56,23 +58,25 @@ const FollowUpChat = () => {
                 )}
             </div>
 
-            <div className="relative flex items-center">
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={onKeyDown}
-                    placeholder={t('followup_placeholder')}
-                    className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/10 focus:border-[#B88644] transition-all text-sm placeholder:text-slate-400"
-                />
-                <button
-                    onClick={onSend}
-                    disabled={loading || !inputValue.trim()}
-                    className="absolute right-3 p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
-                >
-                    {loading ? <LogoSpinner className="w-4 h-4" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
-                </button>
-            </div>
+            {!hasReachedLimit && (
+                <div className="relative flex items-center">
+                    <input
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={onKeyDown}
+                        placeholder={t('followup_placeholder')}
+                        className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/10 focus:border-[#B88644] transition-all text-sm placeholder:text-slate-400"
+                    />
+                    <button
+                        onClick={onSend}
+                        disabled={loading || !inputValue.trim()}
+                        className="absolute right-3 p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
+                    >
+                        {loading ? <LogoSpinner className="w-4 h-4" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
+                    </button>
+                </div>
+            )}
         </section>
     );
 };
