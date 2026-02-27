@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Loader2, X, CreditCard } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
@@ -8,7 +8,7 @@ const PricingView = () => {
     const { t } = useTranslation();
     const { user, openAuthModal } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleChoosePlan = async (planType) => {
@@ -18,13 +18,12 @@ const PricingView = () => {
         }
 
         setLoading(true);
-        setSuccessMessage('');
+        setShowSuccessModal(false);
         setErrorMessage('');
 
         try {
             await api.choosePlan(planType, user.email);
-            setSuccessMessage(t('pricing_success'));
-            setTimeout(() => setSuccessMessage(''), 5000);
+            setShowSuccessModal(true);
         } catch (e) {
             setErrorMessage(t('pricing_error'));
             setTimeout(() => setErrorMessage(''), 5000);
@@ -62,41 +61,40 @@ const PricingView = () => {
     ];
 
     return (
-        <section className="py-12 px-6 max-w-5xl mx-auto animate-in fade-in duration-500">
-            <h1 className="text-3xl font-bold text-center mb-10 text-slate-900">
+        <section className="py-12 px-6 max-w-5xl mx-auto flex flex-col items-center animate-in fade-in duration-500">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
+                <CreditCard className="w-7 h-7 text-[#B88644]" />
+            </div>
+
+            <h1 className="text-3xl font-bold text-center mb-10 text-slate-600">
                 {t('pricing_title')}
             </h1>
 
-            {successMessage && (
-                <p className="mb-6 text-center text-sm text-green-600 animate-in fade-in duration-300">
-                    {successMessage}
-                </p>
-            )}
             {errorMessage && (
                 <p className="mb-6 text-center text-sm text-red-600 animate-in fade-in duration-300">
                     {errorMessage}
                 </p>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 {plans.map((plan) => (
                     <div
                         key={plan.key}
                         className="rounded-3xl border border-slate-200 bg-white p-8 flex flex-col hover:shadow-lg transition-shadow"
                     >
-                        <h2 className="text-xl font-bold text-slate-900 mb-1">
+                        <h2 className="text-xl font-bold text-slate-600 mb-1">
                             {plan.name}
                         </h2>
-                        <p className="text-sm text-slate-500 mb-6">
+                        <p className="text-sm text-slate-600 mb-6">
                             {plan.description}
                         </p>
-                        <p className="text-3xl font-bold text-slate-900 mb-8">
+                        <p className="text-3xl font-bold text-slate-600 mb-8">
                             {plan.price}
                         </p>
 
                         <ul className="space-y-3 mb-8 flex-grow">
                             {plan.features.map((feat, i) => (
-                                <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                                <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
                                     <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
                                     <span>{feat}</span>
                                 </li>
@@ -120,6 +118,27 @@ const PricingView = () => {
                     </div>
                 ))}
             </div>
+            {showSuccessModal && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full mx-6 p-8 text-center animate-in zoom-in-95 duration-300">
+                        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Check className="w-7 h-7 text-green-600" />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-600 mb-2">
+                            {t('pricing_success_title')}
+                        </h3>
+                        <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                            {t('pricing_success_text')}
+                        </p>
+                        <button
+                            onClick={() => setShowSuccessModal(false)}
+                            className="px-8 py-2.5 bg-[#B88644] text-white rounded-full font-semibold hover:bg-[#a6763b] transition-colors"
+                        >
+                            {t('pricing_success_ok')}
+                        </button>
+                    </div>
+                </div>
+            )}
         </section>
     );
 };

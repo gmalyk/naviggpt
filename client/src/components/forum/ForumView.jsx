@@ -11,7 +11,6 @@ const ForumView = () => {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [confirming, setConfirming] = useState(false);
-    const [waitlistCount, setWaitlistCount] = useState(0);
 
     useEffect(() => {
         loadData();
@@ -21,11 +20,6 @@ const ForumView = () => {
         if (!supabase) { setLoading(false); return; }
 
         try {
-            const { count } = await supabase
-                .from('forum_guestlist')
-                .select('*', { count: 'exact', head: true });
-            setWaitlistCount(count || 0);
-
             if (user) {
                 const { data } = await supabase
                     .from('forum_guestlist')
@@ -59,7 +53,6 @@ const ForumView = () => {
                 });
             if (!error) {
                 setStatus('pending');
-                setWaitlistCount(prev => prev + 1);
             }
         } catch {
             // handle silently
@@ -88,15 +81,12 @@ const ForumView = () => {
                     </h1>
 
                     <p className="text-slate-500 max-w-xl leading-relaxed text-sm md:text-base">
-                        {t('forum_guestlist_text')}
+                        {t('forum_description')}
                     </p>
 
-                    {waitlistCount > 0 && (
-                        <div className="flex items-center gap-2 text-sm text-slate-400">
-                            <Users className="w-4 h-4" />
-                            <span>{waitlistCount} {t('forum_guestlist_members')}</span>
-                        </div>
-                    )}
+                    <p className="text-slate-500 max-w-xl leading-relaxed text-sm md:text-base">
+                        {t('forum_guestlist_text')}
+                    </p>
 
                     {loading ? (
                         <div className="w-8 h-8 border-2 border-[#B88644]/30 border-t-[#B88644] rounded-full animate-spin" />

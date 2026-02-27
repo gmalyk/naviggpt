@@ -69,6 +69,12 @@ html, body, #root {
     background-color: #ffffff !important;
     color-scheme: light only !important;
   }
+
+  .bg-clip-text {
+    background-image: radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%) !important;
+    -webkit-text-fill-color: transparent !important;
+    color-scheme: light only !important;
+  }
 }
 
 /* Custom scrollbar */

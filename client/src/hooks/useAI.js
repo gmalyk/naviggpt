@@ -9,23 +9,9 @@ export const useAI = () => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 
-    const formatProfile = (profile, values) => {
-        const profileLabels = {
-            kid: t('prof_kid'),
-            teen: t('prof_teen'),
-            adult: t('prof_adult'),
-            senior: t('prof_senior')
-        };
-        const label = profileLabels[profile] || profile;
-        return values.length > 0
-            ? `${label}, valeurs: [${values.join(', ')}]`
-            : label;
-    };
-
     const callSubmitFilters = async (questionOverride) => {
         const response = await api.submitFilters({
             question: questionOverride || state.question,
-            profile: formatProfile(state.profile, state.values),
             profileKey: state.profile,
             language: state.language,
             provider: state.settings.provider,
@@ -51,7 +37,6 @@ export const useAI = () => {
             } else {
                 const data = await api.ask({
                     question,
-                    profile: formatProfile(state.profile, state.values),
                     profileKey: state.profile,
                     language: state.language,
                     provider: state.settings.provider,
@@ -102,7 +87,6 @@ export const useAI = () => {
                 precision: state.precision,
                 virgileResponse: state.virgileResponse,
                 followUpHistory: state.followUpHistory,
-                profile: formatProfile(state.profile, state.values),
                 profileKey: state.profile,
                 language: state.language,
                 provider: state.settings.provider,

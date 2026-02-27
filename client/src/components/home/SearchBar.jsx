@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
@@ -19,7 +19,8 @@ const SearchBar = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
     const { askVirgile, loading } = useAI();
-    const [inputValue, setInputValue] = useState('');
+    const inputValue = state.inputDraft;
+    const setInputValue = (val) => dispatch({ type: ACTIONS.SET_INPUT_DRAFT, payload: val });
 
     useEffect(() => {
         if (state.question === '') setInputValue('');

@@ -26,7 +26,7 @@ const AboutView = () => {
             <div className="bg-white rounded-[24px] border border-slate-200 shadow-sm p-8 md:p-10 w-full">
                 {sections.map((section, idx) => (
                     <div key={idx} className={idx < sections.length - 1 ? 'mb-6' : ''}>
-                        <h3 className="font-bold text-slate-900 text-sm md:text-base mb-1.5">{section.title}</h3>
+                        <h3 className="font-bold text-slate-600 text-sm md:text-base mb-1.5">{section.title}</h3>
                         <p className="text-slate-600 leading-relaxed text-xs md:text-sm">{section.text}</p>
                     </div>
                 ))}

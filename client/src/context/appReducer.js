@@ -6,6 +6,7 @@ export const initialState = {
     filterCount: 5,
     faith: null,
     values: [],
+    inputDraft: '',
     question: '',
     analysis: '',
     sections: [],
@@ -28,6 +29,7 @@ export const ACTIONS = {
     SET_FILTER_COUNT: 'SET_FILTER_COUNT',
     SET_FAITH: 'SET_FAITH',
     SET_VALUES: 'SET_VALUES',
+    SET_INPUT_DRAFT: 'SET_INPUT_DRAFT',
     SET_QUESTION: 'SET_QUESTION',
     SET_INITIAL_ANALYSIS: 'SET_INITIAL_ANALYSIS',
     SET_SELECTED_FILTERS: 'SET_SELECTED_FILTERS',
@@ -57,6 +59,8 @@ export function appReducer(state, action) {
             return { ...state, faith: action.payload };
         case ACTIONS.SET_VALUES:
             return { ...state, values: action.payload };
+        case ACTIONS.SET_INPUT_DRAFT:
+            return { ...state, inputDraft: action.payload };
         case ACTIONS.SET_QUESTION:
             return { ...state, question: action.payload };
         case ACTIONS.SET_INITIAL_ANALYSIS:

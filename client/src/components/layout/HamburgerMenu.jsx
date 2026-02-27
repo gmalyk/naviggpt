@@ -13,12 +13,8 @@ const HamburgerMenu = () => {
     const { t } = useTranslation();
 
     const handleForum = () => {
-        if (!user) {
-            openAuthModal();
-        } else {
-            dispatch({ type: ACTIONS.SET_VIEW, payload: 'forum' });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        dispatch({ type: ACTIONS.SET_VIEW, payload: 'forum' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         setIsOpen(false);
     };
 

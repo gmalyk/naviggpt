@@ -29,9 +29,13 @@ const ContactView = () => {
     };
 
     return (
-        <section className="py-12 px-6 max-w-2xl mx-auto w-full animate-in fade-in duration-500">
+        <section className="py-12 px-6 max-w-2xl mx-auto w-full flex flex-col items-center animate-in fade-in duration-500">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
+                <Mail className="w-7 h-7 text-[#B88644]" />
+            </div>
+
             <div className="text-center mb-10">
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-600 mb-2">
                     {t('contact_title')}
                 </h1>
                 <p className="text-slate-500 text-sm">
@@ -41,7 +45,7 @@ const ContactView = () => {
 
             <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm space-y-5"
+                className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm space-y-5 w-full"
             >
                 {/* Name */}
                 <div>
