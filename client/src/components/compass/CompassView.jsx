@@ -111,7 +111,7 @@ const CompassView = () => {
             <div className={`text-center ${compact ? 'mb-4' : 'mb-8'}`}>
                 {!compact && (
                     <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                        <Compass className="w-7 h-7 text-[#B88644]" />
+                        <Compass className="w-7 h-7 text-[#B88644] brand-protect" />
                     </div>
                 )}
                 <h1 className={`font-bold text-slate-900 ${compact ? 'text-lg mb-1' : 'text-2xl mb-2'}`}>{t('compass_title')}</h1>
@@ -144,7 +144,7 @@ const CompassView = () => {
                     return (
                         <div
                             key={category.key}
-                            className={`rounded-2xl border ${colors.border} ${colors.bg} ${compact ? 'p-3' : 'p-5'} transition-all`}
+                            className={`rounded-2xl border ${colors.border} ${colors.bg} ${compact ? 'p-3' : 'p-5'} transition-all brand-protect`}
                         >
                             <div className={`flex items-center justify-between ${compact ? 'mb-2' : 'mb-3'}`}>
                                 <div>
@@ -154,7 +154,7 @@ const CompassView = () => {
                                     </h2>
                                     {!compact && <p className="text-xs text-slate-400 mt-0.5">{category.subtitle?.[language] || category.subtitle?.fr || category.subtitle}</p>}
                                 </div>
-                                <span className={`text-xs px-2 py-0.5 rounded-full ${remaining > 0 ? 'bg-white/70 text-slate-500' : `${colors.selected} text-white`}`}>
+                                <span className={`text-xs px-2 py-0.5 rounded-full brand-protect ${remaining > 0 ? 'bg-white/70 text-slate-500' : `${colors.selected} text-white`}`}>
                                     {selected.length}/{MAX_PER_CATEGORY}
                                 </span>
                             </div>
@@ -174,6 +174,7 @@ const CompassView = () => {
                                                 className={`
                                                     inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
                                                     transition-all duration-200 border
+                                                    brand-protect
                                                     ${isSelected
                                                         ? `${colors.selected} text-white border-transparent shadow-sm`
                                                         : isDisabled
@@ -214,7 +215,7 @@ const CompassView = () => {
                                 return (
                                     <span
                                         key={`${catKey}-${v}`}
-                                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${colors.selected} text-white`}
+                                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium brand-protect ${colors.selected} text-white`}
                                     >
                                         {getLabel(v)}
                                     </span>
@@ -226,8 +227,8 @@ const CompassView = () => {
                         <button
                             onClick={handleSave}
                             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${saved
-                                ? 'bg-emerald-500 text-white'
-                                : 'bg-[#B88644] text-white hover:bg-[#A07538]'
+                                ? 'bg-emerald-500 text-white brand-protect'
+                                : 'bg-[#B88644] text-white hover:bg-[#A07538] brand-protect'
                                 }`}
                         >
                             {saved ? t('compass_saved') : state.returnToView ? t('compass_save_and_return') : t('compass_save')}

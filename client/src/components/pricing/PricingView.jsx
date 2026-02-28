@@ -39,20 +39,33 @@ const PricingView = () => {
             price: t('pricing_individual_price'),
             description: t('pricing_individual_desc'),
             features: [
-                t('pricing_feat_unlimited'),
-                t('pricing_feat_engines'),
+                t('pricing_feat_usage_limits'),
+                t('pricing_feat_history'),
+                t('pricing_feat_no_ads'),
+                t('pricing_feat_anti_sycophancy'),
+                t('pricing_feat_timer'),
+                t('pricing_feat_parental'),
+                t('pricing_feat_values_saved'),
+                t('pricing_feat_no_gadgets'),
+                t('pricing_feat_no_data_resale'),
+                t('pricing_feat_no_standard_window'),
+                t('pricing_feat_voice_dictation'),
+                t('pricing_feat_file_image_download'),
+                t('pricing_feat_custom_agents'),
+                t('pricing_feat_and_more'),
             ],
-            buttonClass: 'bg-[#B88644] hover:bg-[#a6763b] text-white',
+            buttonClass: 'bg-[#B88644] hover:bg-[#a6763b] text-white brand-protect',
         },
         {
             key: 'institution',
             name: t('pricing_institution'),
             price: t('pricing_institution_price'),
             description: t('pricing_institution_desc'),
+            highlight: t('pricing_feat_includes_individual'),
             features: [
-                t('pricing_feat_unlimited'),
-                t('pricing_feat_engines'),
-                t('pricing_feat_users'),
+                t('pricing_feat_culture'),
+                t('pricing_feat_categories'),
+                t('pricing_feat_price_users'),
                 t('pricing_feat_admin'),
                 t('pricing_feat_support'),
             ],
@@ -63,7 +76,7 @@ const PricingView = () => {
     return (
         <section className="py-12 px-6 max-w-5xl mx-auto flex flex-col items-center animate-in fade-in duration-500">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                <CreditCard className="w-7 h-7 text-[#B88644]" />
+                <CreditCard className="w-7 h-7 text-[#B88644] brand-protect" />
             </div>
 
             <h1 className="text-3xl font-bold text-center mb-10 text-slate-600">
@@ -92,6 +105,9 @@ const PricingView = () => {
                             {plan.price}
                         </p>
 
+                        {plan.highlight && (
+                            <p className="text-sm font-medium text-slate-500 mb-3 italic">{plan.highlight}</p>
+                        )}
                         <ul className="space-y-3 mb-8 flex-grow">
                             {plan.features.map((feat, i) => (
                                 <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
@@ -132,7 +148,7 @@ const PricingView = () => {
                         </p>
                         <button
                             onClick={() => setShowSuccessModal(false)}
-                            className="px-8 py-2.5 bg-[#B88644] text-white rounded-full font-semibold hover:bg-[#a6763b] transition-colors"
+                            className="px-8 py-2.5 bg-[#B88644] text-white rounded-full font-semibold hover:bg-[#a6763b] transition-colors brand-protect"
                         >
                             {t('pricing_success_ok')}
                         </button>

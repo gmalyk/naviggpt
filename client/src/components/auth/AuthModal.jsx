@@ -132,13 +132,13 @@ const AuthModal = () => {
                     <div className="flex border-b border-slate-100">
                         <button
                             onClick={() => handleTabSwitch('sign_in')}
-                            className={`flex-1 py-3 text-sm font-semibold transition-colors ${authModalTab === 'sign_in' ? 'text-[#B88644] border-b-2 border-[#B88644]' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 py-3 text-sm font-semibold transition-colors brand-protect ${authModalTab === 'sign_in' ? 'text-[#B88644] border-b-2 border-[#B88644]' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             {t('auth_sign_in')}
                         </button>
                         <button
                             onClick={() => handleTabSwitch('sign_up')}
-                            className={`flex-1 py-3 text-sm font-semibold transition-colors ${authModalTab === 'sign_up' ? 'text-[#B88644] border-b-2 border-[#B88644]' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`flex-1 py-3 text-sm font-semibold transition-colors brand-protect ${authModalTab === 'sign_up' ? 'text-[#B88644] border-b-2 border-[#B88644]' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             {t('auth_sign_up')}
                         </button>
@@ -179,7 +179,7 @@ const AuthModal = () => {
                             {authModalTab === 'forgot_password' && (
                                 <button
                                     onClick={() => handleTabSwitch('sign_in')}
-                                    className="text-sm font-semibold text-[#B88644] hover:underline"
+                                    className="text-sm font-semibold text-[#B88644] hover:underline brand-protect"
                                 >
                                     {t('auth_back_to_login')}
                                 </button>
@@ -201,7 +201,7 @@ const AuthModal = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             required
-                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-all"
+                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-all brand-protect"
                                         />
                                     </div>
                                 )}
@@ -215,7 +215,7 @@ const AuthModal = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => handleTabSwitch('forgot_password')}
-                                                    className="text-xs font-semibold text-[#B88644] hover:underline"
+                                                    className="text-xs font-semibold text-[#B88644] hover:underline brand-protect"
                                                 >
                                                     {t('auth_forgot_password')}
                                                 </button>
@@ -226,7 +226,7 @@ const AuthModal = () => {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             required
-                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-all"
+                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-all brand-protect"
                                         />
                                     </div>
                                 )}
@@ -238,7 +238,7 @@ const AuthModal = () => {
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             required
-                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-all"
+                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-all brand-protect"
                                         />
                                     </div>
                                 )}
@@ -250,7 +250,7 @@ const AuthModal = () => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-2.5 bg-[#B88644] text-white text-sm font-bold rounded-full shadow-lg shadow-amber-900/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                                    className="w-full py-2.5 bg-[#B88644] text-white text-sm font-bold rounded-full shadow-lg shadow-amber-900/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100 brand-protect"
                                 >
                                     {loading ? '...' : (
                                         authModalTab === 'sign_in' ? t('auth_sign_in') :

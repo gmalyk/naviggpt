@@ -4,6 +4,7 @@ export const initialState = {
     dir: 'ltr',
     profile: 'adult',
     filterCount: 5,
+    useWebSearch: true,
     faith: null,
     values: [],
     inputDraft: '',
@@ -27,6 +28,7 @@ export const ACTIONS = {
     SET_LANGUAGE: 'SET_LANGUAGE',
     SET_PROFILE: 'SET_PROFILE',
     SET_FILTER_COUNT: 'SET_FILTER_COUNT',
+    SET_WEB_SEARCH: 'SET_WEB_SEARCH',
     SET_FAITH: 'SET_FAITH',
     SET_VALUES: 'SET_VALUES',
     SET_INPUT_DRAFT: 'SET_INPUT_DRAFT',
@@ -55,6 +57,8 @@ export function appReducer(state, action) {
             return { ...state, profile: action.payload };
         case ACTIONS.SET_FILTER_COUNT:
             return { ...state, filterCount: action.payload };
+        case ACTIONS.SET_WEB_SEARCH:
+            return { ...state, useWebSearch: action.payload };
         case ACTIONS.SET_FAITH:
             return { ...state, faith: action.payload };
         case ACTIONS.SET_VALUES:

@@ -12,7 +12,7 @@ const HeroSection = () => {
                 return (
                     <span
                         key={i}
-                        className="bg-clip-text text-transparent"
+                        className="bg-clip-text text-transparent brand-protect"
                         style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only' }}
                     >
                         {match[1]}

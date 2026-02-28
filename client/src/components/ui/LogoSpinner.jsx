@@ -2,7 +2,7 @@ import React from 'react';
 
 const LogoSpinner = ({ className = "w-8 h-8" }) => {
     return (
-        <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 100 100" className={`${className} brand-protect`} style={{ colorScheme: 'light only' }} fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="spin-copper" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#D49078" />

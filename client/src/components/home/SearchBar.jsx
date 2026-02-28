@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Send } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Send, Globe } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -22,8 +22,13 @@ const SearchBar = () => {
     const inputValue = state.inputDraft;
     const setInputValue = (val) => dispatch({ type: ACTIONS.SET_INPUT_DRAFT, payload: val });
 
+    const prevQuestionRef = useRef(state.question);
+
     useEffect(() => {
-        if (state.question === '') setInputValue('');
+        if (prevQuestionRef.current !== '' && state.question === '') {
+            setInputValue('');
+        }
+        prevQuestionRef.current = state.question;
     }, [state.question]);
 
     const handleSend = () => {
@@ -38,7 +43,7 @@ const SearchBar = () => {
 
     return (
         <section className="max-w-2xl w-full mx-auto mb-8 relative z-50">
-            <div className="relative group bg-white border border-slate-200 rounded-[32px] p-5 transition-all focus-within:border-[#B88644]/40">
+            <div className="relative group bg-white border border-slate-200 rounded-[32px] p-5 transition-all focus-within:border-[#B88644]/40 brand-protect">
                 <div className="flex items-center gap-3 mb-3">
                     <input
                         type="text"
@@ -52,7 +57,7 @@ const SearchBar = () => {
                         <button
                             onClick={handleSend}
                             disabled={loading || !inputValue.trim()}
-                            className={`p-2 text-[#B88644] hover:bg-[#B88644]/10 rounded-full transition-all ${loading ? '' : 'disabled:opacity-30'}`}
+                            className={`p-2 text-[#B88644] hover:bg-[#B88644]/10 rounded-full transition-all brand-protect ${loading ? '' : 'disabled:opacity-30'}`}
                         >
                             {loading ? <LogoSpinner className="w-6 h-6" /> : <Send className="w-6 h-6 rtl:scale-x-[-1]" />}
                         </button>
@@ -64,7 +69,7 @@ const SearchBar = () => {
                         <button
                             key={p.id}
                             onClick={() => dispatch({ type: ACTIONS.SET_PROFILE, payload: p.id })}
-                            className={`px-4 py-1.5 rounded-full text-xs transition-all border ${state.profile === p.id
+                            className={`px-4 py-1.5 rounded-full text-xs transition-all border brand-protect ${state.profile === p.id
                                 ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
                                 : 'bg-white/60 border-slate-100 text-slate-600 hover:bg-white hover:border-slate-200'
                                 }`}
@@ -72,18 +77,29 @@ const SearchBar = () => {
                             {t(p.labelKey)}
                         </button>
                     ))}
-                    <span className="text-[10px] text-slate-400 self-center ml-auto mr-1">{t('filter_count_label')}</span>
+                    <button
+                        onClick={() => dispatch({ type: ACTIONS.SET_WEB_SEARCH, payload: !state.useWebSearch })}
+                        className={`px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 ml-auto brand-protect ${state.useWebSearch
+                            ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
+                            : 'bg-white/60 border-slate-100 text-slate-400 hover:bg-white hover:border-slate-200'
+                            }`}
+                        title={t('web_search_tooltip')}
+                    >
+                        <Globe className="w-3.5 h-3.5" />
+                        <span>{t('web_search_label')}</span>
+                    </button>
+                    <span className="text-[10px] text-slate-400 self-center mr-1">{t('filter_count_label')}</span>
                     <button
                         onClick={() => {
                             const currentIndex = filterCountCycle.indexOf(state.filterCount);
                             const nextValue = filterCountCycle[(currentIndex + 1) % filterCountCycle.length];
                             dispatch({ type: ACTIONS.SET_FILTER_COUNT, payload: nextValue });
                         }}
-                        className="px-4 py-1.5 rounded-full text-xs transition-all border border-[#B88644] bg-white shadow-sm"
+                        className="px-4 py-1.5 rounded-full text-xs transition-all border border-[#B88644] bg-white shadow-sm brand-protect"
                     >
                         {filterCountCycle.map((val, i) => (
                             <span key={val}>
-                                <span className={state.filterCount === val ? 'text-[#B88644] font-bold' : 'text-slate-300'}>
+                                <span className={state.filterCount === val ? 'text-[#B88644] font-bold brand-protect' : 'text-slate-300'}>
                                     {val}
                                 </span>
                                 {i < filterCountCycle.length - 1 && <span className="text-slate-300 mx-0.5">·</span>}

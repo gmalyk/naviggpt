@@ -18,7 +18,8 @@ export const useAI = () => {
             apiKey: '',
             filters: state.selectedFilters,
             precision: state.precision,
-            values: state.values
+            values: state.values,
+            useWebSearch: state.useWebSearch
         });
 
         dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virgile: response.virgile, standard: response.standard } });
@@ -91,7 +92,8 @@ export const useAI = () => {
                 language: state.language,
                 provider: state.settings.provider,
                 apiKey: '',
-                values: state.values
+                values: state.values,
+                useWebSearch: state.useWebSearch
             });
 
             if (result.rejected) {

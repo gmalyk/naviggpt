@@ -17,8 +17,18 @@ html {
   color-scheme: light only;
 }
 
+/* Android Chrome Auto-Dark Protection */
+.brand-protect {
+  color-scheme: light only !important;
+}
+
+.bg-clip-text {
+  color-scheme: light only !important;
+}
+
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
 }
 
 /* Custom RTL Support */
@@ -67,12 +77,6 @@ html, body, #root {
 @media (prefers-color-scheme: dark) {
   html, body {
     background-color: #ffffff !important;
-    color-scheme: light only !important;
-  }
-
-  .bg-clip-text {
-    background-image: radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%) !important;
-    -webkit-text-fill-color: transparent !important;
     color-scheme: light only !important;
   }
 }

@@ -13,7 +13,7 @@ const QuestionBar = () => {
                     "{state.question}"
                 </p>
                 <div className="px-3 py-1 bg-white/50 rounded-full border border-slate-200 flex items-center gap-2 shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-[#B88644]" />
+                    <div className="w-2 h-2 rounded-full bg-[#B88644] brand-protect" />
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{t('status_in_progress')}</span>
                 </div>
             </div>

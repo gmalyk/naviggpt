@@ -36,7 +36,7 @@ const Navbar = () => {
                         ) : (
                             <button
                                 onClick={() => openAuthModal()}
-                                className="px-4 py-1.5 bg-[#B88644] text-white text-xs font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm"
+                                className="px-4 py-1.5 bg-[#B88644] text-white text-xs font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm brand-protect"
                             >
                                 {t('auth_sign_in')}
                             </button>

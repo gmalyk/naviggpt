@@ -43,11 +43,11 @@ router.post('/ask', async (req, res) => {
 
 // POST /api/filters - Result generation stage
 router.post('/filters', async (req, res) => {
-    const { question, profile, faith, values, language, provider, apiKey, filters, precision } = req.body;
+    const { question, profile, faith, values, language, provider, apiKey, filters, precision, useWebSearch } = req.body;
 
     try {
         // Virgile response: full context with filters, profile, faith, values, precision
-        const virgilePrompt = getSubmitFiltersPrompt(profile, faith, values, language);
+        const virgilePrompt = getSubmitFiltersPrompt(profile, faith, values, language, useWebSearch);
         const virgileMessage = `Question: "${question}"\nFiltres: ${filters.join(', ')}\nPrécision: "${precision}"`;
 
         // Standard response: raw question only, no filters/profile/context
@@ -55,9 +55,10 @@ router.post('/filters', async (req, res) => {
         const standardMessage = `Question: "${question}"`;
 
         // Run both calls in parallel
+        const webSearchOption = useWebSearch !== false;
         const [virgileResponse, standardResponse] = await Promise.all([
-            callAI(provider, apiKey, virgilePrompt, virgileMessage, { useWebSearch: true }),
-            callAI(provider, apiKey, standardPrompt, standardMessage, { useWebSearch: true })
+            callAI(provider, apiKey, virgilePrompt, virgileMessage, { useWebSearch: webSearchOption }),
+            callAI(provider, apiKey, standardPrompt, standardMessage, { useWebSearch: webSearchOption })
         ]);
 
         res.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
@@ -68,7 +69,7 @@ router.post('/filters', async (req, res) => {
 
 // POST /api/followup - Follow-up chat stage
 router.post('/followup', async (req, res) => {
-    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, faith, values, language, provider, apiKey } = req.body;
+    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, faith, values, language, provider, apiKey, useWebSearch } = req.body;
 
     try {
         // Stage 3a: Context Check
@@ -80,7 +81,7 @@ router.post('/followup', async (req, res) => {
         }
 
         // Stage 3b: Generation — include full conversation history
-        const genPrompt = getFollowUpGenPrompt(profile, faith, values, language);
+        const genPrompt = getFollowUpGenPrompt(profile, faith, values, language, useWebSearch !== false);
 
         let conversationContext = `Question initiale : "${question}"\nFiltres : ${filters ? filters.join(', ') : 'aucun'}\nPrécision : "${precision || ''}"\n\nRéponse de Virgile :\n${virgileResponse || ''}`;
 
@@ -93,7 +94,7 @@ router.post('/followup', async (req, res) => {
 
         conversationContext += `\n\nNouvelle question de l'utilisateur : "${followUp}"`;
 
-        const response = await callAI(provider, apiKey, genPrompt, conversationContext, { useWebSearch: true });
+        const response = await callAI(provider, apiKey, genPrompt, conversationContext, { useWebSearch: useWebSearch !== false });
 
         res.json({ success: true, data: { rejected: false, response } });
     } catch (error) {

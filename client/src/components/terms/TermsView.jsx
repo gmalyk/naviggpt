@@ -22,7 +22,7 @@ const TermsView = () => {
         <section className="py-12 px-6 max-w-3xl mx-auto flex flex-col items-center w-full animate-in fade-in duration-500">
             <div className="flex justify-center mb-8">
                 <div className="bg-white rounded-full p-1 shadow-xl ring-8 ring-white w-28 h-28 flex items-center justify-center overflow-hidden border border-slate-100">
-                    <ShieldCheck className="w-14 h-14 text-[#B88644]" />
+                    <ShieldCheck className="w-14 h-14 text-[#B88644] brand-protect" />
                 </div>
             </div>
 
