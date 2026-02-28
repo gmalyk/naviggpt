@@ -4,7 +4,7 @@ export const initialState = {
     dir: 'ltr',
     profile: 'adult',
     filterCount: 5,
-    useWebSearch: true,
+    useWebSearch: false,
     faith: null,
     values: [],
     inputDraft: '',
