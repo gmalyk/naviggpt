@@ -43,7 +43,7 @@ const FollowUpChat = () => {
                         <div>
                             <div className="flex items-center gap-2.5 mb-4">
                                 <Logo className="w-6 h-6" />
-                                <span className="text-sm font-semibold text-slate-700">Virgile</span>
+                                <span className="text-sm font-semibold text-slate-700">{t('brand_name')}</span>
                             </div>
                             <MarkdownContent content={chat.ai} />
                             <CopyButton content={chat.ai} />
@@ -58,7 +58,7 @@ const FollowUpChat = () => {
                 )}
             </div>
 
-            {!hasReachedLimit && (
+            {!hasReachedLimit && !loading && (
                 <div className="relative flex items-center">
                     <input
                         type="text"

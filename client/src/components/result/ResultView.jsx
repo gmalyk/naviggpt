@@ -36,6 +36,8 @@ const ResultView = () => {
 
     const resetToHome = () => {
         dispatch({ type: ACTIONS.SET_QUESTION, payload: '' });
+        dispatch({ type: ACTIONS.SET_SELECTED_FILTERS, payload: [] });
+        dispatch({ type: ACTIONS.SET_PRECISION, payload: '' });
         dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
         window.scrollTo(0, 0);
     };
