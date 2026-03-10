@@ -81,11 +81,11 @@ export const api = {
         return await handleResponse(response);
     },
 
-    choosePlan: async (plan, email) => {
+    choosePlan: async (plan, email, firstName) => {
         const response = await fetch(`${API_BASE}/plan/choose`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan, email })
+            body: JSON.stringify({ plan, email, firstName })
         });
         return await handleResponse(response);
     },

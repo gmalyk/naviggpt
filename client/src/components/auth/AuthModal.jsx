@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
 
 const AuthModal = () => {
-    const { authModalOpen, authModalTab, setAuthModalTab, closeAuthModal } = useAuth();
+    const { authModalOpen, authModalTab, setAuthModalTab, authModalMessage, closeAuthModal } = useAuth();
     const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -147,6 +147,11 @@ const AuthModal = () => {
 
                 {/* Body */}
                 <div className="p-6 space-y-5">
+                    {/* Contextual message (e.g. from pricing page) */}
+                    {authModalMessage && !success && (
+                        <p className="text-sm text-center text-slate-500 bg-slate-50 px-4 py-2.5 rounded-xl">{authModalMessage}</p>
+                    )}
+
                     {/* Google Sign-In (only on sign_in / sign_up tabs) */}
                     {(authModalTab === 'sign_in' || authModalTab === 'sign_up') && !success && (
                         <>

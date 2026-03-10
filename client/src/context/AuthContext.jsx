@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [authModalOpen, setAuthModalOpen] = useState(false);
     const [authModalTab, setAuthModalTab] = useState('sign_in');
+    const [authModalMessage, setAuthModalMessage] = useState('');
 
     useEffect(() => {
         if (!supabase) {
@@ -40,14 +41,18 @@ export const AuthProvider = ({ children }) => {
         if (supabase) await supabase.auth.signOut();
     };
 
-    const openAuthModal = (tab = 'sign_in') => {
+    const openAuthModal = (tab = 'sign_in', message = '') => {
         setAuthModalTab(tab);
+        setAuthModalMessage(message);
         setAuthModalOpen(true);
     };
-    const closeAuthModal = () => setAuthModalOpen(false);
+    const closeAuthModal = () => {
+        setAuthModalOpen(false);
+        setAuthModalMessage('');
+    };
 
     return (
-        <AuthContext.Provider value={{ user, loading, signOut, authModalOpen, authModalTab, setAuthModalTab, openAuthModal, closeAuthModal }}>
+        <AuthContext.Provider value={{ user, loading, signOut, authModalOpen, authModalTab, setAuthModalTab, authModalMessage, openAuthModal, closeAuthModal }}>
             {children}
         </AuthContext.Provider>
     );

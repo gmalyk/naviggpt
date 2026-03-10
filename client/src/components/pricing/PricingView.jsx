@@ -13,7 +13,7 @@ const PricingView = () => {
 
     const handleChoosePlan = async (planType) => {
         if (!user) {
-            openAuthModal();
+            openAuthModal('sign_in', t('auth_plan_hint'));
             return;
         }
 
@@ -22,7 +22,8 @@ const PricingView = () => {
         setErrorMessage('');
 
         try {
-            await api.choosePlan(planType, user.email);
+            const firstName = user?.user_metadata?.full_name?.split(' ')[0] || '';
+            await api.choosePlan(planType, user.email, firstName);
             setShowSuccessModal(true);
         } catch (e) {
             setErrorMessage(t('pricing_error'));

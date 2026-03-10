@@ -2873,7 +2873,7 @@ app.post("/api/contact", async (c) => {
 });
 app.post("/api/plan/choose", async (c) => {
   try {
-    const { plan, email } = await c.req.json();
+    const { plan, email, firstName } = await c.req.json();
     if (!plan || !email) {
       return c.json({ success: false, error: "Plan and email are required" }, 400);
     }
@@ -2882,6 +2882,7 @@ app.post("/api/plan/choose", async (c) => {
       return c.json({ success: false, error: "Email service not configured" }, 500);
     }
     const planLabel = plan === "institution" ? "Institution" : "Individual";
+    const greeting = firstName ? firstName : "there";
     const adminRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -2895,7 +2896,8 @@ app.post("/api/plan/choose", async (c) => {
         reply_to: email,
         html: `<h2>New plan selection</h2>
                     <p><strong>Plan:</strong> ${planLabel}</p>
-                    <p><strong>Email:</strong> ${email}</p>`
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Name:</strong> ${firstName || "N/A"}</p>`
       })
     });
     if (!adminRes.ok) {
@@ -2910,14 +2912,36 @@ app.post("/api/plan/choose", async (c) => {
         "Authorization": `Bearer ${resendKey}`
       },
       body: JSON.stringify({
-        from: "Virgile <onboarding@resend.dev>",
+        from: "Virggil <onboarding@resend.dev>",
         to: email,
-        subject: "Virgile - Plan selection confirmation",
-        html: `<h2>Thank you for your interest!</h2>
-                    <p>Your request for the <strong>${planLabel}</strong> plan has been received.</p>
-                    <p>Our team will get back to you very soon.</p>
-                    <br />
-                    <p>The Virgile Team</p>`
+        subject: "Thank You for Subscribing to Virggil",
+        html: `
+<div style="font-family: Georgia, 'Times New Roman', serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.7;">
+    <p style="font-size: 16px;">Dear ${greeting},</p>
+
+    <p style="font-size: 15px;">Thank you so much for choosing to subscribe to Virggil's ${planLabel} Plan. It means the world to us \u2014 and we truly believe it is no coincidence that you found your way here.</p>
+
+    <p style="font-size: 15px;">We want to be fully transparent with you: the paid plans are not yet available. We are still in the process of building Virggil into the fully operational platform we know it can be. But here is the good news \u2014 your decision to subscribe directly increases our chances of securing the funding we need to bring that vision to life. Every person who signs up sends a powerful signal to investors that there is a real, growing community behind Virggil. So thank you. You are part of making this happen.</p>
+
+    <p style="font-size: 15px;">Virggil was built for people like you and me \u2014 families and individuals who want an AI grounded in Christian values, not shaped by woke cultural consensus. A space where faith is respected, where answers reflect a traditional worldview, and where parents can feel confident letting their children explore freely.</p>
+
+    <p style="font-size: 15px;">While we finalize the paid plans, you are warmly welcome to keep using Virggil for free. Please note that for financial reasons, we are currently able to offer up to two web searches per day per user (Virggil works perfectly well without web search) \u2014 we appreciate your patience and understanding as we grow.</p>
+
+    <p style="font-size: 15px;">Our entire team is here for you. Whether you have questions, suggestions, or feedback about how Virggil is working, we genuinely want to hear from you. Please reply to this email or reach us at <a href="mailto:virggilai@gmail.com" style="color: #8B6914;">virggilai@gmail.com</a>. No message is too small.</p>
+
+    <p style="font-size: 15px;">Thank you again for your generosity, your patience, and your faith in this project.</p>
+
+    <p style="font-size: 15px; margin-top: 30px;">With gratitude,<br/>
+    <strong>Alexander Genko-Starosselsky</strong><br/>
+    Founder</p>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0d5c1; text-align: center;">
+        <img src="https://virggil.com/logo.png" alt="Virggil" style="width: 80px; height: 80px; margin-bottom: 10px;" />
+        <p style="font-size: 13px; color: #8B6914; margin: 0;">
+            <a href="https://virggil.com" style="color: #8B6914; text-decoration: none;">virggil.com</a> \xB7 <a href="mailto:virggilai@gmail.com" style="color: #8B6914; text-decoration: none;">virggilai@gmail.com</a>
+        </p>
+    </div>
+</div>`
       })
     });
     if (!userRes.ok) {
@@ -2979,7 +3003,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-RTIHCD/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-iSnpDf/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -3011,7 +3035,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-RTIHCD/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-iSnpDf/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
