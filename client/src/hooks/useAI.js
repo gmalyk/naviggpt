@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAppState } from '../context/AppContext';
 import { ACTIONS } from '../context/appReducer';
+import { navigateTo } from './useRouting';
 import { useTranslation } from './useTranslation';
 import { api } from '../services/api';
 
@@ -23,7 +24,7 @@ export const useAI = () => {
         });
 
         dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virgile: response.virgile, standard: response.standard } });
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'result' });
+        navigateTo(dispatch, 'result');
     };
 
     const askVirgile = async (question) => {
@@ -47,7 +48,7 @@ export const useAI = () => {
                 });
 
                 dispatch({ type: ACTIONS.SET_INITIAL_ANALYSIS, payload: data });
-                dispatch({ type: ACTIONS.SET_VIEW, payload: 'discernment' });
+                navigateTo(dispatch, 'discernment');
             }
         } catch (error) {
             console.error(error);

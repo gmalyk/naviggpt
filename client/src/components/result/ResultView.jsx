@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { navigateTo } from '../../hooks/useRouting';
 import { useTranslation } from '../../hooks/useTranslation';
 import OptimizedResponse from './OptimizedResponse';
 import StandardResponse from './StandardResponse';
@@ -38,13 +39,11 @@ const ResultView = () => {
         dispatch({ type: ACTIONS.SET_QUESTION, payload: '' });
         dispatch({ type: ACTIONS.SET_SELECTED_FILTERS, payload: [] });
         dispatch({ type: ACTIONS.SET_PRECISION, payload: '' });
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
-        window.scrollTo(0, 0);
+        navigateTo(dispatch, 'home');
     };
 
     const handleSubscribe = () => {
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'pricing' });
-        window.scrollTo(0, 0);
+        navigateTo(dispatch, 'pricing');
     };
 
     return (

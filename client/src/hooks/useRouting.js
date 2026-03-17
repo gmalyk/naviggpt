@@ -1,0 +1,68 @@
+import { useEffect } from 'react';
+import { useAppState } from '../context/AppContext';
+import { ACTIONS } from '../context/appReducer';
+
+const VIEW_TO_PATH = {
+    home: '/',
+    about: '/about',
+    pricing: '/pricing',
+    contact: '/contact',
+    forum: '/forum',
+    terms: '/terms',
+    privacy: '/privacy',
+    compass: '/compass',
+    account: '/account',
+    prompts: '/edit',
+    discernment: '/',
+    result: '/',
+};
+
+const PATH_TO_VIEW = {
+    '/': 'home',
+    '/about': 'about',
+    '/pricing': 'pricing',
+    '/contact': 'contact',
+    '/forum': 'forum',
+    '/terms': 'terms',
+    '/privacy': 'privacy',
+    '/compass': 'compass',
+    '/account': 'account',
+    '/edit': 'prompts',
+};
+
+export function getViewFromPath(pathname) {
+    return PATH_TO_VIEW[pathname] || 'home';
+}
+
+export function getPathFromView(view) {
+    return VIEW_TO_PATH[view] || '/';
+}
+
+export function navigateTo(dispatch, view) {
+    const path = getPathFromView(view);
+    window.history.pushState({ view }, '', path);
+    dispatch({ type: ACTIONS.SET_VIEW, payload: view });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+export function useRouting() {
+    const { dispatch } = useAppState();
+
+    // Set initial view from URL on mount
+    useEffect(() => {
+        const view = getViewFromPath(window.location.pathname);
+        dispatch({ type: ACTIONS.SET_VIEW, payload: view });
+    }, [dispatch]);
+
+    // Handle browser back/forward
+    useEffect(() => {
+        const handlePopState = (event) => {
+            const view = event.state?.view || getViewFromPath(window.location.pathname);
+            dispatch({ type: ACTIONS.SET_VIEW, payload: view });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, [dispatch]);
+}

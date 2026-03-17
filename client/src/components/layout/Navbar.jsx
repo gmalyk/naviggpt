@@ -3,6 +3,7 @@ import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
+import { navigateTo } from '../../hooks/useRouting';
 
 import LanguageSelector from './LanguageSelector';
 import HamburgerMenu from './HamburgerMenu';
@@ -18,8 +19,7 @@ const Navbar = () => {
         dispatch({ type: ACTIONS.SET_QUESTION, payload: '' });
         dispatch({ type: ACTIONS.SET_SELECTED_FILTERS, payload: [] });
         dispatch({ type: ACTIONS.SET_PRECISION, payload: '' });
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        navigateTo(dispatch, 'home');
     };
 
     return (

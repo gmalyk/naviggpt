@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, MessageSquare, Info, Users, ShieldCheck, Compass, CreditCard } from 'lucide-react';
+import { Menu, MessageSquare, Info, Users, ShieldCheck, Lock, Compass, CreditCard } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
+import { navigateTo } from '../../hooks/useRouting';
 
 const HamburgerMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +14,7 @@ const HamburgerMenu = () => {
     const { t } = useTranslation();
 
     const handleForum = () => {
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'forum' });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        navigateTo(dispatch, 'forum');
         setIsOpen(false);
     };
 
@@ -39,68 +39,62 @@ const HamburgerMenu = () => {
 
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50 animate-in fade-in slide-in-from-top-2">
-                    <button
-                        onClick={handleForum}
+                    <a
+                        href="/forum"
+                        onClick={(e) => { e.preventDefault(); handleForum(); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
                     >
                         <MessageSquare className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_forum')}</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'compass' });
-                            setIsOpen(false);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
+                    </a>
+                    <a
+                        href="/compass"
+                        onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'compass'); setIsOpen(false); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
                     >
                         <Compass className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_compass')}</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'pricing' });
-                            setIsOpen(false);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
+                    </a>
+                    <a
+                        href="/pricing"
+                        onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'pricing'); setIsOpen(false); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
                     >
                         <CreditCard className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_pricing')}</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'about' });
-                            setIsOpen(false);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
+                    </a>
+                    <a
+                        href="/about"
+                        onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'about'); setIsOpen(false); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
                     >
                         <Info className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_about')}</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'contact' });
-                            setIsOpen(false);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
+                    </a>
+                    <a
+                        href="/contact"
+                        onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'contact'); setIsOpen(false); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
                     >
                         <Users className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_contact')}</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'terms' });
-                            setIsOpen(false);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
+                    </a>
+                    <a
+                        href="/terms"
+                        onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'terms'); setIsOpen(false); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left border-t border-slate-100"
                     >
                         <ShieldCheck className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_terms')}</span>
-                    </button>
+                    </a>
+                    <a
+                        href="/privacy"
+                        onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'privacy'); setIsOpen(false); }}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                    >
+                        <Lock className="w-4 h-4 text-slate-400" />
+                        <span>{t('menu_privacy')}</span>
+                    </a>
                 </div>
             )}
         </div>

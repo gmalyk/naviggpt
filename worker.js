@@ -82,22 +82,25 @@ const callGemini = async (apiKey, systemPrompt, userMessage) => {
 };
 
 // --- Grok (xAI) ---
-// Uses /v1/responses with web_search for real-time web search
-const callGrok = async (apiKey, systemPrompt, userMessage) => {
+// Uses /v1/responses; web_search tool only included when options.useWebSearch is true
+const callGrok = async (apiKey, systemPrompt, userMessage, options = {}) => {
+    const body = {
+        model: 'grok-4-1-fast-reasoning',
+        input: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMessage }
+        ]
+    };
+    if (options.useWebSearch) {
+        body.tools = [{ type: 'web_search' }];
+    }
     const response = await fetch('https://api.x.ai/v1/responses', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify({
-            model: 'grok-4-1-fast-reasoning',
-            input: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userMessage }
-            ],
-            tools: [{ type: 'web_search' }]
-        })
+        body: JSON.stringify(body)
     });
     const data = await response.json();
     if (data.error) throw new Error(data.error.message || 'Grok API Error');
@@ -144,7 +147,7 @@ const callMistral = async (apiKey, systemPrompt, userMessage) => {
 // ║  and API key resolution (client OR env var).                                ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-const callAI = async (provider, apiKey, env, systemPrompt, userMessage) => {
+const callAI = async (provider, apiKey, env, systemPrompt, userMessage, options = {}) => {
     // Virgile prompts arrive as {staticPrompt, dynamicPrompt}
     // Simple prompts (standard, followUpCheck) arrive already as strings
     const flatPrompt = (typeof systemPrompt === 'object' && systemPrompt.staticPrompt)
@@ -165,7 +168,7 @@ const callAI = async (provider, apiKey, env, systemPrompt, userMessage) => {
     if (provider === 'grok') {
         const key = apiKey || env.XAI_API_KEY;
         if (!key) throw new Error('No Grok API key provided');
-        return await callGrok(key, flatPrompt, userMessage);
+        return await callGrok(key, flatPrompt, userMessage, options);
     }
     if (provider === 'mistral') {
         const key = apiKey || env.MISTRAL_API_KEY;
@@ -602,6 +605,15 @@ app.onError((err, c) => {
     return c.json({ success: false, error: err.message }, 500);
 });
 
+// --- Strip "SOURCES AND LINKS" section from prompts when web search is off ---
+const stripSourcesSection = (prompt) => {
+    const regex = /SOURCES AND LINKS:[\s\S]*?(?=\n\n[A-Z]|\n*$)/;
+    if (typeof prompt === 'object' && prompt.staticPrompt) {
+        return { ...prompt, staticPrompt: prompt.staticPrompt.replace(regex, '').trim() };
+    }
+    return typeof prompt === 'string' ? prompt.replace(regex, '').trim() : prompt;
+};
+
 // ╔══════════════════════════════════════════════════════════════════════════════╗
 // ║  SECTION 8 — MAIN ROUTES (AI FLOW)                                         ║
 // ║                                                                             ║
@@ -646,21 +658,29 @@ app.post('/api/ask', async (c) => {
 app.post('/api/filters', async (c) => {
     try {
         const body = await c.req.json();
-        const { question, profileKey, language, provider, apiKey, filters, precision, values } = body;
-        console.log(`[Worker] filters - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}`);
+        const { question, profileKey, language, provider, apiKey, filters, precision, values, useWebSearch } = body;
+        console.log(`[Worker] filters - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}, WebSearch: ${!!useWebSearch}`);
 
         // Virgile response: prompt with profile+values, message with question+filters+precision
-        const virgilePrompt = await getSubmitFiltersPrompt(c.env, profileKey, values, language);
+        let virgilePrompt = await getSubmitFiltersPrompt(c.env, profileKey, values, language);
         const virgileMessage = `Question: "${question}"\nFilters: ${filters ? filters.join(', ') : 'none'}\nClarification: "${precision}"`;
 
         // Standard response: generic prompt (language only), message with question ONLY
-        const standardPrompt = await getStandardPrompt(c.env, language);
+        let standardPrompt = await getStandardPrompt(c.env, language);
         const standardMessage = `Question: "${question}"`;
+
+        // Strip sources section when web search is off
+        if (!useWebSearch) {
+            virgilePrompt = stripSourcesSection(virgilePrompt);
+            standardPrompt = stripSourcesSection(standardPrompt);
+        }
+
+        const aiOptions = { useWebSearch };
 
         // Parallel calls to reduce latency
         const [virgileResponse, standardResponse] = await Promise.all([
-            callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage),
-            callAI(provider, apiKey, c.env, standardPrompt, standardMessage)
+            callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, aiOptions),
+            callAI(provider, apiKey, c.env, standardPrompt, standardMessage, aiOptions)
         ]);
 
         return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
@@ -687,10 +707,10 @@ app.post('/api/filters', async (c) => {
 app.post('/api/followup', async (c) => {
     try {
         const body = await c.req.json();
-        const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profileKey, language, provider, apiKey, values } = body;
-        console.log(`[Worker] followup - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}`);
+        const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profileKey, language, provider, apiKey, values, useWebSearch } = body;
+        console.log(`[Worker] followup - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}, WebSearch: ${!!useWebSearch}`);
 
-        // 3a. Verification: is the question related to the context?
+        // 3a. Verification: is the question related to the context? (never needs web search)
         const checkPrompt = await getFollowUpCheckPrompt(c.env, context, followUp, language);
         const checkResult = await callAI(provider, apiKey, c.env, "You are a context verifier.", checkPrompt);
 
@@ -705,7 +725,10 @@ app.post('/api/followup', async (c) => {
         }
 
         // 3b. Follow-up response generation
-        const genPrompt = await getFollowUpGenPrompt(c.env, profileKey, values, language);
+        let genPrompt = await getFollowUpGenPrompt(c.env, profileKey, values, language);
+        if (!useWebSearch) {
+            genPrompt = stripSourcesSection(genPrompt);
+        }
 
         // Truncate the Virgile response to 500 characters to reduce payload
         const truncatedResponse = virgileResponse ? virgileResponse.substring(0, 500) + '...' : '';
@@ -724,7 +747,7 @@ app.post('/api/followup', async (c) => {
 
         conversationContext += `\n\nUser's new question: "${followUp}"`;
 
-        const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext);
+        const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext, { useWebSearch });
         return c.json({ success: true, data: { rejected: false, response } });
     } catch (e) {
         console.error('[Worker] /api/followup error:', e);

@@ -15,7 +15,12 @@ const TermsView = () => {
         { title: t('terms_s7_title'), text: t('terms_s7_text') },
         { title: t('terms_s8_title'), text: t('terms_s8_text') },
         { title: t('terms_s9_title'), text: t('terms_s9_text') },
-        { title: t('terms_s10_title'), text: t('terms_s10_text') }
+        { title: t('terms_s10_title'), text: t('terms_s10_text') },
+        { title: t('terms_s11_title'), text: t('terms_s11_text') },
+        { title: t('terms_s12_title'), text: t('terms_s12_text') },
+        { title: t('terms_s13_title'), text: t('terms_s13_text') },
+        { title: t('terms_s14_title'), text: t('terms_s14_text') },
+        { title: t('terms_s15_title'), text: t('terms_s15_text') }
     ];
 
     return (

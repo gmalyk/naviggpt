@@ -19,7 +19,7 @@ const AuthModal = () => {
         setError('');
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: window.location.origin },
+            options: { redirectTo: window.location.href },
         });
         if (error) setError(error.message);
     };
@@ -79,7 +79,7 @@ const AuthModal = () => {
         setLoading(true);
         if (!supabase) { setError('Auth not configured'); setLoading(false); return; }
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}`,
+            redirectTo: window.location.href,
         });
         setLoading(false);
         if (error) {

@@ -2224,21 +2224,24 @@ User Question: ${userMessage}` }]
   const data = JSON.parse(text);
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini";
 }, "callGemini");
-var callGrok = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
+var callGrok = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage, options = {}) => {
+  const body = {
+    model: "grok-4-1-fast-reasoning",
+    input: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userMessage }
+    ]
+  };
+  if (options.useWebSearch) {
+    body.tools = [{ type: "web_search" }];
+  }
   const response = await fetch("https://api.x.ai/v1/responses", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`
     },
-    body: JSON.stringify({
-      model: "grok-4-1-fast-reasoning",
-      input: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage }
-      ],
-      tools: [{ type: "web_search" }]
-    })
+    body: JSON.stringify(body)
   });
   const data = await response.json();
   if (data.error) throw new Error(data.error.message || "Grok API Error");
@@ -2273,7 +2276,7 @@ var callMistral = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessag
   if (data.error || data.message) throw new Error(data.error?.message || data.message || "Mistral API Error");
   return data.choices[0].message.content;
 }, "callMistral");
-var callAI = /* @__PURE__ */ __name(async (provider, apiKey, env, systemPrompt, userMessage) => {
+var callAI = /* @__PURE__ */ __name(async (provider, apiKey, env, systemPrompt, userMessage, options = {}) => {
   const flatPrompt = typeof systemPrompt === "object" && systemPrompt.staticPrompt ? systemPrompt.staticPrompt + "\n\n" + systemPrompt.dynamicPrompt : systemPrompt;
   if (provider === "openai") {
     const key = apiKey || env.OPENAI_API_KEY;
@@ -2288,7 +2291,7 @@ var callAI = /* @__PURE__ */ __name(async (provider, apiKey, env, systemPrompt, 
   if (provider === "grok") {
     const key = apiKey || env.XAI_API_KEY;
     if (!key) throw new Error("No Grok API key provided");
-    return await callGrok(key, flatPrompt, userMessage);
+    return await callGrok(key, flatPrompt, userMessage, options);
   }
   if (provider === "mistral") {
     const key = apiKey || env.MISTRAL_API_KEY;
@@ -2626,6 +2629,13 @@ app.onError((err, c) => {
   console.error(`[Worker Error] ${err.message}`, err.stack);
   return c.json({ success: false, error: err.message }, 500);
 });
+var stripSourcesSection = /* @__PURE__ */ __name((prompt) => {
+  const regex = /SOURCES AND LINKS:[\s\S]*?(?=\n\n[A-Z]|\n*$)/;
+  if (typeof prompt === "object" && prompt.staticPrompt) {
+    return { ...prompt, staticPrompt: prompt.staticPrompt.replace(regex, "").trim() };
+  }
+  return typeof prompt === "string" ? prompt.replace(regex, "").trim() : prompt;
+}, "stripSourcesSection");
 app.post("/api/ask", async (c) => {
   try {
     const body = await c.req.json();
@@ -2647,17 +2657,22 @@ app.post("/api/ask", async (c) => {
 app.post("/api/filters", async (c) => {
   try {
     const body = await c.req.json();
-    const { question, profileKey, language, provider, apiKey, filters, precision, values } = body;
-    console.log(`[Worker] filters - Profile: ${profileKey}, Values: ${values ? values.join(", ") : "none"}`);
-    const virgilePrompt = await getSubmitFiltersPrompt(c.env, profileKey, values, language);
+    const { question, profileKey, language, provider, apiKey, filters, precision, values, useWebSearch } = body;
+    console.log(`[Worker] filters - Profile: ${profileKey}, Values: ${values ? values.join(", ") : "none"}, WebSearch: ${!!useWebSearch}`);
+    let virgilePrompt = await getSubmitFiltersPrompt(c.env, profileKey, values, language);
     const virgileMessage = `Question: "${question}"
 Filters: ${filters ? filters.join(", ") : "none"}
 Clarification: "${precision}"`;
-    const standardPrompt = await getStandardPrompt(c.env, language);
+    let standardPrompt = await getStandardPrompt(c.env, language);
     const standardMessage = `Question: "${question}"`;
+    if (!useWebSearch) {
+      virgilePrompt = stripSourcesSection(virgilePrompt);
+      standardPrompt = stripSourcesSection(standardPrompt);
+    }
+    const aiOptions = { useWebSearch };
     const [virgileResponse, standardResponse] = await Promise.all([
-      callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage),
-      callAI(provider, apiKey, c.env, standardPrompt, standardMessage)
+      callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, aiOptions),
+      callAI(provider, apiKey, c.env, standardPrompt, standardMessage, aiOptions)
     ]);
     return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
   } catch (e) {
@@ -2668,8 +2683,8 @@ Clarification: "${precision}"`;
 app.post("/api/followup", async (c) => {
   try {
     const body = await c.req.json();
-    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profileKey, language, provider, apiKey, values } = body;
-    console.log(`[Worker] followup - Profile: ${profileKey}, Values: ${values ? values.join(", ") : "none"}`);
+    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profileKey, language, provider, apiKey, values, useWebSearch } = body;
+    console.log(`[Worker] followup - Profile: ${profileKey}, Values: ${values ? values.join(", ") : "none"}, WebSearch: ${!!useWebSearch}`);
     const checkPrompt = await getFollowUpCheckPrompt(c.env, context, followUp, language);
     const checkResult = await callAI(provider, apiKey, c.env, "You are a context verifier.", checkPrompt);
     if (checkResult.toUpperCase().includes("NO")) {
@@ -2681,7 +2696,10 @@ app.post("/api/followup", async (c) => {
         }
       });
     }
-    const genPrompt = await getFollowUpGenPrompt(c.env, profileKey, values, language);
+    let genPrompt = await getFollowUpGenPrompt(c.env, profileKey, values, language);
+    if (!useWebSearch) {
+      genPrompt = stripSourcesSection(genPrompt);
+    }
     const truncatedResponse = virgileResponse ? virgileResponse.substring(0, 500) + "..." : "";
     let conversationContext = `Initial question: "${question}"
 Filters: ${filters ? filters.join(", ") : "none"}
@@ -2702,7 +2720,7 @@ Virgile: ${aiMsg}`;
     conversationContext += `
 
 User's new question: "${followUp}"`;
-    const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext);
+    const response = await callAI(provider, apiKey, c.env, genPrompt, conversationContext, { useWebSearch });
     return c.json({ success: true, data: { rejected: false, response } });
   } catch (e) {
     console.error("[Worker] /api/followup error:", e);

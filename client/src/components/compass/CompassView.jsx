@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Compass, Check, Info, Users, BookOpen, Smile, Heart } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { navigateTo } from '../../hooks/useRouting';
 import { useTranslation } from '../../hooks/useTranslation';
 import { compassData } from '../../data/compassData';
 
@@ -76,14 +77,12 @@ const CompassView = () => {
         if (state.returnToView) {
             const returnView = state.returnToView;
             dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: null });
-            dispatch({ type: ACTIONS.SET_VIEW, payload: returnView });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            navigateTo(dispatch, returnView);
         } else {
             setSaved(true);
             setTimeout(() => {
                 setSaved(false);
-                dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                navigateTo(dispatch, 'home');
             }, 500);
         }
     };
@@ -254,8 +253,7 @@ const CompassView = () => {
                         onClick={() => {
                             const returnView = state.returnToView;
                             dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: null });
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: returnView });
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            navigateTo(dispatch, returnView);
                         }}
                         className="text-sm text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
                     >

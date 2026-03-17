@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Save, RotateCcw, ArrowLeft, Loader2, Lock } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { navigateTo } from '../../hooks/useRouting';
 import { useTranslation } from '../../hooks/useTranslation';
 import { api } from '../../services/api';
 import PromptCard from './PromptCard';
@@ -153,18 +154,14 @@ const PromptEditorView = () => {
 
     const goBack = () => {
         if (hasUnsavedChanges && !window.confirm(t('prompt_unsaved_warning'))) return;
-        window.history.pushState({}, '', '/');
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
+        navigateTo(dispatch, 'home');
     };
 
     if (!authenticated) {
         return (
             <div className="max-w-md mx-auto px-4 py-16">
                 <button
-                    onClick={() => {
-                        window.history.pushState({}, '', '/');
-                        dispatch({ type: ACTIONS.SET_VIEW, payload: 'home' });
-                    }}
+                    onClick={() => navigateTo(dispatch, 'home')}
                     className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
@@ -50,6 +50,32 @@ const FilterForm = () => {
     const sections = state.sections.slice(0, state.filterCount);
     const gridCols = state.filterCount <= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-5';
 
+    // Swipe handling for mobile
+    const touchStartX = useRef(null);
+    const touchStartY = useRef(null);
+
+    const handleTouchStart = useCallback((e) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchStartY.current = e.touches[0].clientY;
+    }, []);
+
+    const handleTouchEnd = useCallback((e) => {
+        if (touchStartX.current === null) return;
+        const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+        const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+        touchStartX.current = null;
+        touchStartY.current = null;
+
+        // Only swipe if horizontal movement is dominant and > 40px
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX < 0) {
+                setActiveCategoryIndex(i => Math.min(sections.length - 1, i + 1));
+            } else {
+                setActiveCategoryIndex(i => Math.max(0, i - 1));
+            }
+        }
+    }, [sections.length]);
+
     if (sections.length === 0) return null;
 
     const clampedIndex = Math.min(activeCategoryIndex, sections.length - 1);
@@ -64,8 +90,12 @@ const FilterForm = () => {
                 ))}
             </div>
 
-            {/* Mobile: one category at a time */}
-            <div className="md:hidden w-full animate-in slide-in-from-bottom-4 duration-500">
+            {/* Mobile: one category at a time, swipeable */}
+            <div
+                className="md:hidden w-full animate-in slide-in-from-bottom-4 duration-500"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            >
                 <div key={clampedIndex} className="animate-in fade-in duration-300">
                     <CategorySection section={activeSection} state={state} onToggle={handleToggle} />
                 </div>

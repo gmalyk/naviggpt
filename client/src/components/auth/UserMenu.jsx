@@ -3,6 +3,7 @@ import { LogOut, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { navigateTo } from '../../hooks/useRouting';
 import { useTranslation } from '../../hooks/useTranslation';
 
 const UserMenu = () => {
@@ -51,7 +52,7 @@ const UserMenu = () => {
                     </div>
                     <button
                         onClick={() => {
-                            dispatch({ type: ACTIONS.SET_VIEW, payload: 'account' });
+                            navigateTo(dispatch, 'account');
                             setIsOpen(false);
                         }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"

@@ -4,6 +4,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useAuth } from '../../context/AuthContext';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { navigateTo } from '../../hooks/useRouting';
 
 const AccountView = () => {
     const { t } = useTranslation();
@@ -38,7 +39,7 @@ const AccountView = () => {
                     </p>
 
                     <button
-                        onClick={() => dispatch({ type: ACTIONS.SET_VIEW, payload: 'pricing' })}
+                        onClick={() => navigateTo(dispatch, 'pricing')}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#B88644] hover:bg-[#a6763b] text-white font-semibold text-sm transition-colors brand-protect"
                     >
                         {t('account_subscribe_cta')}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Sparkles, ArrowRight, Compass } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
+import { navigateTo } from '../../hooks/useRouting';
 import { useAI } from '../../hooks/useAI';
 import { useTranslation } from '../../hooks/useTranslation';
 import QuestionBar from './QuestionBar';
@@ -18,8 +19,7 @@ const DiscernmentView = () => {
 
     const handleDefineValues = () => {
         dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: 'discernment' });
-        dispatch({ type: ACTIONS.SET_VIEW, payload: 'compass' });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        navigateTo(dispatch, 'compass');
     };
 
     useEffect(() => {
