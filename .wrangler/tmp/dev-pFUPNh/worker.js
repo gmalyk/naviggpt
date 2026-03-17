@@ -2160,7 +2160,7 @@ var cors = /* @__PURE__ */ __name((options) => {
 }, "cors");
 
 // worker.js
-var DAILY_LIMIT = 5;
+var DAILY_LIMIT = 3;
 var EXEMPT_EMAILS = ["alexandregenko@gmail.com", "gregmalyk@gmail.com"];
 function getAuthEmail(c) {
   const auth = c.req.header("Authorization");

@@ -5,7 +5,7 @@ import { cors } from 'hono/cors';
 // ║  DAILY USAGE LIMIT                                                         ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-const DAILY_LIMIT = 5;
+const DAILY_LIMIT = 3;
 const EXEMPT_EMAILS = ['alexandregenko@gmail.com', 'gregmalyk@gmail.com'];
 
 // Try to get email from JWT; returns null (not an error) if no token provided

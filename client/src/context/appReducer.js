@@ -21,7 +21,7 @@ export const initialState = {
     settings: {
         provider: 'grok'
     },
-    usage: { used: 0, limit: 5, remaining: 5, exempt: false, loaded: false },
+    usage: { used: 0, limit: 3, remaining: 3, exempt: false, loaded: false },
     showLimitBanner: false
 };
 
