@@ -232,7 +232,11 @@ export const translations = {
         terms_s9_title: "Modifications des conditions",
         terms_s9_text: "Nous nous réservons le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés des modifications significatives. La poursuite de l'utilisation du service après modification vaut acceptation des nouvelles conditions.",
         terms_s10_title: "Contact et droit applicable",
-        terms_s10_text: "Pour toute question relative aux présentes conditions, vous pouvez nous contacter via la page Contact du site. Les présentes conditions sont régies par le droit français. Tout litige relatif à l'interprétation ou à l'exécution des présentes sera soumis aux tribunaux compétents."
+        terms_s10_text: "Pour toute question relative aux présentes conditions, vous pouvez nous contacter via la page Contact du site. Les présentes conditions sont régies par le droit français. Tout litige relatif à l'interprétation ou à l'exécution des présentes sera soumis aux tribunaux compétents.",
+        daily_limit_reached: "Vous avez atteint votre limite quotidienne de 5 questions. Revenez demain ou passez à un plan supérieur !",
+        login_to_ask: "Veuillez vous connecter pour poser une question.",
+        usage_remaining: "{{used}}/{{limit}} utilisé(s) aujourd'hui",
+        upgrade_plan: "Passer au plan supérieur"
     },
     en: {
         brand_name: "Virgil",
@@ -468,6 +472,10 @@ export const translations = {
         terms_s9_text: "TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL VIRGGILAI, ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR LICENSORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES — INCLUDING LOSS OF PROFITS, DATA, USE, OR GOODWILL — ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.\n\nIn jurisdictions that do not allow the exclusion or limitation of certain damages, our liability shall be limited to the fullest extent permitted by law. In any event, our total aggregate liability to you shall not exceed the greater of (a) the amount you paid us in the twelve months preceding the claim, or (b) one hundred US dollars ($100).",
         terms_s10_title: "Indemnification",
         terms_s10_text: "You agree to indemnify, defend, and hold harmless VirggilAi, its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, costs, or expenses (including reasonable attorneys' fees) arising out of: (a) your use of the Service; (b) your violation of these Terms; (c) your violation of any third-party rights; or (d) any content you submit to the Service.",
+        daily_limit_reached: "You've reached your daily limit of 5 questions. Come back tomorrow or upgrade your plan!",
+        login_to_ask: "Please sign in to ask a question.",
+        usage_remaining: "{{used}}/{{limit}} used today",
+        upgrade_plan: "Upgrade Plan",
         terms_s11_title: "Mental Health and Crisis Safety",
         terms_s11_text: "IF YOU ARE EXPERIENCING A MENTAL HEALTH CRISIS, THOUGHTS OF SUICIDE OR SELF-HARM, OR ANY EMERGENCY, DO NOT RELY ON THIS SERVICE. CALL 911 (US EMERGENCY SERVICES) OR THE 988 SUICIDE AND CRISIS LIFELINE (CALL OR TEXT 988) IMMEDIATELY.\n\nVirggil is designed to encourage and support users spiritually, but it is not equipped to handle psychiatric emergencies or provide crisis counseling. The Company expressly disclaims any liability for harm arising from reliance on the Service in a mental health crisis.",
         terms_s12_title: "Modifications to Terms and Service",
@@ -741,7 +749,11 @@ export const translations = {
         terms_s9_title: "Modifiche ai termini",
         terms_s9_text: "Ci riserviamo il diritto di modificare questi termini in qualsiasi momento. Gli utenti verranno informati delle modifiche significative. L'uso continuato del servizio dopo la modifica costituisce accettazione dei nuovi termini.",
         terms_s10_title: "Contatti e legge applicabile",
-        terms_s10_text: "Per qualsiasi domanda relativa ai presenti termini, puoi contattarci tramite la pagina Contatti del sito. I presenti termini sono regolati dal diritto francese. Qualsiasi controversia relativa all'interpretazione o all'esecuzione dei presenti termini sarà sottoposta ai tribunali competenti."
+        terms_s10_text: "Per qualsiasi domanda relativa ai presenti termini, puoi contattarci tramite la pagina Contatti del sito. I presenti termini sono regolati dal diritto francese. Qualsiasi controversia relativa all'interpretazione o all'esecuzione dei presenti termini sarà sottoposta ai tribunali competenti.",
+        daily_limit_reached: "Hai raggiunto il limite giornaliero di 5 domande. Torna domani o aggiorna il tuo piano!",
+        login_to_ask: "Accedi per fare una domanda.",
+        usage_remaining: "{{used}}/{{limit}} utilizzate oggi",
+        upgrade_plan: "Aggiorna il piano"
     },
     de: {
         brand_name: "Vergil",
@@ -974,7 +986,11 @@ export const translations = {
         terms_s9_title: "Änderungen der Bedingungen",
         terms_s9_text: "Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Die Benutzer werden über wesentliche Änderungen informiert. Die fortgesetzte Nutzung des Dienstes nach einer Änderung gilt als Annahme der neuen Bedingungen.",
         terms_s10_title: "Kontakt und anwendbares Recht",
-        terms_s10_text: "Bei Fragen zu diesen Bedingungen können Sie uns über die Kontaktseite der Website erreichen. Diese Bedingungen unterliegen dem französischen Recht. Jeder Streit bezüglich der Auslegung oder Durchführung dieser Bedingungen wird den zuständigen Gerichten vorgelegt."
+        terms_s10_text: "Bei Fragen zu diesen Bedingungen können Sie uns über die Kontaktseite der Website erreichen. Diese Bedingungen unterliegen dem französischen Recht. Jeder Streit bezüglich der Auslegung oder Durchführung dieser Bedingungen wird den zuständigen Gerichten vorgelegt.",
+        daily_limit_reached: "Du hast dein tägliches Limit von 5 Fragen erreicht. Komm morgen wieder oder upgrade deinen Plan!",
+        login_to_ask: "Bitte melde dich an, um eine Frage zu stellen.",
+        usage_remaining: "{{used}}/{{limit}} heute genutzt",
+        upgrade_plan: "Plan upgraden"
     },
     es: {
         brand_name: "Virgilio",
@@ -1207,7 +1223,11 @@ export const translations = {
         terms_s9_title: "Modificaciones de los términos",
         terms_s9_text: "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los usuarios serán informados de las modificaciones significativas. El uso continuado del servicio tras la modificación constituye la aceptación de los nuevos términos.",
         terms_s10_title: "Contacto y legislación aplicable",
-        terms_s10_text: "Para cualquier pregunta relativa a estos términos, puede contactarnos a través de la página de Contacto del sitio. Estos términos se rigen por la legislación francesa. Cualquier litigio relativo a la interpretación o ejecución de estos términos se someterá a los tribunales competentes."
+        terms_s10_text: "Para cualquier pregunta relativa a estos términos, puede contactarnos a través de la página de Contacto del sitio. Estos términos se rigen por la legislación francesa. Cualquier litigio relativo a la interpretación o ejecución de estos términos se someterá a los tribunales competentes.",
+        daily_limit_reached: "Has alcanzado tu límite diario de 5 preguntas. ¡Vuelve mañana o mejora tu plan!",
+        login_to_ask: "Inicia sesión para hacer una pregunta.",
+        usage_remaining: "{{used}}/{{limit}} usadas hoy",
+        upgrade_plan: "Mejorar plan"
     },
     pt: {
         brand_name: "Virgílio",
@@ -1440,7 +1460,11 @@ export const translations = {
         terms_s9_title: "Alterações aos termos",
         terms_s9_text: "Reservamo-nos o direito de alterar estes termos a qualquer momento. Os utilizadores serão informados de alterações significativas. A utilização continuada do serviço após a alteração constitui aceitação dos novos termos.",
         terms_s10_title: "Contacto e lei aplicável",
-        terms_s10_text: "Para qualquer questão relativa a estes termos, pode contactar-nos através da página de Contacto do site. Estes termos são regidos pela lei francesa. Qualquer litígio relativo à interpretação ou execução destes termos será submetido aos tribunais competentes."
+        terms_s10_text: "Para qualquer questão relativa a estes termos, pode contactar-nos através da página de Contacto do site. Estes termos são regidos pela lei francesa. Qualquer litígio relativo à interpretação ou execução destes termos será submetido aos tribunais competentes.",
+        daily_limit_reached: "Você atingiu seu limite diário de 5 perguntas. Volte amanhã ou atualize seu plano!",
+        login_to_ask: "Faça login para fazer uma pergunta.",
+        usage_remaining: "{{used}}/{{limit}} usadas hoje",
+        upgrade_plan: "Atualizar plano"
     },
     ru: {
         brand_name: "Вергилий",
@@ -1673,7 +1697,11 @@ export const translations = {
         terms_s9_title: "Изменение условий",
         terms_s9_text: "Мы оставляем за собой право изменять настоящие условия в любое время. Пользователи будут уведомлены о существенных изменениях. Продолжение использования сервиса после изменения означает принятие новых условий.",
         terms_s10_title: "Контакты и применимое право",
-        terms_s10_text: "По любым вопросам, касающимся настоящих условий, вы можете связаться с нами через страницу Контакты на сайте. Настоящие условия регулируются французским правом. Любой спор, связанный с толкованием или исполнением настоящих условий, передаётся на рассмотрение компетентных судов."
+        terms_s10_text: "По любым вопросам, касающимся настоящих условий, вы можете связаться с нами через страницу Контакты на сайте. Настоящие условия регулируются французским правом. Любой спор, связанный с толкованием или исполнением настоящих условий, передаётся на рассмотрение компетентных судов.",
+        daily_limit_reached: "Вы достигли дневного лимита в 5 вопросов. Возвращайтесь завтра или обновите план!",
+        login_to_ask: "Войдите, чтобы задать вопрос.",
+        usage_remaining: "{{used}}/{{limit}} использовано сегодня",
+        upgrade_plan: "Обновить план"
     },
     zh: {
         brand_name: "维吉尔",
@@ -1906,7 +1934,11 @@ export const translations = {
         terms_s9_title: "条款修改",
         terms_s9_text: "我们保留随时修改这些条款的权利。重大变更将通知用户。修改后继续使用服务即表示接受新条款。",
         terms_s10_title: "联系方式与适用法律",
-        terms_s10_text: "如有任何关于这些条款的问题，您可以通过网站的联系页面与我们联系。这些条款受法国法律管辖。与这些条款的解释或执行相关的任何争议将提交至有管辖权的法院。"
+        terms_s10_text: "如有任何关于这些条款的问题，您可以通过网站的联系页面与我们联系。这些条款受法国法律管辖。与这些条款的解释或执行相关的任何争议将提交至有管辖权的法院。",
+        daily_limit_reached: "您已达到每日5个问题的限制。明天再来或升级您的计划！",
+        login_to_ask: "请登录以提问。",
+        usage_remaining: "今天已使用 {{used}}/{{limit}}",
+        upgrade_plan: "升级计划"
     },
     ar: {
         brand_name: "فيرجيل",
@@ -2139,7 +2171,11 @@ export const translations = {
         terms_s9_title: "تعديل الشروط",
         terms_s9_text: "نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سيتم إعلام المستخدمين بالتعديلات الجوهرية. يُعد استمرار استخدام الخدمة بعد التعديل بمثابة قبول للشروط الجديدة.",
         terms_s10_title: "التواصل والقانون المعمول به",
-        terms_s10_text: "لأي استفسار بخصوص هذه الشروط، يمكنك التواصل معنا عبر صفحة الاتصال على الموقع. تخضع هذه الشروط للقانون الفرنسي. أي نزاع يتعلق بتفسير أو تنفيذ هذه الشروط يُحال إلى المحاكم المختصة."
+        terms_s10_text: "لأي استفسار بخصوص هذه الشروط، يمكنك التواصل معنا عبر صفحة الاتصال على الموقع. تخضع هذه الشروط للقانون الفرنسي. أي نزاع يتعلق بتفسير أو تنفيذ هذه الشروط يُحال إلى المحاكم المختصة.",
+        daily_limit_reached: "لقد وصلت إلى الحد اليومي من 5 أسئلة. عد غداً أو قم بترقية خطتك!",
+        login_to_ask: "يرجى تسجيل الدخول لطرح سؤال.",
+        usage_remaining: "{{used}}/{{limit}} مستخدمة اليوم",
+        upgrade_plan: "ترقية الخطة"
     },
     hi: {
         brand_name: "वर्जिल",
@@ -2372,6 +2408,10 @@ export const translations = {
         terms_s9_title: "शर्तों में परिवर्तन",
         terms_s9_text: "हम किसी भी समय इन शर्तों को संशोधित करने का अधिकार सुरक्षित रखते हैं। महत्वपूर्ण परिवर्तनों की सूचना उपयोगकर्ताओं को दी जाएगी। संशोधन के बाद सेवा का निरंतर उपयोग नई शर्तों की स्वीकृति माना जाएगा।",
         terms_s10_title: "संपर्क और लागू कानून",
-        terms_s10_text: "इन शर्तों के बारे में किसी भी प्रश्न के लिए, आप साइट के संपर्क पृष्ठ के माध्यम से हमसे संपर्क कर सकते हैं। ये शर्तें फ्रांसीसी कानून द्वारा शासित हैं। इन शर्तों की व्याख्या या निष्पादन से संबंधित कोई भी विवाद सक्षम न्यायालयों को प्रस्तुत किया जाएगा।"
+        terms_s10_text: "इन शर्तों के बारे में किसी भी प्रश्न के लिए, आप साइट के संपर्क पृष्ठ के माध्यम से हमसे संपर्क कर सकते हैं। ये शर्तें फ्रांसीसी कानून द्वारा शासित हैं। इन शर्तों की व्याख्या या निष्पादन से संबंधित कोई भी विवाद सक्षम न्यायालयों को प्रस्तुत किया जाएगा।",
+        daily_limit_reached: "आपने अपनी दैनिक 5 प्रश्नों की सीमा पूरी कर ली है। कल वापस आएं या अपनी योजना अपग्रेड करें!",
+        login_to_ask: "प्रश्न पूछने के लिए कृपया साइन इन करें।",
+        usage_remaining: "{{used}}/{{limit}} आज उपयोग किए गए",
+        upgrade_plan: "योजना अपग्रेड करें"
     }
 };

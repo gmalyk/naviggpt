@@ -2160,6 +2160,42 @@ var cors = /* @__PURE__ */ __name((options) => {
 }, "cors");
 
 // worker.js
+var DAILY_LIMIT = 5;
+var EXEMPT_EMAILS = ["alexandregenko@gmail.com", "gregmalyk@gmail.com"];
+async function getAuthEmail(c) {
+  const auth = c.req.header("Authorization");
+  if (!auth?.startsWith("Bearer ")) return { error: "auth_required" };
+  const token = auth.slice(7);
+  try {
+    const [, payloadB64] = token.split(".");
+    const payload = JSON.parse(atob(payloadB64.replace(/-/g, "+").replace(/_/g, "/")));
+    if (payload.exp && payload.exp < Date.now() / 1e3) return { error: "token_expired" };
+    return { email: payload.email };
+  } catch {
+    return { error: "invalid_token" };
+  }
+}
+__name(getAuthEmail, "getAuthEmail");
+function getUsageKey(email) {
+  return `usage:${email.toLowerCase()}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`;
+}
+__name(getUsageKey, "getUsageKey");
+async function getUsageCount(env, email) {
+  const val = await env.PROMPTS.get(getUsageKey(email));
+  return val ? parseInt(val, 10) : 0;
+}
+__name(getUsageCount, "getUsageCount");
+async function incrementUsage(env, email) {
+  const key = getUsageKey(email);
+  const current = await getUsageCount(env, email);
+  await env.PROMPTS.put(key, String(current + 1), { expirationTtl: 172800 });
+  return current + 1;
+}
+__name(incrementUsage, "incrementUsage");
+function isExempt(email) {
+  return EXEMPT_EMAILS.includes(email.toLowerCase());
+}
+__name(isExempt, "isExempt");
 var callOpenAI = /* @__PURE__ */ __name(async (apiKey, systemPrompt, userMessage) => {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -2636,8 +2672,21 @@ var stripSourcesSection = /* @__PURE__ */ __name((prompt) => {
   }
   return typeof prompt === "string" ? prompt.replace(regex, "").trim() : prompt;
 }, "stripSourcesSection");
+app.get("/api/usage", async (c) => {
+  const { email, error } = await getAuthEmail(c);
+  if (error) return c.json({ success: false, error }, 401);
+  if (isExempt(email)) return c.json({ success: true, data: { used: 0, limit: -1, remaining: -1, exempt: true } });
+  const used = await getUsageCount(c.env, email);
+  return c.json({ success: true, data: { used, limit: DAILY_LIMIT, remaining: Math.max(0, DAILY_LIMIT - used), exempt: false } });
+});
 app.post("/api/ask", async (c) => {
   try {
+    const { email, error: authError } = await getAuthEmail(c);
+    if (authError) return c.json({ success: false, error: authError }, 401);
+    if (!isExempt(email)) {
+      const used = await getUsageCount(c.env, email);
+      if (used >= DAILY_LIMIT) return c.json({ success: false, error: "daily_limit_reached" }, 429);
+    }
     const body = await c.req.json();
     const { question, profileKey, language, provider, apiKey, values, filterCount } = body;
     console.log(`[Worker] ask - Profile: ${profileKey}, Values: ${values ? values.join(", ") : "none"}, FilterCount: ${filterCount}`);
@@ -2656,6 +2705,12 @@ app.post("/api/ask", async (c) => {
 });
 app.post("/api/filters", async (c) => {
   try {
+    const { email, error: authError } = await getAuthEmail(c);
+    if (authError) return c.json({ success: false, error: authError }, 401);
+    if (!isExempt(email)) {
+      const used = await getUsageCount(c.env, email);
+      if (used >= DAILY_LIMIT) return c.json({ success: false, error: "daily_limit_reached" }, 429);
+    }
     const body = await c.req.json();
     const { question, profileKey, language, provider, apiKey, filters, precision, values, useWebSearch } = body;
     console.log(`[Worker] filters - Profile: ${profileKey}, Values: ${values ? values.join(", ") : "none"}, WebSearch: ${!!useWebSearch}`);
@@ -2674,6 +2729,7 @@ Clarification: "${precision}"`;
       callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, aiOptions),
       callAI(provider, apiKey, c.env, standardPrompt, standardMessage, aiOptions)
     ]);
+    if (!isExempt(email)) await incrementUsage(c.env, email);
     return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
   } catch (e) {
     console.error("[Worker] /api/filters error:", e);

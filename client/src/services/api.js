@@ -2,6 +2,14 @@
  * API Service for Virgile AI - Optimized for Cloudflare
  */
 
+import { supabase } from '../lib/supabase';
+
+const getAuthHeaders = async () => {
+    if (!supabase) return {};
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {};
+};
+
 const handleResponse = async (response) => {
     let data;
     try {
@@ -10,7 +18,10 @@ const handleResponse = async (response) => {
         throw new Error(`Server error (${response.status})`);
     }
     if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Fetch error');
+        const err = new Error(data.error || 'Fetch error');
+        err.status = response.status;
+        err.errorCode = data.error;
+        throw err;
     }
 
     if (typeof data.data === 'string' && data.data.trim().startsWith('{')) {
@@ -30,18 +41,20 @@ const API_BASE = '/api';
 
 export const api = {
     ask: async (payload) => {
+        const authHeaders = await getAuthHeaders();
         const response = await fetch(`${API_BASE}/ask`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders },
             body: JSON.stringify(payload)
         });
         return await handleResponse(response);
     },
 
     submitFilters: async (payload) => {
+        const authHeaders = await getAuthHeaders();
         const response = await fetch(`${API_BASE}/filters`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders },
             body: JSON.stringify(payload)
         });
         return await handleResponse(response);
@@ -94,6 +107,14 @@ export const api = {
         const response = await fetch(`${API_BASE}/prompts/reset`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` }
+        });
+        return await handleResponse(response);
+    },
+
+    getUsage: async () => {
+        const authHeaders = await getAuthHeaders();
+        const response = await fetch(`${API_BASE}/usage`, {
+            headers: authHeaders
         });
         return await handleResponse(response);
     }

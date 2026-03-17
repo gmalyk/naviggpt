@@ -3,11 +3,13 @@ import { useAppState } from '../context/AppContext';
 import { ACTIONS } from '../context/appReducer';
 import { navigateTo } from './useRouting';
 import { useTranslation } from './useTranslation';
+import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
 export const useAI = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
+    const { user, openAuthModal } = useAuth();
     const [loading, setLoading] = useState(false);
 
     const callSubmitFilters = async (questionOverride) => {
@@ -23,11 +25,34 @@ export const useAI = () => {
             useWebSearch: state.useWebSearch
         });
 
+        // Optimistic usage decrement after successful flow
+        if (!state.usage.exempt) {
+            dispatch({
+                type: ACTIONS.SET_USAGE,
+                payload: {
+                    used: state.usage.used + 1,
+                    remaining: Math.max(0, state.usage.remaining - 1)
+                }
+            });
+        }
+
         dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virgile: response.virgile, standard: response.standard } });
         navigateTo(dispatch, 'result');
     };
 
     const askVirgile = async (question) => {
+        // Require login
+        if (!user) {
+            openAuthModal('sign_in', t('login_to_ask'));
+            return;
+        }
+
+        // Check usage limit
+        if (state.usage.remaining <= 0 && !state.usage.exempt) {
+            dispatch({ type: ACTIONS.SHOW_LIMIT_BANNER });
+            return;
+        }
+
         setLoading(true);
         dispatch({ type: ACTIONS.SET_LOADING, payload: true });
         dispatch({ type: ACTIONS.SET_QUESTION, payload: question });
@@ -52,7 +77,13 @@ export const useAI = () => {
             }
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            if (error.status === 401) {
+                openAuthModal('sign_in', t('login_to_ask'));
+            } else if (error.status === 429 || error.errorCode === 'daily_limit_reached') {
+                dispatch({ type: ACTIONS.SHOW_LIMIT_BANNER });
+            } else {
+                alert(error.message);
+            }
         } finally {
             setLoading(false);
             dispatch({ type: ACTIONS.SET_LOADING, payload: false });
@@ -67,7 +98,13 @@ export const useAI = () => {
             await callSubmitFilters();
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            if (error.status === 401) {
+                openAuthModal('sign_in', t('login_to_ask'));
+            } else if (error.status === 429 || error.errorCode === 'daily_limit_reached') {
+                dispatch({ type: ACTIONS.SHOW_LIMIT_BANNER });
+            } else {
+                alert(error.message);
+            }
         } finally {
             setLoading(false);
             dispatch({ type: ACTIONS.SET_LOADING, payload: false });

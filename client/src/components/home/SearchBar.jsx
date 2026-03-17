@@ -4,6 +4,7 @@ import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAI } from '../../hooks/useAI';
+import { useAuth } from '../../context/AuthContext';
 import LogoSpinner from '../ui/LogoSpinner';
 
 const profiles = [
@@ -19,6 +20,7 @@ const SearchBar = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
     const { askVirgile, loading } = useAI();
+    const { user } = useAuth();
     const inputValue = state.inputDraft;
     const setInputValue = (val) => dispatch({ type: ACTIONS.SET_INPUT_DRAFT, payload: val });
 
@@ -109,7 +111,11 @@ const SearchBar = () => {
                 </div>
             </div>
             <p className="text-center text-[10px] text-slate-400 mt-2 italic">{t('beta_notice')}</p>
-
+            {user && state.usage.loaded && !state.usage.exempt && (
+                <p className="text-center text-[11px] text-slate-400 mt-1">
+                    {t('usage_remaining').replace('{{used}}', state.usage.used).replace('{{limit}}', state.usage.limit)}
+                </p>
+            )}
         </section>
     );
 };

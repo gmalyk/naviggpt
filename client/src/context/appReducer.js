@@ -20,7 +20,9 @@ export const initialState = {
     loading: false,
     settings: {
         provider: 'grok'
-    }
+    },
+    usage: { used: 0, limit: 5, remaining: 5, exempt: false, loaded: false },
+    showLimitBanner: false
 };
 
 export const ACTIONS = {
@@ -40,7 +42,10 @@ export const ACTIONS = {
     ADD_FOLLOW_UP: 'ADD_FOLLOW_UP',
     SET_LOADING: 'SET_LOADING',
     SET_RETURN_TO_VIEW: 'SET_RETURN_TO_VIEW',
-    UPDATE_SETTINGS: 'UPDATE_SETTINGS'
+    UPDATE_SETTINGS: 'UPDATE_SETTINGS',
+    SET_USAGE: 'SET_USAGE',
+    SHOW_LIMIT_BANNER: 'SHOW_LIMIT_BANNER',
+    HIDE_LIMIT_BANNER: 'HIDE_LIMIT_BANNER'
 };
 
 export function appReducer(state, action) {
@@ -97,6 +102,12 @@ export function appReducer(state, action) {
             return { ...state, loading: action.payload };
         case ACTIONS.UPDATE_SETTINGS:
             return { ...state, settings: { ...state.settings, ...action.payload } };
+        case ACTIONS.SET_USAGE:
+            return { ...state, usage: { ...state.usage, ...action.payload, loaded: true } };
+        case ACTIONS.SHOW_LIMIT_BANNER:
+            return { ...state, showLimitBanner: true };
+        case ACTIONS.HIDE_LIMIT_BANNER:
+            return { ...state, showLimitBanner: false };
         default:
             return state;
     }

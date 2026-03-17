@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useAppState } from './context/AppContext';
+import { ACTIONS } from './context/appReducer';
 import { useRouting } from './hooks/useRouting';
+import { useAuth } from './context/AuthContext';
+import { api } from './services/api';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomeView from './components/home/HomeView';
@@ -15,9 +18,11 @@ import ForumView from './components/forum/ForumView';
 import TermsView from './components/terms/TermsView';
 import CompassView from './components/compass/CompassView';
 import PrivacyView from './components/privacy/PrivacyView';
+import LimitBanner from './components/ui/LimitBanner';
 
 function App() {
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
+  const { user } = useAuth();
 
   useRouting();
 
@@ -26,6 +31,14 @@ function App() {
     window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
   }, []);
+
+  // Fetch usage when user logs in or on mount
+  useEffect(() => {
+    if (!user) return;
+    api.getUsage()
+      .then((data) => dispatch({ type: ACTIONS.SET_USAGE, payload: data }))
+      .catch(() => {});
+  }, [user]);
 
   return (
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
@@ -64,6 +77,7 @@ function App() {
         )}
       </div>
       <Footer />
+      <LimitBanner />
     </div>
   );
 }

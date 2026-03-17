@@ -2,6 +2,45 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
+// ║  DAILY USAGE LIMIT                                                         ║
+// ╚══════════════════════════════════════════════════════════════════════════════╝
+
+const DAILY_LIMIT = 5;
+const EXEMPT_EMAILS = ['alexandregenko@gmail.com', 'gregmalyk@gmail.com'];
+
+async function getAuthEmail(c) {
+    const auth = c.req.header('Authorization');
+    if (!auth?.startsWith('Bearer ')) return { error: 'auth_required' };
+    const token = auth.slice(7);
+    try {
+        const [, payloadB64] = token.split('.');
+        const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')));
+        if (payload.exp && payload.exp < Date.now() / 1000) return { error: 'token_expired' };
+        return { email: payload.email };
+    } catch { return { error: 'invalid_token' }; }
+}
+
+function getUsageKey(email) {
+    return `usage:${email.toLowerCase()}:${new Date().toISOString().slice(0, 10)}`;
+}
+
+async function getUsageCount(env, email) {
+    const val = await env.PROMPTS.get(getUsageKey(email));
+    return val ? parseInt(val, 10) : 0;
+}
+
+async function incrementUsage(env, email) {
+    const key = getUsageKey(email);
+    const current = await getUsageCount(env, email);
+    await env.PROMPTS.put(key, String(current + 1), { expirationTtl: 172800 });
+    return current + 1;
+}
+
+function isExempt(email) {
+    return EXEMPT_EMAILS.includes(email.toLowerCase());
+}
+
+// ╔══════════════════════════════════════════════════════════════════════════════╗
 // ║  SECTION 1 — AI PROVIDERS                                                  ║
 // ║  Each function calls a specific AI provider.                                ║
 // ║  Common signature: (apiKey, systemPrompt, userMessage) => string            ║
@@ -623,12 +662,29 @@ const stripSourcesSection = (prompt) => {
 // ║  3. POST /api/followup → follow-up: check context then generate response    ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+// ── GET /api/usage — Return current daily usage for the authenticated user ──
+app.get('/api/usage', async (c) => {
+    const { email, error } = await getAuthEmail(c);
+    if (error) return c.json({ success: false, error }, 401);
+    if (isExempt(email)) return c.json({ success: true, data: { used: 0, limit: -1, remaining: -1, exempt: true } });
+    const used = await getUsageCount(c.env, email);
+    return c.json({ success: true, data: { used, limit: DAILY_LIMIT, remaining: Math.max(0, DAILY_LIMIT - used), exempt: false } });
+});
+
 // ── STEP 1: Initial Analysis ────────────────────────────────────────────
 // Client sends: question, profileKey, language, provider, apiKey, values, filterCount
 // Worker returns: { analysis: string, sections: [{title, options}] }
 // "profileKey" (e.g., "adult") is interpolated into the prompt
 app.post('/api/ask', async (c) => {
     try {
+        // Auth + usage check
+        const { email, error: authError } = await getAuthEmail(c);
+        if (authError) return c.json({ success: false, error: authError }, 401);
+        if (!isExempt(email)) {
+            const used = await getUsageCount(c.env, email);
+            if (used >= DAILY_LIMIT) return c.json({ success: false, error: 'daily_limit_reached' }, 429);
+        }
+
         const body = await c.req.json();
         const { question, profileKey, language, provider, apiKey, values, filterCount } = body;
         console.log(`[Worker] ask - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}, FilterCount: ${filterCount}`);
@@ -657,6 +713,14 @@ app.post('/api/ask', async (c) => {
 // → The standard response receives NO profileKey/values/filters info
 app.post('/api/filters', async (c) => {
     try {
+        // Auth + usage check
+        const { email, error: authError } = await getAuthEmail(c);
+        if (authError) return c.json({ success: false, error: authError }, 401);
+        if (!isExempt(email)) {
+            const used = await getUsageCount(c.env, email);
+            if (used >= DAILY_LIMIT) return c.json({ success: false, error: 'daily_limit_reached' }, 429);
+        }
+
         const body = await c.req.json();
         const { question, profileKey, language, provider, apiKey, filters, precision, values, useWebSearch } = body;
         console.log(`[Worker] filters - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}, WebSearch: ${!!useWebSearch}`);
@@ -682,6 +746,9 @@ app.post('/api/filters', async (c) => {
             callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, aiOptions),
             callAI(provider, apiKey, c.env, standardPrompt, standardMessage, aiOptions)
         ]);
+
+        // Increment usage after successful flow completion
+        if (!isExempt(email)) await incrementUsage(c.env, email);
 
         return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
     } catch (e) {
