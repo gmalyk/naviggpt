@@ -8,30 +8,43 @@ import { cors } from 'hono/cors';
 const DAILY_LIMIT = 5;
 const EXEMPT_EMAILS = ['alexandregenko@gmail.com', 'gregmalyk@gmail.com'];
 
-async function getAuthEmail(c) {
+// Try to get email from JWT; returns null (not an error) if no token provided
+function getAuthEmail(c) {
     const auth = c.req.header('Authorization');
-    if (!auth?.startsWith('Bearer ')) return { error: 'auth_required' };
+    if (!auth?.startsWith('Bearer ')) return { email: null };
     const token = auth.slice(7);
     try {
         const [, payloadB64] = token.split('.');
         const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')));
-        if (payload.exp && payload.exp < Date.now() / 1000) return { error: 'token_expired' };
+        if (payload.exp && payload.exp < Date.now() / 1000) return { email: null };
         return { email: payload.email };
-    } catch { return { error: 'invalid_token' }; }
+    } catch { return { email: null }; }
 }
 
-function getUsageKey(email) {
-    return `usage:${email.toLowerCase()}:${new Date().toISOString().slice(0, 10)}`;
+// For anonymous users, identify by IP address
+function getClientIP(c) {
+    return c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim() || 'unknown';
 }
 
-async function getUsageCount(env, email) {
-    const val = await env.PROMPTS.get(getUsageKey(email));
+// Get a usage identity: email for logged-in users, ip:{address} for anonymous
+function getUsageIdentity(c) {
+    const { email } = getAuthEmail(c);
+    if (email) return { identity: email, email, exempt: isExempt(email) };
+    return { identity: `ip:${getClientIP(c)}`, email: null, exempt: false };
+}
+
+function getUsageKey(identity) {
+    return `usage:${identity.toLowerCase()}:${new Date().toISOString().slice(0, 10)}`;
+}
+
+async function getUsageCount(env, identity) {
+    const val = await env.PROMPTS.get(getUsageKey(identity));
     return val ? parseInt(val, 10) : 0;
 }
 
-async function incrementUsage(env, email) {
-    const key = getUsageKey(email);
-    const current = await getUsageCount(env, email);
+async function incrementUsage(env, identity) {
+    const key = getUsageKey(identity);
+    const current = await getUsageCount(env, identity);
     await env.PROMPTS.put(key, String(current + 1), { expirationTtl: 172800 });
     return current + 1;
 }
@@ -662,12 +675,11 @@ const stripSourcesSection = (prompt) => {
 // ║  3. POST /api/followup → follow-up: check context then generate response    ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-// ── GET /api/usage — Return current daily usage for the authenticated user ──
+// ── GET /api/usage — Return current daily usage (works for both logged-in and anonymous) ──
 app.get('/api/usage', async (c) => {
-    const { email, error } = await getAuthEmail(c);
-    if (error) return c.json({ success: false, error }, 401);
-    if (isExempt(email)) return c.json({ success: true, data: { used: 0, limit: -1, remaining: -1, exempt: true } });
-    const used = await getUsageCount(c.env, email);
+    const { identity, exempt } = getUsageIdentity(c);
+    if (exempt) return c.json({ success: true, data: { used: 0, limit: -1, remaining: -1, exempt: true } });
+    const used = await getUsageCount(c.env, identity);
     return c.json({ success: true, data: { used, limit: DAILY_LIMIT, remaining: Math.max(0, DAILY_LIMIT - used), exempt: false } });
 });
 
@@ -677,11 +689,10 @@ app.get('/api/usage', async (c) => {
 // "profileKey" (e.g., "adult") is interpolated into the prompt
 app.post('/api/ask', async (c) => {
     try {
-        // Auth + usage check
-        const { email, error: authError } = await getAuthEmail(c);
-        if (authError) return c.json({ success: false, error: authError }, 401);
-        if (!isExempt(email)) {
-            const used = await getUsageCount(c.env, email);
+        // Usage check (works for both logged-in and anonymous users)
+        const { identity, exempt } = getUsageIdentity(c);
+        if (!exempt) {
+            const used = await getUsageCount(c.env, identity);
             if (used >= DAILY_LIMIT) return c.json({ success: false, error: 'daily_limit_reached' }, 429);
         }
 
@@ -713,11 +724,10 @@ app.post('/api/ask', async (c) => {
 // → The standard response receives NO profileKey/values/filters info
 app.post('/api/filters', async (c) => {
     try {
-        // Auth + usage check
-        const { email, error: authError } = await getAuthEmail(c);
-        if (authError) return c.json({ success: false, error: authError }, 401);
-        if (!isExempt(email)) {
-            const used = await getUsageCount(c.env, email);
+        // Usage check (works for both logged-in and anonymous users)
+        const { identity, exempt } = getUsageIdentity(c);
+        if (!exempt) {
+            const used = await getUsageCount(c.env, identity);
             if (used >= DAILY_LIMIT) return c.json({ success: false, error: 'daily_limit_reached' }, 429);
         }
 
@@ -748,7 +758,7 @@ app.post('/api/filters', async (c) => {
         ]);
 
         // Increment usage after successful flow completion
-        if (!isExempt(email)) await incrementUsage(c.env, email);
+        if (!exempt) await incrementUsage(c.env, identity);
 
         return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
     } catch (e) {

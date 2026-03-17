@@ -38,11 +38,13 @@ export function getPathFromView(view) {
     return VIEW_TO_PATH[view] || '/';
 }
 
-export function navigateTo(dispatch, view) {
+export function navigateTo(dispatch, view, { skipScroll = false } = {}) {
     const path = getPathFromView(view);
     window.history.pushState({ view }, '', path);
     dispatch({ type: ACTIONS.SET_VIEW, payload: view });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!skipScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 export function useRouting() {

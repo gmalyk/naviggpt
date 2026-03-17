@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useAppState } from './context/AppContext';
 import { ACTIONS } from './context/appReducer';
 import { useRouting } from './hooks/useRouting';
-import { useAuth } from './context/AuthContext';
 import { api } from './services/api';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -22,7 +21,6 @@ import LimitBanner from './components/ui/LimitBanner';
 
 function App() {
   const { state, dispatch } = useAppState();
-  const { user } = useAuth();
 
   useRouting();
 
@@ -32,13 +30,12 @@ function App() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fetch usage when user logs in or on mount
+  // Fetch usage on mount (works for both anonymous and logged-in users)
   useEffect(() => {
-    if (!user) return;
     api.getUsage()
       .then((data) => dispatch({ type: ACTIONS.SET_USAGE, payload: data }))
       .catch(() => {});
-  }, [user]);
+  }, []);
 
   return (
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>

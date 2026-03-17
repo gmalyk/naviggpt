@@ -2162,32 +2162,42 @@ var cors = /* @__PURE__ */ __name((options) => {
 // worker.js
 var DAILY_LIMIT = 5;
 var EXEMPT_EMAILS = ["alexandregenko@gmail.com", "gregmalyk@gmail.com"];
-async function getAuthEmail(c) {
+function getAuthEmail(c) {
   const auth = c.req.header("Authorization");
-  if (!auth?.startsWith("Bearer ")) return { error: "auth_required" };
+  if (!auth?.startsWith("Bearer ")) return { email: null };
   const token = auth.slice(7);
   try {
     const [, payloadB64] = token.split(".");
     const payload = JSON.parse(atob(payloadB64.replace(/-/g, "+").replace(/_/g, "/")));
-    if (payload.exp && payload.exp < Date.now() / 1e3) return { error: "token_expired" };
+    if (payload.exp && payload.exp < Date.now() / 1e3) return { email: null };
     return { email: payload.email };
   } catch {
-    return { error: "invalid_token" };
+    return { email: null };
   }
 }
 __name(getAuthEmail, "getAuthEmail");
-function getUsageKey(email) {
-  return `usage:${email.toLowerCase()}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`;
+function getClientIP(c) {
+  return c.req.header("CF-Connecting-IP") || c.req.header("X-Forwarded-For")?.split(",")[0]?.trim() || "unknown";
+}
+__name(getClientIP, "getClientIP");
+function getUsageIdentity(c) {
+  const { email } = getAuthEmail(c);
+  if (email) return { identity: email, email, exempt: isExempt(email) };
+  return { identity: `ip:${getClientIP(c)}`, email: null, exempt: false };
+}
+__name(getUsageIdentity, "getUsageIdentity");
+function getUsageKey(identity) {
+  return `usage:${identity.toLowerCase()}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`;
 }
 __name(getUsageKey, "getUsageKey");
-async function getUsageCount(env, email) {
-  const val = await env.PROMPTS.get(getUsageKey(email));
+async function getUsageCount(env, identity) {
+  const val = await env.PROMPTS.get(getUsageKey(identity));
   return val ? parseInt(val, 10) : 0;
 }
 __name(getUsageCount, "getUsageCount");
-async function incrementUsage(env, email) {
-  const key = getUsageKey(email);
-  const current = await getUsageCount(env, email);
+async function incrementUsage(env, identity) {
+  const key = getUsageKey(identity);
+  const current = await getUsageCount(env, identity);
   await env.PROMPTS.put(key, String(current + 1), { expirationTtl: 172800 });
   return current + 1;
 }
@@ -2673,18 +2683,16 @@ var stripSourcesSection = /* @__PURE__ */ __name((prompt) => {
   return typeof prompt === "string" ? prompt.replace(regex, "").trim() : prompt;
 }, "stripSourcesSection");
 app.get("/api/usage", async (c) => {
-  const { email, error } = await getAuthEmail(c);
-  if (error) return c.json({ success: false, error }, 401);
-  if (isExempt(email)) return c.json({ success: true, data: { used: 0, limit: -1, remaining: -1, exempt: true } });
-  const used = await getUsageCount(c.env, email);
+  const { identity, exempt } = getUsageIdentity(c);
+  if (exempt) return c.json({ success: true, data: { used: 0, limit: -1, remaining: -1, exempt: true } });
+  const used = await getUsageCount(c.env, identity);
   return c.json({ success: true, data: { used, limit: DAILY_LIMIT, remaining: Math.max(0, DAILY_LIMIT - used), exempt: false } });
 });
 app.post("/api/ask", async (c) => {
   try {
-    const { email, error: authError } = await getAuthEmail(c);
-    if (authError) return c.json({ success: false, error: authError }, 401);
-    if (!isExempt(email)) {
-      const used = await getUsageCount(c.env, email);
+    const { identity, exempt } = getUsageIdentity(c);
+    if (!exempt) {
+      const used = await getUsageCount(c.env, identity);
       if (used >= DAILY_LIMIT) return c.json({ success: false, error: "daily_limit_reached" }, 429);
     }
     const body = await c.req.json();
@@ -2705,10 +2713,9 @@ app.post("/api/ask", async (c) => {
 });
 app.post("/api/filters", async (c) => {
   try {
-    const { email, error: authError } = await getAuthEmail(c);
-    if (authError) return c.json({ success: false, error: authError }, 401);
-    if (!isExempt(email)) {
-      const used = await getUsageCount(c.env, email);
+    const { identity, exempt } = getUsageIdentity(c);
+    if (!exempt) {
+      const used = await getUsageCount(c.env, identity);
       if (used >= DAILY_LIMIT) return c.json({ success: false, error: "daily_limit_reached" }, 429);
     }
     const body = await c.req.json();
@@ -2729,7 +2736,7 @@ Clarification: "${precision}"`;
       callAI(provider, apiKey, c.env, virgilePrompt, virgileMessage, aiOptions),
       callAI(provider, apiKey, c.env, standardPrompt, standardMessage, aiOptions)
     ]);
-    if (!isExempt(email)) await incrementUsage(c.env, email);
+    if (!exempt) await incrementUsage(c.env, identity);
     return c.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
   } catch (e) {
     console.error("[Worker] /api/filters error:", e);
