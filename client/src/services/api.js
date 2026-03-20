@@ -1,5 +1,5 @@
 /**
- * API Service for Virgile AI - Optimized for Cloudflare
+ * API Service for Virggile AI - Optimized for Cloudflare
  */
 
 import { supabase } from '../lib/supabase';

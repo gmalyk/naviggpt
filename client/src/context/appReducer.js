@@ -13,7 +13,7 @@ export const initialState = {
     sections: [],
     selectedFilters: [],
     precision: '',
-    virgileResponse: '',
+    virggileResponse: '',
     standardResponse: '',
     followUpHistory: [],
     returnToView: null,
@@ -87,7 +87,7 @@ export function appReducer(state, action) {
         case ACTIONS.SET_FINAL_RESPONSES:
             return {
                 ...state,
-                virgileResponse: action.payload.virgile,
+                virggileResponse: action.payload.virggile,
                 standardResponse: action.payload.standard,
                 followUpHistory: []
             };

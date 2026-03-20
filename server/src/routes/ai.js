@@ -1,6 +1,6 @@
 import express from 'express';
 import { callAI } from '../services/dispatcher.js';
-import { getAskVirgilePrompt } from '../prompts/askVirgile.js';
+import { getAskVirggilePrompt } from '../prompts/askVirggile.js';
 import { getSubmitFiltersPrompt, getStandardPrompt } from '../prompts/submitFilters.js';
 import { getFollowUpCheckPrompt, getFollowUpGenPrompt } from '../prompts/followUp.js';
 
@@ -11,7 +11,7 @@ router.post('/ask', async (req, res) => {
     const { question, profile, faith, values, language, provider, apiKey, filterCount } = req.body;
 
     try {
-        const systemPrompt = getAskVirgilePrompt(profile, faith, values, language, filterCount);
+        const systemPrompt = getAskVirggilePrompt(profile, faith, values, language, filterCount);
         let response = await callAI(provider, apiKey, systemPrompt, `Question: "${question}"`);
 
         // Server-side safety net: filter out any age-related sections
@@ -46,9 +46,9 @@ router.post('/filters', async (req, res) => {
     const { question, profile, faith, values, language, provider, apiKey, filters, precision, useWebSearch } = req.body;
 
     try {
-        // Virgile response: full context with filters, profile, faith, values, precision
-        const virgilePrompt = getSubmitFiltersPrompt(profile, faith, values, language, useWebSearch);
-        const virgileMessage = `Question: "${question}"\nFiltres: ${filters.join(', ')}\nPrécision: "${precision}"`;
+        // Virggile response: full context with filters, profile, faith, values, precision
+        const virggilePrompt = getSubmitFiltersPrompt(profile, faith, values, language, useWebSearch);
+        const virggileMessage = `Question: "${question}"\nFiltres: ${filters.join(', ')}\nPrécision: "${precision}"`;
 
         // Standard response: raw question only, no filters/profile/context
         const standardPrompt = getStandardPrompt(language);
@@ -56,12 +56,12 @@ router.post('/filters', async (req, res) => {
 
         // Run both calls in parallel
         const webSearchOption = useWebSearch !== false;
-        const [virgileResponse, standardResponse] = await Promise.all([
-            callAI(provider, apiKey, virgilePrompt, virgileMessage, { useWebSearch: webSearchOption }),
+        const [virggileResponse, standardResponse] = await Promise.all([
+            callAI(provider, apiKey, virggilePrompt, virggileMessage, { useWebSearch: webSearchOption }),
             callAI(provider, apiKey, standardPrompt, standardMessage, { useWebSearch: webSearchOption })
         ]);
 
-        res.json({ success: true, data: { virgile: virgileResponse, standard: standardResponse } });
+        res.json({ success: true, data: { virggile: virggileResponse, standard: standardResponse } });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -69,7 +69,7 @@ router.post('/filters', async (req, res) => {
 
 // POST /api/followup - Follow-up chat stage
 router.post('/followup', async (req, res) => {
-    const { followUp, context, question, filters, precision, virgileResponse, followUpHistory, profile, faith, values, language, provider, apiKey, useWebSearch } = req.body;
+    const { followUp, context, question, filters, precision, virggileResponse, followUpHistory, profile, faith, values, language, provider, apiKey, useWebSearch } = req.body;
 
     try {
         // Stage 3a: Context Check
@@ -83,12 +83,12 @@ router.post('/followup', async (req, res) => {
         // Stage 3b: Generation — include full conversation history
         const genPrompt = getFollowUpGenPrompt(profile, faith, values, language, useWebSearch !== false);
 
-        let conversationContext = `Question initiale : "${question}"\nFiltres : ${filters ? filters.join(', ') : 'aucun'}\nPrécision : "${precision || ''}"\n\nRéponse de Virgile :\n${virgileResponse || ''}`;
+        let conversationContext = `Question initiale : "${question}"\nFiltres : ${filters ? filters.join(', ') : 'aucun'}\nPrécision : "${precision || ''}"\n\nRéponse de Virggile :\n${virggileResponse || ''}`;
 
         if (followUpHistory && followUpHistory.length > 0) {
             conversationContext += '\n\nHistorique de la discussion :';
             for (const entry of followUpHistory) {
-                conversationContext += `\nUtilisateur : ${entry.user}\nVirgile : ${entry.ai}`;
+                conversationContext += `\nUtilisateur : ${entry.user}\nVirggile : ${entry.ai}`;
             }
         }
 

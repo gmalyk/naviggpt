@@ -11,10 +11,10 @@ import FollowUpChat from './FollowUpChat';
 const ResultView = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
-    const virgileRef = useRef(null);
+    const virggileRef = useRef(null);
 
     useEffect(() => {
-        const el = virgileRef.current;
+        const el = virggileRef.current;
         if (!el) return;
 
         let scrolled = false;
@@ -56,7 +56,7 @@ const ResultView = () => {
                         </div>
                     </div>
                 )}
-                <OptimizedResponse content={state.virgileResponse} innerRef={virgileRef} />
+                <OptimizedResponse content={state.virggileResponse} question={state.question} standardResponse={state.standardResponse} innerRef={virggileRef} />
                 <StandardResponse content={state.standardResponse} />
                 <FollowUpChat />
 

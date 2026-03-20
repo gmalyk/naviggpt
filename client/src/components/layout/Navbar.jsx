@@ -26,7 +26,7 @@ const Navbar = () => {
         <>
             <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-[100] border-b border-slate-100 px-6 py-2 flex items-center justify-between h-14">
                 <button onClick={resetToHome} className="flex items-center gap-2 cursor-pointer group">
-                    <img src="/logo.png" alt="Virgile" className="w-9 h-9 transition-transform hover:scale-105" />
+                    <img src="/logo.png" alt="Virggile" className="w-9 h-9 transition-transform hover:scale-105" />
                     <span className="text-lg font-semibold tracking-tight text-slate-600">
                         {t('brand_name').split('').map((char, i) =>
                             char.toLowerCase() === 'g' ? (
@@ -35,7 +35,7 @@ const Navbar = () => {
                                     className="bg-clip-text text-transparent brand-protect"
                                     style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only' }}
                                 >
-                                    {char}{char}
+                                    {char}
                                 </span>
                             ) : char
                         )}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import virgilImage from '../../assets/images/virgil.webp';
+import virggilImage from '../../assets/images/virggil.webp';
 const AboutView = () => {
     const { t } = useTranslation();
 
@@ -16,8 +16,8 @@ const AboutView = () => {
             <div className="flex justify-center mb-6">
                 <div className="w-36 h-36 flex items-center justify-center overflow-hidden rounded-full">
                     <img
-                        src={virgilImage}
-                        alt="Virgil"
+                        src={virggilImage}
+                        alt="Virggil"
                         className="w-full h-full object-cover"
                     />
                 </div>

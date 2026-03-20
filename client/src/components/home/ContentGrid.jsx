@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import virgilBust from '../../assets/images/virgil_bust.png';
+import virggilBust from '../../assets/images/virggil_bust.png';
 
 const ContentGrid = () => {
     const { t } = useTranslation();
@@ -31,8 +31,8 @@ const ContentGrid = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:block pointer-events-none">
                 <div className="bg-white rounded-full p-1 shadow-xl ring-8 ring-white w-32 h-32 flex items-center justify-center overflow-hidden border border-slate-100 group">
                     <img
-                        src={virgilBust}
-                        alt="Virgil"
+                        src={virggilBust}
+                        alt="Virggil"
                         className="w-28 h-28 object-contain transition-transform duration-500 group-hover:scale-110"
                     />
                 </div>

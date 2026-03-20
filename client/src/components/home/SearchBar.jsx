@@ -18,7 +18,7 @@ const filterCountCycle = [5, 3, 0];
 const SearchBar = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
-    const { askVirgile, loading } = useAI();
+    const { askVirggile, loading } = useAI();
     const inputValue = state.inputDraft;
     const setInputValue = (val) => dispatch({ type: ACTIONS.SET_INPUT_DRAFT, payload: val });
 
@@ -34,7 +34,7 @@ const SearchBar = () => {
     const handleSend = () => {
         if (!inputValue.trim() || loading) return;
 
-        askVirgile(inputValue.trim());
+        askVirggile(inputValue.trim());
     };
 
     const handleKeyDown = (e) => {
