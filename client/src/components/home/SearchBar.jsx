@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Send, Globe } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
@@ -23,6 +23,14 @@ const SearchBar = () => {
     const setInputValue = (val) => dispatch({ type: ACTIONS.SET_INPUT_DRAFT, payload: val });
 
     const prevQuestionRef = useRef(state.question);
+    const textareaRef = useRef(null);
+
+    const autoResize = useCallback(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+    }, []);
 
     useEffect(() => {
         if (prevQuestionRef.current !== '' && state.question === '') {
@@ -31,6 +39,10 @@ const SearchBar = () => {
         prevQuestionRef.current = state.question;
     }, [state.question]);
 
+    useEffect(() => {
+        autoResize();
+    }, [inputValue, autoResize]);
+
     const handleSend = () => {
         if (!inputValue.trim() || loading) return;
 
@@ -38,20 +50,24 @@ const SearchBar = () => {
     };
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') handleSend();
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
     };
 
     return (
         <section className="max-w-2xl w-full mx-auto mb-8 relative z-50">
             <div className="relative group bg-white border border-slate-200 rounded-[32px] p-5 transition-all focus-within:border-[#B88644]/40 brand-protect">
-                <div className="flex items-center gap-3 mb-3">
-                    <input
-                        type="text"
+                <div className="flex items-start gap-3 mb-3">
+                    <textarea
+                        ref={textareaRef}
+                        rows={1}
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={t('search_placeholder')}
-                        className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-lg md:text-xl px-2 text-slate-700 placeholder:text-slate-400 w-full"
+                        className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-lg md:text-xl px-2 text-slate-700 placeholder:text-slate-400 w-full resize-none overflow-hidden"
                     />
                     <div className="flex items-center gap-1 pr-1">
                         <button

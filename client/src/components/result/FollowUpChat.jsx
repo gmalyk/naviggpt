@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Send } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
@@ -13,6 +13,14 @@ const FollowUpChat = () => {
     const { handleFollowUp, loading } = useAI();
     const { t } = useTranslation();
     const [inputValue, setInputValue] = useState('');
+    const textareaRef = useRef(null);
+
+    const autoResize = useCallback(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+    }, []);
 
     const onSend = async () => {
         if (!inputValue.trim() || loading) return;
@@ -59,14 +67,15 @@ const FollowUpChat = () => {
             </div>
 
             {!hasReachedLimit && !loading && (
-                <div className="relative flex items-center">
-                    <input
-                        type="text"
+                <div className="relative flex items-end">
+                    <textarea
+                        ref={textareaRef}
+                        rows={1}
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
+                        onChange={(e) => { setInputValue(e.target.value); autoResize(); }}
                         onKeyDown={onKeyDown}
                         placeholder={t('followup_placeholder')}
-                        className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/10 focus:border-[#B88644] transition-all text-sm placeholder:text-slate-400 brand-protect"
+                        className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/10 focus:border-[#B88644] transition-all text-sm placeholder:text-slate-400 brand-protect resize-none overflow-hidden"
                     />
                     <button
                         onClick={onSend}
