@@ -182,7 +182,7 @@ const PreviewModal = ({ dataUrl, onShare, onDownload, onClose, canNativeShare, t
                     <img
                         src={dataUrl}
                         alt="Share card preview"
-                        className="w-full rounded-xl border border-slate-100 shadow-sm"
+                        className="w-full max-h-[50vh] object-contain rounded-xl border border-slate-100 shadow-sm"
                     />
                 </div>
 
