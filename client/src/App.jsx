@@ -17,6 +17,7 @@ import ForumView from './components/forum/ForumView';
 import TermsView from './components/terms/TermsView';
 import CompassView from './components/compass/CompassView';
 import PrivacyView from './components/privacy/PrivacyView';
+import CompanionView from './components/companion/CompanionView';
 import LimitBanner from './components/ui/LimitBanner';
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
       <Navbar />
       <div className="flex-grow pt-20 relative z-0">
-        {state.view !== 'about' && state.view !== 'prompts' && state.view !== 'pricing' && state.view !== 'account' && state.view !== 'contact' && state.view !== 'forum' && state.view !== 'terms' && state.view !== 'privacy' && state.view !== 'compass' && <HomeView />}
+        {state.view !== 'about' && state.view !== 'prompts' && state.view !== 'pricing' && state.view !== 'account' && state.view !== 'contact' && state.view !== 'forum' && state.view !== 'terms' && state.view !== 'privacy' && state.view !== 'compass' && state.view !== 'companion' && <HomeView />}
 
         {state.view === 'about' && <AboutView />}
 
@@ -61,6 +62,8 @@ function App() {
 
         {state.view === 'privacy' && <PrivacyView />}
 
+        {state.view === 'companion' && <CompanionView />}
+
         {(state.view === 'discernment' || state.view === 'result') && state.filterCount > 0 && (
           <div className="border-t border-slate-50">
             <DiscernmentView />
@@ -73,7 +76,7 @@ function App() {
           </div>
         )}
       </div>
-      <Footer />
+      {state.view !== 'companion' && <Footer />}
       <LimitBanner />
     </div>
   );

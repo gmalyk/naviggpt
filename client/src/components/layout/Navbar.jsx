@@ -1,4 +1,5 @@
 import React from 'react';
+import { MessageCircle } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useAuth } from '../../context/AuthContext';
@@ -43,6 +44,24 @@ const Navbar = () => {
                 </button>
 
                 <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => {
+                            if (user) {
+                                navigateTo(dispatch, 'companion');
+                            } else {
+                                openAuthModal('sign_in', t('companion_auth_required'));
+                            }
+                        }}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full transition-all ${
+                            state.view === 'companion'
+                                ? 'bg-[#B88644]/10 text-[#B88644]'
+                                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                        }`}
+                        title={t('companion_title')}
+                    >
+                        <MessageCircle className="w-4 h-4" />
+                        <span className="hidden sm:inline">{t('menu_companion')}</span>
+                    </button>
                     <LanguageSelector />
                     {!authLoading && (
                         user ? (

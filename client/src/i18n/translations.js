@@ -242,7 +242,14 @@ export const translations = {
         daily_limit_reached: "Vous avez atteint votre limite quotidienne de 3 questions. Revenez demain ou passez à un plan supérieur !",
         login_to_ask: "Veuillez vous connecter pour poser une question.",
         usage_remaining: "{{used}}/{{limit}} utilisé(s) aujourd'hui",
-        upgrade_plan: "Passer au plan supérieur"
+        upgrade_plan: "Passer au plan supérieur",
+        menu_companion: "Compagnon",
+        companion_title: "Votre compagnon Virgile",
+        companion_placeholder: "Parlez avec Virgile...",
+        companion_welcome: "Je suis Virgile, votre compagnon de sagesse. Partagez ce qui vous occupe l'esprit — une décision, une réflexion, un doute — et explorons ensemble.",
+        companion_new_conversation: "Nouvelle conversation",
+        companion_thinking: "Virgile réfléchit...",
+        companion_auth_required: "Connectez-vous pour parler avec Virgile, votre compagnon de sagesse."
     },
     en: {
         brand_name: "Virggil",
@@ -528,7 +535,14 @@ export const translations = {
         privacy_s13_title: "Changes to This Privacy Policy",
         privacy_s13_text: "We may update this Privacy Policy from time to time to reflect changes in our practices, technologies, legal requirements, or for other operational reasons. When we make material changes, we will:\n\n• Post the updated Policy on this page with a new effective date\n• Send an email notification to registered users at least 14 days before the change takes effect\n• Display a prominent notice in the app or on the website\n\nYour continued use of the Service after the effective date of any changes constitutes your acceptance of the updated Policy.",
         privacy_s14_title: "Contact Us",
-        privacy_s14_text: "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:\n\nVirggilAi\nWebsite: Virggil.com\nEmail: legal@virggil.com\nSubject line for privacy requests: \"Privacy Request – [Your Name]\""
+        privacy_s14_text: "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:\n\nVirggilAi\nWebsite: Virggil.com\nEmail: legal@virggil.com\nSubject line for privacy requests: \"Privacy Request – [Your Name]\"",
+        menu_companion: "Companion",
+        companion_title: "Your Companion Virgil",
+        companion_placeholder: "Talk with Virgil...",
+        companion_welcome: "I'm Virgil, your wisdom companion. Share what's on your mind — a decision, a reflection, a doubt — and let's explore it together.",
+        companion_new_conversation: "New conversation",
+        companion_thinking: "Virgil is reflecting...",
+        companion_auth_required: "Sign in to talk with Virgil, your wisdom companion."
     },
     it: {
         brand_name: "Virggilio",
@@ -771,7 +785,14 @@ export const translations = {
         daily_limit_reached: "Hai raggiunto il limite giornaliero di 3 domande. Torna domani o aggiorna il tuo piano!",
         login_to_ask: "Accedi per fare una domanda.",
         usage_remaining: "{{used}}/{{limit}} utilizzate oggi",
-        upgrade_plan: "Aggiorna il piano"
+        upgrade_plan: "Aggiorna il piano",
+        menu_companion: "Compagno",
+        companion_title: "Il tuo compagno Virgilio",
+        companion_placeholder: "Parla con Virgilio...",
+        companion_welcome: "Sono Virgilio, il tuo compagno di saggezza. Condividi ciò che hai in mente — una decisione, una riflessione, un dubbio — ed esploriamolo insieme.",
+        companion_new_conversation: "Nuova conversazione",
+        companion_thinking: "Virgilio sta riflettendo...",
+        companion_auth_required: "Accedi per parlare con Virgilio, il tuo compagno di saggezza."
     },
     de: {
         brand_name: "Verggil",
@@ -1014,7 +1035,14 @@ export const translations = {
         daily_limit_reached: "Du hast dein tägliches Limit von 3 Fragen erreicht. Komm morgen wieder oder upgrade deinen Plan!",
         login_to_ask: "Bitte melde dich an, um eine Frage zu stellen.",
         usage_remaining: "{{used}}/{{limit}} heute genutzt",
-        upgrade_plan: "Plan upgraden"
+        upgrade_plan: "Plan upgraden",
+        menu_companion: "Begleiter",
+        companion_title: "Dein Begleiter Virgil",
+        companion_placeholder: "Sprich mit Virgil...",
+        companion_welcome: "Ich bin Virgil, dein Weisheitsbegleiter. Teile mir mit, was dich beschäftigt — eine Entscheidung, eine Überlegung, ein Zweifel — und lass uns gemeinsam erkunden.",
+        companion_new_conversation: "Neues Gespräch",
+        companion_thinking: "Virgil denkt nach...",
+        companion_auth_required: "Melde dich an, um mit Virgil zu sprechen, deinem Weisheitsbegleiter."
     },
     es: {
         brand_name: "Virggilio",
@@ -1257,7 +1285,14 @@ export const translations = {
         daily_limit_reached: "Has alcanzado tu límite diario de 3 preguntas. ¡Vuelve mañana o mejora tu plan!",
         login_to_ask: "Inicia sesión para hacer una pregunta.",
         usage_remaining: "{{used}}/{{limit}} usadas hoy",
-        upgrade_plan: "Mejorar plan"
+        upgrade_plan: "Mejorar plan",
+        menu_companion: "Compañero",
+        companion_title: "Tu compañero Virgilio",
+        companion_placeholder: "Habla con Virgilio...",
+        companion_welcome: "Soy Virgilio, tu compañero de sabiduría. Comparte lo que tienes en mente — una decisión, una reflexión, una duda — y explorémoslo juntos.",
+        companion_new_conversation: "Nueva conversación",
+        companion_thinking: "Virgilio está reflexionando...",
+        companion_auth_required: "Inicia sesión para hablar con Virgilio, tu compañero de sabiduría."
     },
     pt: {
         brand_name: "Virggílio",
@@ -1500,7 +1535,14 @@ export const translations = {
         daily_limit_reached: "Você atingiu seu limite diário de 3 perguntas. Volte amanhã ou atualize seu plano!",
         login_to_ask: "Faça login para fazer uma pergunta.",
         usage_remaining: "{{used}}/{{limit}} usadas hoje",
-        upgrade_plan: "Atualizar plano"
+        upgrade_plan: "Atualizar plano",
+        menu_companion: "Companheiro",
+        companion_title: "Seu companheiro Virgílio",
+        companion_placeholder: "Converse com Virgílio...",
+        companion_welcome: "Sou Virgílio, seu companheiro de sabedoria. Compartilhe o que está em sua mente — uma decisão, uma reflexão, uma dúvida — e vamos explorar juntos.",
+        companion_new_conversation: "Nova conversa",
+        companion_thinking: "Virgílio está refletindo...",
+        companion_auth_required: "Entre para conversar com Virgílio, seu companheiro de sabedoria."
     },
     ru: {
         brand_name: "Вергилий",
@@ -1743,7 +1785,14 @@ export const translations = {
         daily_limit_reached: "Вы достигли дневного лимита в 3 вопросов. Возвращайтесь завтра или обновите план!",
         login_to_ask: "Войдите, чтобы задать вопрос.",
         usage_remaining: "{{used}}/{{limit}} использовано сегодня",
-        upgrade_plan: "Обновить план"
+        upgrade_plan: "Обновить план",
+        menu_companion: "Спутник",
+        companion_title: "Ваш спутник Вергилий",
+        companion_placeholder: "Поговорите с Вергилием...",
+        companion_welcome: "Я Вергилий, ваш мудрый спутник. Расскажите, что вас волнует — решение, размышление, сомнение — и давайте исследуем это вместе.",
+        companion_new_conversation: "Новый разговор",
+        companion_thinking: "Вергилий размышляет...",
+        companion_auth_required: "Войдите, чтобы поговорить с Вергилием, вашим мудрым спутником."
     },
     zh: {
         brand_name: "维吉尔",
@@ -1986,7 +2035,14 @@ export const translations = {
         daily_limit_reached: "您已达到每日3个问题的限制。明天再来或升级您的计划！",
         login_to_ask: "请登录以提问。",
         usage_remaining: "今天已使用 {{used}}/{{limit}}",
-        upgrade_plan: "升级计划"
+        upgrade_plan: "升级计划",
+        menu_companion: "伙伴",
+        companion_title: "您的智慧伙伴维吉尔",
+        companion_placeholder: "与维吉尔交谈...",
+        companion_welcome: "我是维吉尔，您的智慧伙伴。分享您心中所想——一个决定、一个思考、一个疑虑——让我们一起探索。",
+        companion_new_conversation: "新对话",
+        companion_thinking: "维吉尔正在思考...",
+        companion_auth_required: "登录后即可与维吉尔交谈，您的智慧伙伴。"
     },
     ar: {
         brand_name: "فيرجيل",
@@ -2229,7 +2285,14 @@ export const translations = {
         daily_limit_reached: "لقد وصلت إلى الحد اليومي من 3 أسئلة. عد غداً أو قم بترقية خطتك!",
         login_to_ask: "يرجى تسجيل الدخول لطرح سؤال.",
         usage_remaining: "{{used}}/{{limit}} مستخدمة اليوم",
-        upgrade_plan: "ترقية الخطة"
+        upgrade_plan: "ترقية الخطة",
+        menu_companion: "رفيق",
+        companion_title: "رفيقك فيرجيل",
+        companion_placeholder: "تحدث مع فيرجيل...",
+        companion_welcome: "أنا فيرجيل، رفيق حكمتك. شاركني ما يشغل بالك — قرار، تأمل، شك — ودعنا نستكشف معاً.",
+        companion_new_conversation: "محادثة جديدة",
+        companion_thinking: "فيرجيل يتأمل...",
+        companion_auth_required: "سجّل دخولك للتحدث مع فيرجيل، رفيق حكمتك."
     },
     hi: {
         brand_name: "वर्जिल",
@@ -2472,6 +2535,13 @@ export const translations = {
         daily_limit_reached: "आपने अपनी दैनिक 3 प्रश्नों की सीमा पूरी कर ली है। कल वापस आएं या अपनी योजना अपग्रेड करें!",
         login_to_ask: "प्रश्न पूछने के लिए कृपया साइन इन करें।",
         usage_remaining: "{{used}}/{{limit}} आज उपयोग किए गए",
-        upgrade_plan: "योजना अपग्रेड करें"
+        upgrade_plan: "योजना अपग्रेड करें",
+        menu_companion: "साथी",
+        companion_title: "आपका साथी वर्जिल",
+        companion_placeholder: "वर्जिल से बात करें...",
+        companion_welcome: "मैं वर्जिल हूँ, आपका ज्ञान साथी। अपने मन की बात साझा करें — कोई फैसला, कोई विचार, कोई संदेह — और आइए मिलकर इसे समझें।",
+        companion_new_conversation: "नई बातचीत",
+        companion_thinking: "वर्जिल सोच रहे हैं...",
+        companion_auth_required: "वर्जिल से बात करने के लिए साइन इन करें, आपका ज्ञान साथी।"
     }
 };

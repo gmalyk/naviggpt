@@ -13,6 +13,7 @@ const VIEW_TO_PATH = {
     compass: '/compass',
     account: '/account',
     prompts: '/edit',
+    companion: '/companion',
     discernment: '/',
     result: '/',
 };
@@ -28,6 +29,7 @@ const PATH_TO_VIEW = {
     '/compass': 'compass',
     '/account': 'account',
     '/edit': 'prompts',
+    '/companion': 'companion',
 };
 
 export function getViewFromPath(pathname) {

@@ -117,5 +117,15 @@ export const api = {
             headers: authHeaders
         });
         return await handleResponse(response);
+    },
+
+    companion: async (payload) => {
+        const authHeaders = await getAuthHeaders();
+        const response = await fetch(`${API_BASE}/companion`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...authHeaders },
+            body: JSON.stringify(payload)
+        });
+        return await handleResponse(response);
     }
 };
