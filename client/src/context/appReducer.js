@@ -22,7 +22,10 @@ export const initialState = {
         provider: 'grok'
     },
     usage: { used: 0, limit: 3, remaining: 3, exempt: false, loaded: false },
-    showLimitBanner: false
+    showLimitBanner: false,
+    dialogueActive: false,
+    dialogueMode: null,
+    pendingCompanionMessage: null
 };
 
 export const ACTIONS = {
@@ -45,7 +48,10 @@ export const ACTIONS = {
     UPDATE_SETTINGS: 'UPDATE_SETTINGS',
     SET_USAGE: 'SET_USAGE',
     SHOW_LIMIT_BANNER: 'SHOW_LIMIT_BANNER',
-    HIDE_LIMIT_BANNER: 'HIDE_LIMIT_BANNER'
+    HIDE_LIMIT_BANNER: 'HIDE_LIMIT_BANNER',
+    SET_DIALOGUE_ACTIVE: 'SET_DIALOGUE_ACTIVE',
+    SET_DIALOGUE_MODE: 'SET_DIALOGUE_MODE',
+    SET_PENDING_COMPANION_MESSAGE: 'SET_PENDING_COMPANION_MESSAGE'
 };
 
 export function appReducer(state, action) {
@@ -108,6 +114,12 @@ export function appReducer(state, action) {
             return { ...state, showLimitBanner: true };
         case ACTIONS.HIDE_LIMIT_BANNER:
             return { ...state, showLimitBanner: false };
+        case ACTIONS.SET_DIALOGUE_ACTIVE:
+            return { ...state, dialogueActive: action.payload, dialogueMode: action.payload ? state.dialogueMode : null };
+        case ACTIONS.SET_DIALOGUE_MODE:
+            return { ...state, dialogueMode: action.payload };
+        case ACTIONS.SET_PENDING_COMPANION_MESSAGE:
+            return { ...state, pendingCompanionMessage: action.payload };
         default:
             return state;
     }

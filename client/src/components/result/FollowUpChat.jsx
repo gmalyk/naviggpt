@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { Send } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Send, Copy, Share2, Check } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -7,13 +7,26 @@ import MarkdownContent from '../ui/MarkdownContent';
 import CopyButton from '../ui/CopyButton';
 import Logo from '../ui/Logo';
 import LogoSpinner from '../ui/LogoSpinner';
+import SubscriptionModal from '../ui/SubscriptionModal';
+
+const FOLLOW_UP_LIMIT = 20;
 
 const FollowUpChat = () => {
     const { state } = useAppState();
     const { handleFollowUp, loading } = useAI();
     const { t } = useTranslation();
     const [inputValue, setInputValue] = useState('');
+    const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+    const [copied, setCopied] = useState(false);
     const textareaRef = useRef(null);
+
+    const hasReachedLimit = !state.usage?.exempt && state.followUpHistory.length >= FOLLOW_UP_LIMIT;
+
+    useEffect(() => {
+        if (hasReachedLimit) {
+            setShowSubscriptionModal(true);
+        }
+    }, [hasReachedLimit]);
 
     const autoResize = useCallback(() => {
         const el = textareaRef.current;
@@ -36,7 +49,30 @@ const FollowUpChat = () => {
         }
     };
 
-    const hasReachedLimit = state.followUpHistory.length >= 1;
+    const buildThreadText = () => {
+        return state.followUpHistory
+            .map((chat) => `${chat.user}\n\n${t('brand_name')} :\n${chat.ai}`)
+            .join('\n\n---\n\n');
+    };
+
+    const handleCopyThread = async () => {
+        try {
+            await navigator.clipboard.writeText(buildThreadText());
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch { /* fallback silent */ }
+    };
+
+    const handleShareThread = async () => {
+        const text = buildThreadText();
+        if (navigator.share) {
+            try {
+                await navigator.share({ text });
+            } catch { /* cancelled */ }
+        } else {
+            handleCopyThread();
+        }
+    };
 
     return (
         <section className="width-full mt-6 max-w-4xl mx-auto animate-in fade-in duration-700 delay-500">
@@ -66,6 +102,28 @@ const FollowUpChat = () => {
                 )}
             </div>
 
+            {hasReachedLimit && !loading && (
+                <div className="text-center py-8 space-y-4 border-t border-slate-100 animate-in fade-in">
+                    <p className="text-sm text-slate-500">{t('followup_limit_reached')}</p>
+                    <div className="flex justify-center gap-3">
+                        <button
+                            onClick={handleCopyThread}
+                            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+                        >
+                            {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                            {t('copy_thread')}
+                        </button>
+                        <button
+                            onClick={handleShareThread}
+                            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-[#B88644] hover:bg-[#a07538] rounded-xl transition-colors"
+                        >
+                            <Share2 className="w-4 h-4" />
+                            {t('share_thread')}
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {!hasReachedLimit && !loading && (
                 <div className="relative flex items-end">
                     <textarea
@@ -80,12 +138,18 @@ const FollowUpChat = () => {
                     <button
                         onClick={onSend}
                         disabled={loading || !inputValue.trim()}
-                        className="absolute right-3 p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 brand-protect"
+                        className="absolute right-3 bottom-2.5 p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 brand-protect"
                     >
                         {loading ? <LogoSpinner className="w-4 h-4" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
                     </button>
                 </div>
             )}
+
+            <SubscriptionModal
+                isOpen={showSubscriptionModal}
+                onClose={() => setShowSubscriptionModal(false)}
+                feature="followup"
+            />
         </section>
     );
 };
