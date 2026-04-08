@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Sparkles } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { navigateTo } from '../../hooks/useRouting';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useAuth } from '../../context/AuthContext';
 import OptimizedResponse from './OptimizedResponse';
 import StandardResponse from './StandardResponse';
 import FollowUpChat from './FollowUpChat';
@@ -11,6 +12,7 @@ import FollowUpChat from './FollowUpChat';
 const ResultView = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
+    const { user } = useAuth();
     const virggileRef = useRef(null);
 
     useEffect(() => {
@@ -58,6 +60,19 @@ const ResultView = () => {
                 )}
                 <OptimizedResponse content={state.virggileResponse} question={state.question} standardResponse={state.standardResponse} innerRef={virggileRef} />
                 <StandardResponse content={state.standardResponse} />
+
+                {!state.usage?.exempt && state.virggileResponse && (
+                    <div className="my-6 text-center animate-in fade-in duration-700">
+                        <button
+                            onClick={handleSubscribe}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#B88644] to-[#D4A24C] text-white text-sm font-semibold rounded-full hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                        >
+                            <Sparkles className="w-4 h-4" />
+                            {t('try_free_cta')}
+                        </button>
+                    </div>
+                )}
+
                 <FollowUpChat />
 
                 <div className="mt-4 pt-4 border-t border-slate-50 flex flex-col items-center gap-8">

@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useAppState } from './context/AppContext';
+import { useAuth } from './context/AuthContext';
 import { ACTIONS } from './context/appReducer';
 import { useRouting } from './hooks/useRouting';
 import { api } from './services/api';
 import Navbar from './components/layout/Navbar';
+import Sidebar from './components/layout/Sidebar';
 import Footer from './components/layout/Footer';
 import HomeView from './components/home/HomeView';
 import AboutView from './components/about/AboutView';
@@ -18,12 +20,18 @@ import TermsView from './components/terms/TermsView';
 import CompassView from './components/compass/CompassView';
 import PrivacyView from './components/privacy/PrivacyView';
 import CompanionView from './components/companion/CompanionView';
+import LandingView from './components/landing/LandingView';
 import LimitBanner from './components/ui/LimitBanner';
+import CompassFab from './components/ui/CompassFab';
 
 function App() {
   const { state, dispatch } = useAppState();
+  const { user } = useAuth();
 
   useRouting();
+
+  const hasSidebar = !!user && state.view !== 'landing';
+  const sidebarMargin = hasSidebar ? (state.sidebarOpen ? 'md:ml-60' : 'md:ml-14') : '';
 
   // Scroll to top on page refresh
   useEffect(() => {
@@ -41,8 +49,11 @@ function App() {
   return (
     <div className={`min-h-screen flex flex-col font-sans bg-white text-slate-900 ${state.dir === 'rtl' ? 'rtl' : 'ltr'}`}>
       <Navbar />
-      <div className="flex-grow pt-20 relative z-0">
-        {state.view !== 'about' && state.view !== 'prompts' && state.view !== 'pricing' && state.view !== 'account' && state.view !== 'contact' && state.view !== 'forum' && state.view !== 'terms' && state.view !== 'privacy' && state.view !== 'compass' && state.view !== 'companion' && <HomeView />}
+      <Sidebar />
+      <div className={`flex-grow pt-20 relative z-0 transition-[margin] duration-200 ${sidebarMargin}`}>
+        {state.view === 'landing' && <LandingView />}
+
+        {state.view === 'home' && <HomeView />}
 
         {state.view === 'about' && <AboutView />}
 
@@ -77,6 +88,7 @@ function App() {
         )}
       </div>
       {state.view !== 'companion' && <Footer />}
+      <CompassFab />
       <LimitBanner />
     </div>
   );

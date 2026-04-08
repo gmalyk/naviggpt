@@ -905,10 +905,16 @@ const getCompanionPrompt = async (env, profileKey, valuesArr, lang, dialogueMode
 const extractJSON = (text) => {
     let cleaned = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
     try { return JSON.parse(cleaned); } catch { }
-    const start = cleaned.indexOf('{');
-    const end = cleaned.lastIndexOf('}');
+    // Remove trailing commas before } or ] (common AI mistake)
+    let sanitized = cleaned.replace(/,\s*([}\]])/g, '$1');
+    try { return JSON.parse(sanitized); } catch { }
+    const start = sanitized.indexOf('{');
+    const end = sanitized.lastIndexOf('}');
     if (start !== -1 && end > start) {
-        try { return JSON.parse(cleaned.substring(start, end + 1)); } catch { }
+        let slice = sanitized.substring(start, end + 1);
+        try { return JSON.parse(slice); } catch { }
+        // Last resort: remove trailing commas again on the slice
+        try { return JSON.parse(slice.replace(/,\s*([}\]])/g, '$1')); } catch { }
     }
     return null;
 };
@@ -976,11 +982,21 @@ app.post('/api/ask', async (c) => {
         console.log(`[Worker] ask - Profile: ${profileKey}, Values: ${values ? values.join(', ') : 'none'}, FilterCount: ${filterCount}`);
 
         const systemPrompt = await getAskVirggilePrompt(c.env, profileKey, values, language, filterCount);
-        const response = await callAI(provider, apiKey, c.env, systemPrompt, `Question: "${question}"`);
 
-        const parsed = extractJSON(response);
-        if (!parsed || !Array.isArray(parsed.sections)) {
-            console.error('Failed to parse AI response as JSON:', response.substring(0, 500));
+        // Try up to 2 times — AI occasionally returns malformed JSON
+        let parsed = null;
+        let lastRaw = '';
+        for (let attempt = 0; attempt < 2; attempt++) {
+            const response = await callAI(provider, apiKey, c.env, systemPrompt, `Question: "${question}"`);
+            lastRaw = response;
+            parsed = extractJSON(response);
+            if (parsed && Array.isArray(parsed.sections)) break;
+            parsed = null;
+            if (attempt === 0) console.warn('[Worker] /api/ask: AI returned invalid format, retrying…');
+        }
+
+        if (!parsed) {
+            console.error('Failed to parse AI response as JSON after 2 attempts:', lastRaw.substring(0, 500));
             return c.json({ success: false, error: 'AI returned invalid format.' }, 500);
         }
 
@@ -1132,16 +1148,53 @@ app.post('/api/companion', async (c) => {
         }
 
         const body = await c.req.json();
-        const { messages, language, provider = 'grok', values, profile = 'adult', dialogueMode = 'socrate' } = body;
+        const { messages, language, provider = 'grok', values, profile = 'adult', dialogueMode = 'socrate', files } = body;
 
         if (!messages || !Array.isArray(messages) || messages.length === 0) {
             return c.json({ success: false, error: 'Messages array is required' }, 400);
         }
 
-        console.log(`[Worker] companion - Profile: ${profile}, Values: ${values ? values.join(', ') : 'none'}, Mode: ${dialogueMode}, Messages: ${messages.length}`);
+        // If files are attached, inject them into the last user message as multimodal content
+        let processedMessages = messages;
+        if (files && Array.isArray(files) && files.length > 0) {
+            processedMessages = messages.map((msg, idx) => {
+                if (idx === messages.length - 1 && msg.role === 'user') {
+                    const contentParts = [];
+                    for (const file of files) {
+                        if (file.type && file.type.startsWith('image/')) {
+                            contentParts.push({
+                                type: 'image_url',
+                                image_url: { url: `data:${file.type};base64,${file.data}` }
+                            });
+                        } else {
+                            // For non-image files, decode base64 and include as text
+                            try {
+                                const text = atob(file.data);
+                                contentParts.push({
+                                    type: 'text',
+                                    text: `[File: ${file.name}]\n${text}`
+                                });
+                            } catch {
+                                contentParts.push({
+                                    type: 'text',
+                                    text: `[File: ${file.name} — could not be read]`
+                                });
+                            }
+                        }
+                    }
+                    if (msg.content) {
+                        contentParts.push({ type: 'text', text: msg.content });
+                    }
+                    return { ...msg, content: contentParts };
+                }
+                return msg;
+            });
+        }
+
+        console.log(`[Worker] companion - Profile: ${profile}, Values: ${values ? values.join(', ') : 'none'}, Mode: ${dialogueMode}, Messages: ${messages.length}, Files: ${files ? files.length : 0}`);
 
         const systemPrompt = await getCompanionPrompt(c.env, profile, values, language, dialogueMode);
-        const response = await callAIMultiTurn(provider, '', c.env, systemPrompt, messages);
+        const response = await callAIMultiTurn(provider, '', c.env, systemPrompt, processedMessages);
 
         // Increment companion usage
         if (!exempt) {
@@ -1438,6 +1491,49 @@ app.post('/api/plan/choose', async (c) => {
         return c.json({ success: true });
     } catch (e) {
         console.error('[Worker] /api/plan/choose error:', e);
+        return c.json({ success: false, error: e.message }, 500);
+    }
+});
+
+// POST /api/auth/notify-signup — Notify admin of new user registration
+app.post('/api/auth/notify-signup', async (c) => {
+    try {
+        const { email, name } = await c.req.json();
+        if (!email) {
+            return c.json({ success: false, error: 'Email is required' }, 400);
+        }
+
+        const resendKey = c.env.RESEND_API_KEY;
+        if (!resendKey) {
+            return c.json({ success: false, error: 'Email service not configured' }, 500);
+        }
+
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${resendKey}`
+            },
+            body: JSON.stringify({
+                from: 'Virggile <onboarding@resend.dev>',
+                to: 'virggilai@gmail.com',
+                subject: '[Virggile] New user signup',
+                reply_to: email,
+                html: `<h2>New user registration</h2>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Name:</strong> ${name || 'N/A'}</p>`
+            })
+        });
+
+        if (!res.ok) {
+            const errText = await res.text();
+            console.error('Resend signup notification error:', res.status, errText);
+            return c.json({ success: false, error: `Resend ${res.status}: ${errText}` }, 500);
+        }
+
+        return c.json({ success: true });
+    } catch (e) {
+        console.error('[Worker] /api/auth/notify-signup error:', e);
         return c.json({ success: false, error: e.message }, 500);
     }
 });

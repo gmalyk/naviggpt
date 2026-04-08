@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { api } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -28,6 +29,14 @@ export const AuthProvider = ({ children }) => {
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             setUser(session?.user ?? null);
+            if (event === 'SIGNED_IN' && session?.user) {
+                const key = `notified_signup_${session.user.id}`;
+                if (!localStorage.getItem(key)) {
+                    localStorage.setItem(key, '1');
+                    const name = session.user.user_metadata?.full_name || '';
+                    api.notifySignup(session.user.email, name).catch(() => {});
+                }
+            }
             if (event === 'PASSWORD_RECOVERY') {
                 setAuthModalTab('update_password');
                 setAuthModalOpen(true);

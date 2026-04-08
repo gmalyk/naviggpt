@@ -3,7 +3,8 @@ import { useAppState } from '../context/AppContext';
 import { ACTIONS } from '../context/appReducer';
 
 const VIEW_TO_PATH = {
-    home: '/',
+    landing: '/',
+    home: '/app',
     about: '/about',
     pricing: '/pricing',
     contact: '/contact',
@@ -14,12 +15,13 @@ const VIEW_TO_PATH = {
     account: '/account',
     prompts: '/edit',
     companion: '/companion',
-    discernment: '/',
-    result: '/',
+    discernment: '/app',
+    result: '/app',
 };
 
 const PATH_TO_VIEW = {
-    '/': 'home',
+    '/': 'landing',
+    '/app': 'home',
     '/about': 'about',
     '/pricing': 'pricing',
     '/contact': 'contact',

@@ -33,8 +33,8 @@ export const useCompanion = () => {
     const conversationCount = getCompanionData().count;
     const hasReachedConversationLimit = !appState.usage?.exempt && conversationCount >= COMPANION_CONVERSATION_LIMIT;
 
-    const sendMessage = async (text) => {
-        if (!text.trim() || state.loading) return;
+    const sendMessage = async (text, files) => {
+        if ((!text.trim() && (!files || files.length === 0)) || state.loading) return;
 
         // If this is the first message of a new conversation, increment count
         if (state.messages.length === 0) {
@@ -45,10 +45,26 @@ export const useCompanion = () => {
             }
         }
 
-        dispatch({ type: COMPANION_ACTIONS.ADD_USER_MESSAGE, payload: text.trim() });
+        // Build display text with file names
+        const fileNames = files?.length ? files.map(f => f.name) : [];
+        const displayText = fileNames.length > 0
+            ? `${text}${text ? '\n' : ''}📎 ${fileNames.join(', ')}`
+            : text.trim();
+
+        dispatch({ type: COMPANION_ACTIONS.ADD_USER_MESSAGE, payload: displayText });
         dispatch({ type: COMPANION_ACTIONS.SET_LOADING, payload: true });
 
         try {
+            // Convert files to base64
+            let fileData;
+            if (files?.length) {
+                fileData = await Promise.all(files.map(async ({ file, name, type }) => {
+                    const buffer = await file.arrayBuffer();
+                    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+                    return { name, type, data: base64 };
+                }));
+            }
+
             // Build messages array for the API (without timestamps)
             const apiMessages = [
                 ...state.messages.map(m => ({ role: m.role, content: m.content })),
@@ -61,7 +77,8 @@ export const useCompanion = () => {
                 provider: appState.settings.provider,
                 values: appState.values,
                 profile: appState.profile,
-                dialogueMode: appState.dialogueMode || 'socrate'
+                dialogueMode: appState.dialogueMode || 'socrate',
+                ...(fileData && { files: fileData })
             });
 
             dispatch({ type: COMPANION_ACTIONS.ADD_ASSISTANT_MESSAGE, payload: result.response });

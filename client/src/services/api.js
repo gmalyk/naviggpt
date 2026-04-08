@@ -94,11 +94,20 @@ export const api = {
         return await handleResponse(response);
     },
 
-    choosePlan: async (plan, email, firstName) => {
+    notifySignup: async (email, name) => {
+        const response = await fetch(`${API_BASE}/auth/notify-signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, name })
+        });
+        return await handleResponse(response);
+    },
+
+    choosePlan: async (plan, email, firstName, billingPeriod = 'monthly') => {
         const response = await fetch(`${API_BASE}/plan/choose`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan, email, firstName })
+            body: JSON.stringify({ plan, email, firstName, billingPeriod })
         });
         return await handleResponse(response);
     },

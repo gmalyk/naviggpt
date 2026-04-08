@@ -10,6 +10,7 @@ const PricingView = () => {
     const [loading, setLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [billingPeriod, setBillingPeriod] = useState('monthly');
 
     const handleChoosePlan = async (planType) => {
         if (!user) {
@@ -23,7 +24,7 @@ const PricingView = () => {
 
         try {
             const firstName = user?.user_metadata?.full_name?.split(' ')[0] || '';
-            await api.choosePlan(planType, user.email, firstName);
+            await api.choosePlan(planType, user.email, firstName, billingPeriod);
             setShowSuccessModal(true);
         } catch (e) {
             setErrorMessage(t('pricing_error'));
@@ -33,11 +34,16 @@ const PricingView = () => {
         }
     };
 
+    const isAnnual = billingPeriod === 'annual';
+
     const plans = [
         {
             key: 'individual',
             name: t('pricing_individual'),
-            price: t('pricing_individual_price'),
+            price: isAnnual ? t('pricing_individual_price_annual') : t('pricing_individual_price'),
+            priceSubtext: isAnnual ? t('pricing_individual_billed_annually') : null,
+            trialBadge: t('pricing_free_trial'),
+            trialButton: t('pricing_choose_trial'),
             description: t('pricing_individual_desc'),
             features: [
                 t('pricing_feat_usage_limits'),
@@ -60,7 +66,10 @@ const PricingView = () => {
         {
             key: 'institution',
             name: t('pricing_institution'),
-            price: t('pricing_institution_price'),
+            price: isAnnual ? t('pricing_institution_price_annual') : t('pricing_institution_price'),
+            priceSubtext: isAnnual ? t('pricing_institution_billed_annually') : null,
+            trialBadge: null,
+            trialButton: null,
             description: t('pricing_institution_desc'),
             highlight: t('pricing_feat_includes_individual'),
             features: [
@@ -80,9 +89,36 @@ const PricingView = () => {
                 <CreditCard className="w-7 h-7 text-[#B88644] brand-protect" />
             </div>
 
-            <h1 className="text-3xl font-bold text-center mb-10 text-slate-600">
+            <h1 className="text-3xl font-bold text-center mb-6 text-slate-600">
                 {t('pricing_title')}
             </h1>
+
+            {/* Billing period toggle */}
+            <div className="flex items-center justify-center gap-1 mb-8 bg-slate-100 rounded-full p-1">
+                <button
+                    onClick={() => setBillingPeriod('monthly')}
+                    className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
+                        !isAnnual
+                            ? 'bg-white text-slate-700 shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                >
+                    {t('pricing_toggle_monthly')}
+                </button>
+                <button
+                    onClick={() => setBillingPeriod('annual')}
+                    className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 ${
+                        isAnnual
+                            ? 'bg-white text-slate-700 shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                >
+                    {t('pricing_toggle_annual')}
+                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                        {t('pricing_annual_savings_badge')}
+                    </span>
+                </button>
+            </div>
 
             {errorMessage && (
                 <p className="mb-6 text-center text-sm text-red-600 animate-in fade-in duration-300">
@@ -99,12 +135,22 @@ const PricingView = () => {
                         <h2 className="text-xl font-bold text-slate-600 mb-1">
                             {plan.name}
                         </h2>
+                        {plan.trialBadge && (
+                            <span className="inline-block self-start mt-1 mb-2 text-xs font-semibold bg-amber-100 text-[#B88644] px-3 py-1 rounded-full">
+                                {plan.trialBadge}
+                            </span>
+                        )}
                         <p className="text-sm text-slate-600 mb-6">
                             {plan.description}
                         </p>
-                        <p className="text-3xl font-bold text-slate-600 mb-8">
+                        <p className="text-3xl font-bold text-slate-600 mb-2">
                             {plan.price}
                         </p>
+                        {plan.priceSubtext ? (
+                            <p className="text-sm text-slate-500 mb-8">{plan.priceSubtext}</p>
+                        ) : (
+                            <div className="mb-6" />
+                        )}
 
                         {plan.highlight && (
                             <p className="text-sm font-medium text-slate-500 mb-3 italic">{plan.highlight}</p>
@@ -129,7 +175,7 @@ const PricingView = () => {
                                     {t('pricing_sending')}
                                 </>
                             ) : (
-                                t('pricing_choose')
+                                plan.trialButton || t('pricing_choose')
                             )}
                         </button>
                     </div>

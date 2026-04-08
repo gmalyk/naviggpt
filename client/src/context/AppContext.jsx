@@ -11,6 +11,15 @@ export const AppProvider = ({ children }) => {
         document.documentElement.dir = state.dir;
     }, [state.language, state.dir]);
 
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', state.theme);
+        localStorage.setItem('virgil-theme', state.theme);
+        const isDark = state.theme === 'dark';
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light only';
+        const meta = document.querySelector('meta[name="color-scheme"]');
+        if (meta) meta.content = isDark ? 'dark' : 'only light';
+    }, [state.theme]);
+
     return (
         <AppContext.Provider value={{ state, dispatch }}>
             {children}

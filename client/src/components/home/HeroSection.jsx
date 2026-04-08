@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useAppState } from '../../context/AppContext';
 
 const HeroSection = () => {
     const { t } = useTranslation();
+    const { state } = useAppState();
 
     const renderHighlighted = (text) => {
         const parts = text.split(/(<h>.*?<\/h>)/g);
@@ -26,7 +28,7 @@ const HeroSection = () => {
     return (
         <section className="text-center mb-6 animate-in fade-in duration-700">
             <h1 className="text-3xl md:text-4xl font-medium text-slate-600 tracking-tight leading-tight">
-                {renderHighlighted(t('hero_title'))}
+                {renderHighlighted(state.dialogueActive ? t('hero_title_companion') : t('hero_title'))}
             </h1>
         </section>
     );

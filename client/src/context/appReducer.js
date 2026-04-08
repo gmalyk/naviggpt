@@ -1,9 +1,9 @@
 export const initialState = {
-    view: 'home', // 'home', 'about', 'discernment', 'result', 'prompts'
+    view: 'landing', // 'landing', 'home', 'about', 'discernment', 'result', 'prompts'
     language: 'en',
     dir: 'ltr',
     profile: 'adult',
-    filterCount: 5,
+    filterCount: 0,
     useWebSearch: false,
     faith: null,
     values: [],
@@ -25,7 +25,9 @@ export const initialState = {
     showLimitBanner: false,
     dialogueActive: false,
     dialogueMode: null,
-    pendingCompanionMessage: null
+    pendingCompanionMessage: null,
+    sidebarOpen: true,
+    theme: (typeof localStorage !== 'undefined' && localStorage.getItem('virgil-theme')) || 'light'
 };
 
 export const ACTIONS = {
@@ -51,7 +53,9 @@ export const ACTIONS = {
     HIDE_LIMIT_BANNER: 'HIDE_LIMIT_BANNER',
     SET_DIALOGUE_ACTIVE: 'SET_DIALOGUE_ACTIVE',
     SET_DIALOGUE_MODE: 'SET_DIALOGUE_MODE',
-    SET_PENDING_COMPANION_MESSAGE: 'SET_PENDING_COMPANION_MESSAGE'
+    SET_PENDING_COMPANION_MESSAGE: 'SET_PENDING_COMPANION_MESSAGE',
+    SET_SIDEBAR_OPEN: 'SET_SIDEBAR_OPEN',
+    SET_THEME: 'SET_THEME'
 };
 
 export function appReducer(state, action) {
@@ -120,6 +124,10 @@ export function appReducer(state, action) {
             return { ...state, dialogueMode: action.payload };
         case ACTIONS.SET_PENDING_COMPANION_MESSAGE:
             return { ...state, pendingCompanionMessage: action.payload };
+        case ACTIONS.SET_SIDEBAR_OPEN:
+            return { ...state, sidebarOpen: action.payload };
+        case ACTIONS.SET_THEME:
+            return { ...state, theme: action.payload };
         default:
             return state;
     }
