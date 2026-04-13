@@ -7,7 +7,7 @@ import virggilImage from '../../assets/images/virggil.webp';
 
 const LandingHero = () => {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, openAuthModal } = useAuth();
     const { dispatch } = useAppState();
 
     const renderHighlighted = (text) => {
@@ -30,7 +30,11 @@ const LandingHero = () => {
     };
 
     const handleCTA = () => {
-        navigateTo(dispatch, 'home');
+        if (user) {
+            navigateTo(dispatch, 'home');
+        } else {
+            openAuthModal();
+        }
     };
 
     const scrollToHowItWorks = () => {

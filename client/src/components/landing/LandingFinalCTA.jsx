@@ -1,14 +1,20 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useAuth } from '../../context/AuthContext';
 import { useAppState } from '../../context/AppContext';
 import { navigateTo } from '../../hooks/useRouting';
 
 const LandingFinalCTA = () => {
     const { t } = useTranslation();
+    const { user, openAuthModal } = useAuth();
     const { dispatch } = useAppState();
 
     const handleCTA = () => {
-        navigateTo(dispatch, 'home');
+        if (user) {
+            navigateTo(dispatch, 'home');
+        } else {
+            openAuthModal();
+        }
     };
 
     return (
