@@ -9,7 +9,7 @@ const LandingComparison = () => {
     return (
         <section className="py-12 px-6 max-w-6xl mx-auto">
             <div className="flex items-center justify-center gap-6 mb-12">
-                <img src={virggilImg} alt="Virggil" className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover" />
+                <img src={virggilImg} alt="NavigGPT" className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover" />
                 <div className="text-left">
                     <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
                         {t('landing_compare_title')}
@@ -28,17 +28,17 @@ const LandingComparison = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                {/* Virggil */}
-                <div className="rounded-3xl border-2 border-[#B88644]/30 bg-white p-8 flex flex-col shadow-lg shadow-[#B88644]/5 relative">
-                    <div className="absolute -top-3 left-6 px-3 py-1 bg-[#B88644] text-white text-xs font-bold rounded-full brand-protect">
+                {/* NavigGPT */}
+                <div className="rounded-3xl border-2 border-[#7B8FA3]/30 bg-white p-8 flex flex-col shadow-lg shadow-[#7B8FA3]/5 relative">
+                    <div className="absolute -top-3 left-6 px-3 py-1 bg-[#7B8FA3] text-white text-xs font-bold rounded-full brand-protect">
                         {t('landing_compare_badge')}
                     </div>
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-full bg-[#B88644]/10 flex items-center justify-center">
-                            <Sparkles className="w-5 h-5 text-[#B88644] brand-protect" />
+                        <div className="w-10 h-10 rounded-full bg-[#7B8FA3]/10 flex items-center justify-center">
+                            <Sparkles className="w-5 h-5 text-[#7B8FA3] brand-protect" />
                         </div>
                         <div>
-                            <p className="font-semibold text-slate-800">Virggil</p>
+                            <p className="font-semibold text-slate-800">NavigGPT</p>
                         </div>
                     </div>
                     <p className="text-sm text-slate-700 leading-relaxed flex-grow">

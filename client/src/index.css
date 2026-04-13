@@ -31,18 +31,18 @@ html {
   -webkit-text-fill-color: transparent;
 }
 
-/* Mobile: solid gold instead of gradient to prevent color-invert artifacts */
+/* Mobile: solid silver instead of gradient to prevent color-invert artifacts */
 @media (max-width: 767px) {
   .bg-clip-text.brand-protect {
     background-image: none !important;
-    -webkit-text-fill-color: #D9B06A !important;
-    color: #D9B06A !important;
+    -webkit-text-fill-color: #A3B5C7 !important;
+    color: #A3B5C7 !important;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   .bg-clip-text.brand-protect {
-    background-image: radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%) !important;
+    background-image: radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%) !important;
     -webkit-text-fill-color: transparent !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
@@ -52,12 +52,12 @@ html {
   }
 }
 
-/* Mobile dark mode: still use solid gold */
+/* Mobile dark mode: still use solid silver */
 @media (max-width: 767px) and (prefers-color-scheme: dark) {
   .bg-clip-text.brand-protect {
     background-image: none !important;
-    -webkit-text-fill-color: #D9B06A !important;
-    color: #D9B06A !important;
+    -webkit-text-fill-color: #A3B5C7 !important;
+    color: #A3B5C7 !important;
   }
 }
 
@@ -84,11 +84,11 @@ html {
 /* Compass Glow Animation */
 @keyframes compass-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 2px #B88644);
+    filter: drop-shadow(0 0 2px #7B8FA3);
     opacity: 1;
   }
   50% {
-    filter: drop-shadow(0 0 10px #D9B06A) drop-shadow(0 0 20px #B8864480);
+    filter: drop-shadow(0 0 10px #A3B5C7) drop-shadow(0 0 20px #7B8FA380);
     opacity: 0.7;
   }
 }
@@ -184,18 +184,18 @@ html, body, #root {
   @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
 }
 
-/* ===== THEME: GOLD ===== */
-[data-theme="gold"] body,
-[data-theme="gold"] .bg-white {
-  background-color: #FBF8F1 !important;
+/* ===== THEME: SILVER ===== */
+[data-theme="silver"] body,
+[data-theme="silver"] .bg-white {
+  background-color: #F3F5F8 !important;
 }
-[data-theme="gold"] .bg-white\/95 { background-color: rgba(251, 248, 241, 0.95) !important; }
-[data-theme="gold"] .bg-white\/80 { background-color: rgba(251, 248, 241, 0.80) !important; }
-[data-theme="gold"] .bg-white\/70 { background-color: rgba(251, 248, 241, 0.70) !important; }
-[data-theme="gold"] .bg-white\/60 { background-color: rgba(251, 248, 241, 0.60) !important; }
-[data-theme="gold"] .bg-white\/50 { background-color: rgba(251, 248, 241, 0.50) !important; }
-[data-theme="gold"] .bg-slate-50 {
-  background-color: #F5F0E6 !important;
+[data-theme="silver"] .bg-white\/95 { background-color: rgba(243, 245, 248, 0.95) !important; }
+[data-theme="silver"] .bg-white\/80 { background-color: rgba(243, 245, 248, 0.80) !important; }
+[data-theme="silver"] .bg-white\/70 { background-color: rgba(243, 245, 248, 0.70) !important; }
+[data-theme="silver"] .bg-white\/60 { background-color: rgba(243, 245, 248, 0.60) !important; }
+[data-theme="silver"] .bg-white\/50 { background-color: rgba(243, 245, 248, 0.50) !important; }
+[data-theme="silver"] .bg-slate-50 {
+  background-color: #EAEFF4 !important;
 }
 
 /* ===== THEME: DARK ===== */
@@ -266,11 +266,11 @@ html, body, #root {
 [data-theme="dark"] .hover\:shadow-xl:hover { box-shadow: 0 20px 25px rgba(0,0,0,0.4) !important; }
 
 /* -- Brand-color hovers (override !important static rules) -- */
-[data-theme="dark"] .hover\:text-\[\#B88644\]:hover { color: #B88644 !important; }
-[data-theme="dark"] .hover\:border-\[\#B88644\]\/40:hover { border-color: rgba(184, 134, 68, 0.4) !important; }
-[data-theme="dark"] .hover\:border-\[\#B88644\]\/30:hover { border-color: rgba(184, 134, 68, 0.3) !important; }
-[data-theme="dark"] .hover\:bg-\[\#B88644\]\/10:hover { background-color: rgba(184, 134, 68, 0.1) !important; }
-[data-theme="dark"] .hover\:bg-\[\#B88644\]\/5:hover { background-color: rgba(184, 134, 68, 0.05) !important; }
+[data-theme="dark"] .hover\:text-\[\#7B8FA3\]:hover { color: #7B8FA3 !important; }
+[data-theme="dark"] .hover\:border-\[\#7B8FA3\]\/40:hover { border-color: rgba(123, 143, 163, 0.4) !important; }
+[data-theme="dark"] .hover\:border-\[\#7B8FA3\]\/30:hover { border-color: rgba(123, 143, 163, 0.3) !important; }
+[data-theme="dark"] .hover\:bg-\[\#7B8FA3\]\/10:hover { background-color: rgba(123, 143, 163, 0.1) !important; }
+[data-theme="dark"] .hover\:bg-\[\#7B8FA3\]\/5:hover { background-color: rgba(123, 143, 163, 0.05) !important; }
 
 /* -- Scrollbar -- */
 [data-theme="dark"] ::-webkit-scrollbar-track { background-color: #1e293b; }

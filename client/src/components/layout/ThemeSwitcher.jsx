@@ -4,7 +4,7 @@ import { ACTIONS } from '../../context/appReducer';
 
 const themes = [
     { id: 'light', color: '#FFFFFF', border: '#e2e8f0' },
-    { id: 'gold', color: '#FBF8F1', border: '#e2d5b0' },
+    { id: 'silver', color: '#F4F6F8', border: '#b0bec5' },
     { id: 'dark', color: '#1e293b', border: '#475569' },
 ];
 
@@ -17,7 +17,7 @@ const ThemeSwitcher = ({ expanded }) => {
                 <button
                     key={id}
                     onClick={() => dispatch({ type: ACTIONS.SET_THEME, payload: id })}
-                    className={`w-5 h-5 rounded-full shrink-0 transition-all ${state.theme === id ? 'ring-2 ring-[#B88644] ring-offset-1 scale-110' : 'hover:scale-110'}`}
+                    className={`w-5 h-5 rounded-full shrink-0 transition-all ${state.theme === id ? 'ring-2 ring-[#7B8FA3] ring-offset-1 scale-110' : 'hover:scale-110'}`}
                     style={{ backgroundColor: color, border: `1.5px solid ${border}` }}
                     title={id.charAt(0).toUpperCase() + id.slice(1)}
                 />

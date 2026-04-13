@@ -20,7 +20,7 @@ const CompanionView = () => {
                 </p>
                 <button
                     onClick={() => openAuthModal()}
-                    className="px-6 py-2.5 bg-[#B88644] text-white text-sm font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm brand-protect"
+                    className="px-6 py-2.5 bg-[#7B8FA3] text-white text-sm font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm brand-protect"
                 >
                     {t('auth_sign_in')}
                 </button>

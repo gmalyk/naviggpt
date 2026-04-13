@@ -1,20 +1,14 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import { useAuth } from '../../context/AuthContext';
 import { useAppState } from '../../context/AppContext';
 import { navigateTo } from '../../hooks/useRouting';
 
 const LandingFinalCTA = () => {
     const { t } = useTranslation();
-    const { user, openAuthModal } = useAuth();
     const { dispatch } = useAppState();
 
     const handleCTA = () => {
-        if (user) {
-            navigateTo(dispatch, 'home');
-        } else {
-            openAuthModal();
-        }
+        navigateTo(dispatch, 'home');
     };
 
     return (
@@ -28,7 +22,7 @@ const LandingFinalCTA = () => {
                 </p>
                 <button
                     onClick={handleCTA}
-                    className="px-10 py-4 bg-[#B88644] text-white text-lg font-bold rounded-full hover:bg-[#a6763b] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#B88644]/20 brand-protect"
+                    className="px-10 py-4 bg-[#7B8FA3] text-white text-lg font-bold rounded-full hover:bg-[#a6763b] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#7B8FA3]/20 brand-protect"
                 >
                     {t('landing_final_cta')}
                 </button>

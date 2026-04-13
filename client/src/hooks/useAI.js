@@ -34,11 +34,11 @@ export const useAI = () => {
             });
         }
 
-        dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { virggile: response.virggile, standard: response.standard } });
+        dispatch({ type: ACTIONS.SET_FINAL_RESPONSES, payload: { naviggpt: response.naviggpt, standard: response.standard } });
         navigateTo(dispatch, 'result', { skipScroll: true });
     };
 
-    const askVirggile = async (question) => {
+    const askNavigGPT = async (question) => {
         // Check usage limit (applies to both logged-in and anonymous users)
         if (state.usage.loaded && state.usage.remaining <= 0 && !state.usage.exempt) {
             dispatch({ type: ACTIONS.SHOW_LIMIT_BANNER });
@@ -104,7 +104,7 @@ export const useAI = () => {
 
         try {
             // Construct context for the check
-            const context = `Question: ${state.question}. Filters: ${state.selectedFilters.join(', ')}. Virggil Response: ${state.virggileResponse.substring(0, 200)}...`;
+            const context = `Question: ${state.question}. Filters: ${state.selectedFilters.join(', ')}. NavigGPT Response: ${state.naviggptResponse.substring(0, 200)}...`;
 
             const result = await api.followUp({
                 followUp: followUpText,
@@ -112,7 +112,7 @@ export const useAI = () => {
                 question: state.question,
                 filters: state.selectedFilters,
                 precision: state.precision,
-                virggileResponse: state.virggileResponse,
+                naviggptResponse: state.naviggptResponse,
                 followUpHistory: state.followUpHistory,
                 profileKey: state.profile,
                 language: state.language,
@@ -142,7 +142,7 @@ export const useAI = () => {
     };
 
     return {
-        askVirggile,
+        askNavigGPT,
         submitFilters,
         handleFollowUp,
         loading

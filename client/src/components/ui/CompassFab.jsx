@@ -60,7 +60,7 @@ const CompassFab = () => {
                         <circle
                             cx="24" cy="24" r={radius}
                             fill="none"
-                            stroke="#B88644"
+                            stroke="#7B8FA3"
                             strokeWidth="2.5"
                             strokeLinecap="round"
                             strokeDasharray={circumference}
@@ -72,12 +72,12 @@ const CompassFab = () => {
 
                 {/* Icon + count */}
                 <div className="relative flex items-center justify-center compass-glow">
-                    <Compass className="w-5 h-5 text-[#B88644]" />
+                    <Compass className="w-5 h-5 text-[#7B8FA3]" />
                 </div>
 
                 {/* Badge */}
                 {count > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#B88644] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#7B8FA3] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
                         {count}
                     </span>
                 )}

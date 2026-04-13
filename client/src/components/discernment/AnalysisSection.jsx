@@ -11,7 +11,7 @@ const AnalysisSection = () => {
     return (
         <div className="animate-in fade-in duration-500">
             <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-4 h-4 text-[#B88644] brand-protect" />
+                <Sparkles className="w-4 h-4 text-[#7B8FA3] brand-protect" />
                 <h2 className="text-sm font-bold text-slate-800">{t('ui_virgile_analysis')}</h2>
             </div>
 

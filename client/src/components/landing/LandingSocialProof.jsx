@@ -17,7 +17,7 @@ const LandingSocialProof = () => {
             <div className="max-w-4xl mx-auto px-6 flex flex-wrap justify-center gap-8 md:gap-16">
                 {stats.map((stat, idx) => (
                     <div key={idx} className="flex items-center gap-3">
-                        <stat.icon className="w-5 h-5 text-[#B88644] brand-protect" />
+                        <stat.icon className="w-5 h-5 text-[#7B8FA3] brand-protect" />
                         <div>
                             <span className="text-lg font-bold text-slate-800">{stat.value}</span>
                             <span className="text-sm text-slate-500 ml-1.5">{stat.label}</span>

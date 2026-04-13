@@ -31,7 +31,7 @@ const ContactView = () => {
     return (
         <section className="py-12 px-6 max-w-2xl mx-auto w-full flex flex-col items-center animate-in fade-in duration-500">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                <Mail className="w-7 h-7 text-[#B88644] brand-protect" />
+                <Mail className="w-7 h-7 text-[#7B8FA3] brand-protect" />
             </div>
 
             <div className="text-center mb-10">
@@ -61,7 +61,7 @@ const ContactView = () => {
                             value={form.name}
                             onChange={handleChange}
                             placeholder={t('contact_name_placeholder')}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-colors brand-protect"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7B8FA3]/30 focus:border-[#7B8FA3] transition-colors brand-protect"
                         />
                     </div>
                 </div>
@@ -80,7 +80,7 @@ const ContactView = () => {
                             value={form.email}
                             onChange={handleChange}
                             placeholder={t('contact_email_placeholder')}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-colors brand-protect"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7B8FA3]/30 focus:border-[#7B8FA3] transition-colors brand-protect"
                         />
                     </div>
                 </div>
@@ -99,7 +99,7 @@ const ContactView = () => {
                             value={form.subject}
                             onChange={handleChange}
                             placeholder={t('contact_subject_placeholder')}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-colors brand-protect"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7B8FA3]/30 focus:border-[#7B8FA3] transition-colors brand-protect"
                         />
                     </div>
                 </div>
@@ -116,7 +116,7 @@ const ContactView = () => {
                         value={form.message}
                         onChange={handleChange}
                         placeholder={t('contact_message_placeholder')}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#B88644]/30 focus:border-[#B88644] transition-colors resize-none brand-protect"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7B8FA3]/30 focus:border-[#7B8FA3] transition-colors resize-none brand-protect"
                     />
                 </div>
 
@@ -124,7 +124,7 @@ const ContactView = () => {
                 <button
                     type="submit"
                     disabled={status === 'sending'}
-                    className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#B88644] hover:bg-[#a6763b] text-white font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed brand-protect"
+                    className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#7B8FA3] hover:bg-[#5A7085] text-white font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed brand-protect"
                 >
                     <Send className="w-4 h-4" />
                     {status === 'sending' ? t('contact_sending') : t('contact_send')}

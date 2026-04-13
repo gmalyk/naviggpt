@@ -19,7 +19,7 @@ const LimitBanner = () => {
                     dispatch({ type: ACTIONS.HIDE_LIMIT_BANNER });
                     navigateTo(dispatch, 'pricing');
                 }}
-                className="px-5 py-2 bg-[#B88644] hover:bg-[#a07538] text-white text-sm font-semibold rounded-full transition-colors whitespace-nowrap"
+                className="px-5 py-2 bg-[#7B8FA3] hover:bg-[#5A7085] text-white text-sm font-semibold rounded-full transition-colors whitespace-nowrap"
             >
                 {t('upgrade_plan')}
             </button>

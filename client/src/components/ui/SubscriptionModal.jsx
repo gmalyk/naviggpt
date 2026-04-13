@@ -41,7 +41,7 @@ const SubscriptionModal = ({ isOpen, onClose, feature = 'followup' }) => {
                         onClose();
                         navigateTo(dispatch, 'pricing');
                     }}
-                    className="w-full px-5 py-3 bg-[#B88644] hover:bg-[#a07538] text-white text-sm font-semibold rounded-full transition-colors"
+                    className="w-full px-5 py-3 bg-[#7B8FA3] hover:bg-[#5A7085] text-white text-sm font-semibold rounded-full transition-colors"
                 >
                     {t('subscription_modal_cta')}
                 </button>

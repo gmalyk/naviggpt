@@ -13,7 +13,7 @@ export const initialState = {
     sections: [],
     selectedFilters: [],
     precision: '',
-    virggileResponse: '',
+    naviggptResponse: '',
     standardResponse: '',
     followUpHistory: [],
     returnToView: null,
@@ -27,7 +27,7 @@ export const initialState = {
     dialogueMode: null,
     pendingCompanionMessage: null,
     sidebarOpen: true,
-    theme: (typeof localStorage !== 'undefined' && localStorage.getItem('virgil-theme')) || 'light'
+    theme: (typeof localStorage !== 'undefined' && localStorage.getItem('naviggpt-theme')) || 'light'
 };
 
 export const ACTIONS = {
@@ -97,7 +97,7 @@ export function appReducer(state, action) {
         case ACTIONS.SET_FINAL_RESPONSES:
             return {
                 ...state,
-                virggileResponse: action.payload.virggile,
+                naviggptResponse: action.payload.naviggpt,
                 standardResponse: action.payload.standard,
                 followUpHistory: []
             };

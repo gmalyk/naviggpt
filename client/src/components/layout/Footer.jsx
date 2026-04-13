@@ -22,7 +22,7 @@ const Footer = () => {
         <footer className="py-16 mt-auto">
             <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
                 <a
-                    href="https://x.com/virggilAI"
+                    href="https://x.com/NavigGPT"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-300 hover:text-slate-500 transition-colors"

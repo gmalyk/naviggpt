@@ -17,7 +17,7 @@ const AboutView = () => {
                 <div className="w-36 h-36 flex items-center justify-center overflow-hidden rounded-full">
                     <img
                         src={virggilImage}
-                        alt="Virggil"
+                        alt="NavigGPT"
                         className="w-full h-full object-cover"
                     />
                 </div>

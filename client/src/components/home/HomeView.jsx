@@ -16,11 +16,11 @@ const HomeView = () => {
                 <button
                     onClick={() => navigateTo(dispatch, 'pricing')}
                     title={t('plan_tooltip')}
-                    className="group relative flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-200 hover:border-[#B88644]/40 hover:bg-[#B88644]/5 transition-all"
+                    className="group relative flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-200 hover:border-[#7B8FA3]/40 hover:bg-[#7B8FA3]/5 transition-all"
                 >
-                    <Zap className="w-3.5 h-3.5 text-[#B88644]" />
+                    <Zap className="w-3.5 h-3.5 text-[#7B8FA3]" />
                     <span className="text-xs text-slate-500">{t('plan_free_label')}</span>
-                    <span className="text-[10px] font-semibold text-[#B88644]">· {t('plan_upgrade_label')}</span>
+                    <span className="text-[10px] font-semibold text-[#7B8FA3]">· {t('plan_upgrade_label')}</span>
                     <span className="pointer-events-none absolute top-full mt-1.5 right-0 whitespace-nowrap rounded bg-slate-800 px-2.5 py-1.5 text-[11px] text-white opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg">
                         {t('plan_tooltip')}
                     </span>

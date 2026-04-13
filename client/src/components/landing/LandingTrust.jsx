@@ -22,7 +22,7 @@ const LandingTrust = () => {
                     {items.map((item, idx) => (
                         <div key={idx} className="flex flex-col items-center text-center gap-3">
                             <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                                <item.icon className="w-6 h-6 text-[#D9B06A]" />
+                                <item.icon className="w-6 h-6 text-[#A3B5C7]" />
                             </div>
                             <p className="text-sm text-slate-300 font-medium">{item.label}</p>
                         </div>

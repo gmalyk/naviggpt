@@ -18,9 +18,9 @@ const profiles = [
 const filterCountCycle = [0, 3, 5];
 
 const sages = [
-    { id: 'socrate', image: '/socrate.png', labelKey: 'sage_socrate', tooltipKey: 'sage_socrate_tooltip', hoverColor: 'hover:bg-[#D49078]/15 hover:border-[#D49078]', bgColor: '#D49078' },
-    { id: 'nestor', image: '/nestor.png', labelKey: 'sage_nestor', tooltipKey: 'sage_nestor_tooltip', hoverColor: 'hover:bg-[#E6C15A]/15 hover:border-[#E6C15A]', bgColor: '#E6C15A' },
-    { id: 'plutarque', image: '/plutarque.png', labelKey: 'sage_plutarque', tooltipKey: 'sage_plutarque_tooltip', hoverColor: 'hover:bg-[#A39656]/15 hover:border-[#A39656]', bgColor: '#A39656' },
+    { id: 'socrate', image: '/socrate.png', labelKey: 'sage_socrate', tooltipKey: 'sage_socrate_tooltip', hoverColor: 'hover:bg-[#8AA0B8]/15 hover:border-[#8AA0B8]', bgColor: '#8AA0B8' },
+    { id: 'nestor', image: '/nestor.png', labelKey: 'sage_nestor', tooltipKey: 'sage_nestor_tooltip', hoverColor: 'hover:bg-[#9BB0C4]/15 hover:border-[#9BB0C4]', bgColor: '#9BB0C4' },
+    { id: 'plutarque', image: '/plutarque.png', labelKey: 'sage_plutarque', tooltipKey: 'sage_plutarque_tooltip', hoverColor: 'hover:bg-[#6E8496]/15 hover:border-[#6E8496]', bgColor: '#6E8496' },
 ];
 
 const topics = [
@@ -34,7 +34,7 @@ const topics = [
 const SearchBar = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
-    const { askVirggile, loading } = useAI();
+    const { askNavigGPT, loading } = useAI();
     const { user, openAuthModal } = useAuth();
     const inputValue = state.inputDraft;
     const setInputValue = (val) => dispatch({ type: ACTIONS.SET_INPUT_DRAFT, payload: val });
@@ -75,7 +75,7 @@ const SearchBar = () => {
             return;
         }
 
-        askVirggile(inputValue.trim());
+        askNavigGPT(inputValue.trim());
     };
 
     const handleKeyDown = (e) => {
@@ -87,7 +87,7 @@ const SearchBar = () => {
 
     return (
         <section className="max-w-2xl w-full mx-auto mb-8 relative z-50">
-            <div className="relative group bg-white border border-slate-200 rounded-[32px] p-5 transition-all focus-within:border-[#B88644]/40 brand-protect">
+            <div className="relative group bg-white border border-slate-200 rounded-[32px] p-5 transition-all focus-within:border-[#7B8FA3]/40 brand-protect">
                 <div className="flex items-center gap-3 mb-3">
                     <div className="relative group/attach shrink-0">
                         <button
@@ -114,7 +114,7 @@ const SearchBar = () => {
                         <button
                             onClick={handleSend}
                             disabled={loading || !inputValue.trim()}
-                            className={`p-2 text-[#B88644] hover:bg-[#B88644]/10 rounded-full transition-all brand-protect ${loading ? '' : 'disabled:opacity-30'}`}
+                            className={`p-2 text-[#7B8FA3] hover:bg-[#7B8FA3]/10 rounded-full transition-all brand-protect ${loading ? '' : 'disabled:opacity-30'}`}
                         >
                             {loading ? <LogoSpinner className="w-6 h-6" /> : <Send className="w-6 h-6 rtl:scale-x-[-1]" />}
                         </button>
@@ -127,8 +127,8 @@ const SearchBar = () => {
                             key={p.id}
                             onClick={() => dispatch({ type: ACTIONS.SET_PROFILE, payload: p.id })}
                             className={`shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border brand-protect ${state.profile === p.id
-                                ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
-                                : 'bg-white/60 border-slate-100 text-slate-600 hover:bg-[#B88644]/10 hover:border-[#B88644]/40 hover:text-[#B88644]'
+                                ? 'bg-white border-[#7B8FA3] text-[#7B8FA3] font-bold shadow-sm'
+                                : 'bg-white/60 border-slate-100 text-slate-600 hover:bg-[#7B8FA3]/10 hover:border-[#7B8FA3]/40 hover:text-[#7B8FA3]'
                                 }`}
                         >
                             {t(p.labelKey)}
@@ -140,7 +140,7 @@ const SearchBar = () => {
                             <button
                                 onClick={() => dispatch({ type: ACTIONS.SET_WEB_SEARCH, payload: !state.useWebSearch })}
                                 className={`shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect ${state.useWebSearch
-                                    ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
+                                    ? 'bg-white border-[#7B8FA3] text-[#7B8FA3] font-bold shadow-sm'
                                     : 'bg-white/60 border-slate-100 text-slate-400 hover:bg-white hover:border-slate-200'
                                     }`}
                                 title={t('web_search_tooltip')}
@@ -154,11 +154,11 @@ const SearchBar = () => {
                                         dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: state.view });
                                         navigateTo(dispatch, 'compass');
                                     }}
-                                    className="sm:hidden shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect bg-white/60 border-slate-100 text-slate-400 hover:bg-[#B88644]/10 hover:border-[#B88644]/40 hover:text-[#B88644] relative"
+                                    className="sm:hidden shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect bg-white/60 border-slate-100 text-slate-400 hover:bg-[#7B8FA3]/10 hover:border-[#7B8FA3]/40 hover:text-[#7B8FA3] relative"
                                 >
-                                    <Compass className="w-3.5 h-3.5 compass-glow text-[#B88644]" />
+                                    <Compass className="w-3.5 h-3.5 compass-glow text-[#7B8FA3]" />
                                     {(state.values?.length || 0) > 0 && (
-                                        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#B88644] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                                        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#7B8FA3] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
                                             {state.values.length}
                                         </span>
                                     )}
@@ -172,11 +172,11 @@ const SearchBar = () => {
                                         const nextValue = filterCountCycle[(currentIndex + 1) % filterCountCycle.length];
                                         dispatch({ type: ACTIONS.SET_FILTER_COUNT, payload: nextValue });
                                     }}
-                                    className="peer shrink-0 px-4 py-1.5 rounded-full text-xs transition-all border border-[#B88644] bg-white shadow-sm brand-protect"
+                                    className="peer shrink-0 px-4 py-1.5 rounded-full text-xs transition-all border border-[#7B8FA3] bg-white shadow-sm brand-protect"
                                 >
                                     {filterCountCycle.map((val, i) => (
                                         <span key={val}>
-                                            <span className={state.filterCount === val ? 'text-[#B88644] font-bold brand-protect' : 'text-slate-300'}>
+                                            <span className={state.filterCount === val ? 'text-[#7B8FA3] font-bold brand-protect' : 'text-slate-300'}>
                                                 {val}
                                             </span>
                                             {i < filterCountCycle.length - 1 && <span className="text-slate-300 mx-0.5">·</span>}
@@ -196,7 +196,7 @@ const SearchBar = () => {
                                     <button
                                         onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: s.id })}
                                         className={`peer shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect ${state.dialogueMode === s.id
-                                            ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
+                                            ? 'bg-white border-[#7B8FA3] text-[#7B8FA3] font-bold shadow-sm'
                                             : `bg-white/60 border-slate-100 text-slate-600 ${s.hoverColor}`
                                             }`}
                                     >
@@ -223,8 +223,8 @@ const SearchBar = () => {
                                 onClick={() => setExpandedTopic(expandedTopic === topic.id ? null : topic.id)}
                                 className={`px-3.5 py-1.5 rounded-full text-xs transition-all border ${
                                     expandedTopic === topic.id
-                                        ? 'bg-[#B88644]/10 border-[#B88644]/40 text-[#B88644] font-semibold'
-                                        : 'bg-white/60 border-slate-200 text-slate-500 hover:border-[#B88644]/30 hover:text-[#B88644]'
+                                        ? 'bg-[#7B8FA3]/10 border-[#7B8FA3]/40 text-[#7B8FA3] font-semibold'
+                                        : 'bg-white/60 border-slate-200 text-slate-500 hover:border-[#7B8FA3]/30 hover:text-[#7B8FA3]'
                                 } ${topic.id === 'surprise' ? 'flex items-center gap-1' : ''}`}
                             >
                                 {topic.id === 'surprise' && <Sparkles className="w-3 h-3" />}
@@ -242,7 +242,7 @@ const SearchBar = () => {
                                         setExpandedTopic(null);
                                         textareaRef.current?.focus();
                                     }}
-                                    className="px-4 py-2 text-xs text-slate-600 bg-white border border-slate-200 rounded-2xl hover:border-[#B88644]/40 hover:text-[#B88644] transition-all shadow-sm"
+                                    className="px-4 py-2 text-xs text-slate-600 bg-white border border-slate-200 rounded-2xl hover:border-[#7B8FA3]/40 hover:text-[#7B8FA3] transition-all shadow-sm"
                                 >
                                     {t(promptKey)}
                                 </button>
@@ -267,7 +267,7 @@ const SearchBar = () => {
                                     ? 'bg-red-500'
                                     : state.usage.used >= state.usage.limit - 1
                                         ? 'bg-amber-500'
-                                        : 'bg-[#B88644]'
+                                        : 'bg-[#7B8FA3]'
                             }`}
                             style={{ width: `${Math.min((state.usage.used / state.usage.limit) * 100, 100)}%` }}
                         />

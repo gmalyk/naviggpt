@@ -39,7 +39,7 @@ const LandingTestimonials = () => {
                     <div key={idx} className="rounded-3xl bg-slate-50 border border-slate-100 p-8 flex flex-col">
                         <div
                             className="text-4xl font-serif leading-none mb-4 bg-clip-text text-transparent brand-protect"
-                            style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only' }}
+                            style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)', colorScheme: 'light only' }}
                         >
                             "
                         </div>
@@ -48,7 +48,7 @@ const LandingTestimonials = () => {
                         </p>
                         <div className="flex items-center gap-1 mb-3">
                             {Array.from({ length: testimonial.stars }).map((_, i) => (
-                                <Star key={i} className="w-4 h-4 fill-[#B88644] text-[#B88644] brand-protect" />
+                                <Star key={i} className="w-4 h-4 fill-[#7B8FA3] text-[#7B8FA3] brand-protect" />
                             ))}
                         </div>
                         <p className="text-sm font-semibold text-slate-800">{testimonial.author}</p>

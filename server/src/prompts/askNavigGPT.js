@@ -6,7 +6,7 @@
  * @param {string} lang - Selected language code
  * @returns {string} The formatted system prompt
  */
-export const getAskVirggilePrompt = (profile, faith, values, lang, filterCount = 5) => {
+export const getAskNavigGPTPrompt = (profile, faith, values, lang, filterCount = 5) => {
   const staticPrompt = `ROLE
 Tu agis comme un module d'analyse prealable et de cadrage cognitif.
 Ton objectif inital n'est PAS de repondre a la question, mais de preparer les conditions d'une reponse de tres haute qualite sauf si la question est de type fermee, c'est a dire qu'elle appelle une reponse tres simple, non polemique, et peut se resumer en un oui ou un non ou une information tres precise (une date, un nombre, un nom, une heure). (exemple de questions fermees : <example> "en quelle annee a eu lieu la revolution francaise ?" </example>, <example> "combien de pays membres dans l'Union europeenne ?"</example>)

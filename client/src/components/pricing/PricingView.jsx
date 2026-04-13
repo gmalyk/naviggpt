@@ -61,7 +61,7 @@ const PricingView = () => {
                 t('pricing_feat_custom_agents'),
                 t('pricing_feat_and_more'),
             ],
-            buttonClass: 'bg-[#B88644] hover:bg-[#a6763b] text-white brand-protect',
+            buttonClass: 'bg-[#7B8FA3] hover:bg-[#5A7085] text-white brand-protect',
         },
         {
             key: 'institution',
@@ -86,7 +86,7 @@ const PricingView = () => {
     return (
         <section className="py-12 px-6 max-w-5xl mx-auto flex flex-col items-center animate-in fade-in duration-500">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                <CreditCard className="w-7 h-7 text-[#B88644] brand-protect" />
+                <CreditCard className="w-7 h-7 text-[#7B8FA3] brand-protect" />
             </div>
 
             <h1 className="text-3xl font-bold text-center mb-6 text-slate-600">
@@ -136,7 +136,7 @@ const PricingView = () => {
                             {plan.name}
                         </h2>
                         {plan.trialBadge && (
-                            <span className="inline-block self-start mt-1 mb-2 text-xs font-semibold bg-amber-100 text-[#B88644] px-3 py-1 rounded-full">
+                            <span className="inline-block self-start mt-1 mb-2 text-xs font-semibold bg-amber-100 text-[#7B8FA3] px-3 py-1 rounded-full">
                                 {plan.trialBadge}
                             </span>
                         )}
@@ -195,7 +195,7 @@ const PricingView = () => {
                         </p>
                         <button
                             onClick={() => setShowSuccessModal(false)}
-                            className="px-8 py-2.5 bg-[#B88644] text-white rounded-full font-semibold hover:bg-[#a6763b] transition-colors brand-protect"
+                            className="px-8 py-2.5 bg-[#7B8FA3] text-white rounded-full font-semibold hover:bg-[#5A7085] transition-colors brand-protect"
                         >
                             {t('pricing_success_ok')}
                         </button>

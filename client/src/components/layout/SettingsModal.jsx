@@ -29,7 +29,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <div className="p-6 space-y-6">
                     <div className="space-y-3">
                         <label className="text-sm font-semibold text-slate-700">{t('settings_default_engine')}</label>
-                        <div className="p-3 border-2 rounded-2xl border-[#B88644] bg-amber-50/30 brand-protect">
+                        <div className="p-3 border-2 rounded-2xl border-[#7B8FA3] bg-slate-50/30 brand-protect">
                             <p className="font-bold text-sm">Grok</p>
                         </div>
                     </div>
@@ -41,7 +41,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     </button>
                     <button
                         onClick={handleSave}
-                        className="flex items-center gap-2 px-6 py-2 bg-[#B88644] text-white text-sm font-bold rounded-full shadow-lg shadow-amber-900/20 hover:scale-[1.02] active:scale-95 transition-all brand-protect"
+                        className="flex items-center gap-2 px-6 py-2 bg-[#7B8FA3] text-white text-sm font-bold rounded-full shadow-lg shadow-slate-500/20 hover:scale-[1.02] active:scale-95 transition-all brand-protect"
                     >
                         <Save className="w-4 h-4" />
                         {t('btn_save')}

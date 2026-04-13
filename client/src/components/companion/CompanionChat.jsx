@@ -20,7 +20,7 @@ import SubscriptionModal from '../ui/SubscriptionModal';
 import ShareButton from '../ui/ShareButton';
 
 const sageImages = { socrate: '/socrate.png', nestor: '/nestor.png', plutarque: '/plutarque.png' };
-const sageBgColors = { socrate: '#D49078', nestor: '#E6C15A', plutarque: '#A39656' };
+const sageBgColors = { socrate: '#8AA0B8', nestor: '#9BB0C4', plutarque: '#6E8496' };
 
 const getSuggestions = (mode, t) => [
     t(`companion_suggest_${mode}_1`),
@@ -147,7 +147,7 @@ const CompanionChat = () => {
                                     <button
                                         onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: key })}
                                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${dialogueMode === key
-                                            ? 'bg-[#B88644]/10 text-[#B88644] ring-1 ring-[#B88644]/30'
+                                            ? 'bg-[#7B8FA3]/10 text-[#7B8FA3] ring-1 ring-[#7B8FA3]/30'
                                             : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
                                             }`}
                                     >
@@ -199,8 +199,8 @@ const CompanionChat = () => {
                                             onClick={() => setExpandedTopic(expandedTopic === topic.id ? null : topic.id)}
                                             className={`px-3.5 py-1.5 rounded-full text-xs transition-all border ${
                                                 expandedTopic === topic.id
-                                                    ? 'bg-[#B88644]/10 border-[#B88644]/40 text-[#B88644] font-semibold'
-                                                    : 'bg-white/60 border-slate-200 text-slate-500 hover:border-[#B88644]/30 hover:text-[#B88644]'
+                                                    ? 'bg-[#7B8FA3]/10 border-[#7B8FA3]/40 text-[#7B8FA3] font-semibold'
+                                                    : 'bg-white/60 border-slate-200 text-slate-500 hover:border-[#7B8FA3]/30 hover:text-[#7B8FA3]'
                                             } ${topic.id === 'surprise' ? 'flex items-center gap-1' : ''}`}
                                         >
                                             {topic.id === 'surprise' && <Sparkles className="w-3 h-3" />}
@@ -217,7 +217,7 @@ const CompanionChat = () => {
                                                     setExpandedTopic(null);
                                                     sendMessage(t(promptKey));
                                                 }}
-                                                className="px-4 py-2 text-xs text-slate-600 bg-white border border-slate-200 rounded-2xl hover:border-[#B88644]/40 hover:text-[#B88644] transition-all shadow-sm"
+                                                className="px-4 py-2 text-xs text-slate-600 bg-white border border-slate-200 rounded-2xl hover:border-[#7B8FA3]/40 hover:text-[#7B8FA3] transition-all shadow-sm"
                                             >
                                                 {t(promptKey)}
                                             </button>
@@ -264,7 +264,7 @@ const CompanionChat = () => {
                                         <div className="flex items-center gap-1 mt-2">
                                             <button
                                                 onClick={() => copyExchange(idx)}
-                                                className="p-1.5 text-slate-300 hover:text-[#B88644] transition-colors rounded-md hover:bg-[#B88644]/5"
+                                                className="p-1.5 text-slate-300 hover:text-[#7B8FA3] transition-colors rounded-md hover:bg-[#7B8FA3]/5"
                                                 title={t('copy_exchange')}
                                             >
                                                 {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -285,7 +285,7 @@ const CompanionChat = () => {
                         <div className="text-center animate-in fade-in duration-700">
                             <button
                                 onClick={() => navigateTo(dispatch, 'pricing')}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#B88644] to-[#D4A24C] text-white text-sm font-semibold rounded-full hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7B8FA3] to-[#95A8BA] text-white text-sm font-semibold rounded-full hover:scale-105 transition-all shadow-lg hover:shadow-xl"
                             >
                                 <Sparkles className="w-4 h-4" />
                                 {t('try_free_cta')}
@@ -300,7 +300,7 @@ const CompanionChat = () => {
                                 <button
                                     key={idx}
                                     onClick={() => { setSuggestionsUsed(true); sendMessage(suggestion); }}
-                                    className="px-4 py-2 text-xs text-[#B88644] bg-[#B88644]/5 border border-[#B88644]/20 rounded-full hover:bg-[#B88644]/10 hover:border-[#B88644]/40 transition-all"
+                                    className="px-4 py-2 text-xs text-[#7B8FA3] bg-[#7B8FA3]/5 border border-[#7B8FA3]/20 rounded-full hover:bg-[#7B8FA3]/10 hover:border-[#7B8FA3]/40 transition-all"
                                 >
                                     {suggestion}
                                 </button>
@@ -312,8 +312,8 @@ const CompanionChat = () => {
                     {/* Values compass invitation after 2-3 exchanges */}
                     {messages.length >= 4 && !loading && !compassInviteDismissed && appState.values.length === 0 && (
                         <div className="mx-auto max-w-md animate-in fade-in slide-in-from-bottom-2 duration-500">
-                            <div className="bg-gradient-to-r from-[#B88644]/5 to-[#B88644]/10 border border-[#B88644]/20 rounded-2xl p-5 text-center">
-                                <Compass className="w-6 h-6 text-[#B88644] mx-auto mb-2" />
+                            <div className="bg-gradient-to-r from-[#7B8FA3]/5 to-[#7B8FA3]/10 border border-[#7B8FA3]/20 rounded-2xl p-5 text-center">
+                                <Compass className="w-6 h-6 text-[#7B8FA3] mx-auto mb-2" />
                                 <p className="text-sm text-slate-600 mb-3 leading-relaxed">
                                     {t('companion_compass_invite')}
                                 </p>
@@ -323,7 +323,7 @@ const CompanionChat = () => {
                                             dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: 'companion' });
                                             dispatch({ type: ACTIONS.SET_VIEW, payload: 'compass' });
                                         }}
-                                        className="px-5 py-2 text-sm font-medium text-white bg-[#B88644] rounded-full hover:bg-[#a07638] transition-all shadow-sm"
+                                        className="px-5 py-2 text-sm font-medium text-white bg-[#7B8FA3] rounded-full hover:bg-[#5A7085] transition-all shadow-sm"
                                     >
                                         {t('companion_compass_invite_btn')}
                                     </button>
@@ -369,7 +369,7 @@ const CompanionChat = () => {
                                         <button
                                             onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: key })}
                                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${dialogueMode === key
-                                                ? 'bg-[#B88644]/10 text-[#B88644] ring-1 ring-[#B88644]/30'
+                                                ? 'bg-[#7B8FA3]/10 text-[#7B8FA3] ring-1 ring-[#7B8FA3]/30'
                                                 : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
                                                 }`}
                                         >
@@ -387,7 +387,7 @@ const CompanionChat = () => {
                         {attachedFiles.length > 0 && (
                             <div className="flex flex-wrap gap-2 mb-2 pl-12">
                                 {attachedFiles.map((f, idx) => (
-                                    <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#B88644]/10 border border-[#B88644]/20 rounded-full text-xs text-[#B88644]">
+                                    <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7B8FA3]/10 border border-[#7B8FA3]/20 rounded-full text-xs text-[#7B8FA3]">
                                         <span className="max-w-[150px] truncate">{f.name}</span>
                                         <button onClick={() => removeFile(idx)} className="hover:text-red-500 transition-colors">✕</button>
                                     </div>
@@ -412,7 +412,7 @@ const CompanionChat = () => {
                                             setShowUploadTip(prev => !prev);
                                         }
                                     }}
-                                    className={`p-2.5 mr-2 rounded-full transition-colors ${canUpload ? 'text-slate-400 hover:text-[#B88644] hover:bg-[#B88644]/10 cursor-pointer' : 'text-slate-300'}`}
+                                    className={`p-2.5 mr-2 rounded-full transition-colors ${canUpload ? 'text-slate-400 hover:text-[#7B8FA3] hover:bg-[#7B8FA3]/10 cursor-pointer' : 'text-slate-300'}`}
                                 >
                                     <Plus className="w-5 h-5" />
                                 </button>
@@ -437,12 +437,12 @@ const CompanionChat = () => {
                                 onKeyDown={onKeyDown}
                                 placeholder={t('companion_placeholder')}
                                 disabled={loading}
-                                className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/10 focus:border-[#B88644] transition-all text-sm placeholder:text-slate-400 brand-protect resize-none overflow-hidden disabled:opacity-50"
+                                className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#7B8FA3]/10 focus:border-[#7B8FA3] transition-all text-sm placeholder:text-slate-400 brand-protect resize-none overflow-hidden disabled:opacity-50"
                             />
                             <button
                                 onClick={onSend}
                                 disabled={loading || (!inputValue.trim() && attachedFiles.length === 0)}
-                                className="absolute right-3 bottom-[0.45rem] p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 brand-protect"
+                                className="absolute right-3 bottom-[0.45rem] p-2.5 bg-[#7B8FA3] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 brand-protect"
                             >
                                 {loading ? <LogoSpinner className="w-4 h-4" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
                             </button>

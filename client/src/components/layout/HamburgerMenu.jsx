@@ -13,8 +13,7 @@ const HamburgerMenu = () => {
     const { dispatch } = useAppState();
     const { user, openAuthModal } = useAuth();
     const { t, language } = useTranslation();
-    const blogLocale = ['en','es','fr','it','ar','hi'].includes(language) ? language : 'en';
-    const blogUrl = `https://christian-chatgpt.com/${blogLocale}/`;
+    const blogUrl = '#';
 
     const handleForum = () => {
         navigateTo(dispatch, 'forum');

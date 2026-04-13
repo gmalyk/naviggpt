@@ -115,7 +115,7 @@ const FollowUpChat = () => {
                         </button>
                         <button
                             onClick={handleShareThread}
-                            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-[#B88644] hover:bg-[#a07538] rounded-xl transition-colors"
+                            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-[#7B8FA3] hover:bg-[#5A7085] rounded-xl transition-colors"
                         >
                             <Share2 className="w-4 h-4" />
                             {t('share_thread')}
@@ -133,12 +133,12 @@ const FollowUpChat = () => {
                         onChange={(e) => { setInputValue(e.target.value); autoResize(); }}
                         onKeyDown={onKeyDown}
                         placeholder={t('followup_placeholder')}
-                        className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#B88644]/10 focus:border-[#B88644] transition-all text-sm placeholder:text-slate-400 brand-protect resize-none overflow-hidden"
+                        className="w-full py-3.5 px-5 pr-14 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#7B8FA3]/10 focus:border-[#7B8FA3] transition-all text-sm placeholder:text-slate-400 brand-protect resize-none overflow-hidden"
                     />
                     <button
                         onClick={onSend}
                         disabled={loading || !inputValue.trim()}
-                        className="absolute right-3 bottom-2.5 p-2.5 bg-[#B88644] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 brand-protect"
+                        className="absolute right-3 bottom-2.5 p-2.5 bg-[#7B8FA3] text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 brand-protect"
                     >
                         {loading ? <LogoSpinner className="w-4 h-4" /> : <Send className="w-4 h-4 rtl:scale-x-[-1]" />}
                     </button>

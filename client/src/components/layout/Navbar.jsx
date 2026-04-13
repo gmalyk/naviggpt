@@ -16,8 +16,7 @@ const Navbar = () => {
     const { state, dispatch } = useAppState();
     const { user, loading: authLoading, openAuthModal } = useAuth();
     const { t, language } = useTranslation();
-    const blogLocale = ['en','es','fr','it','ar','hi'].includes(language) ? language : 'en';
-    const blogUrl = `https://christian-chatgpt.com/${blogLocale}/`;
+    const blogUrl = '#';
     const [mobileOpen, setMobileOpen] = useState(false);
     const [mobilePremiumTip, setMobilePremiumTip] = useState(null);
 
@@ -41,11 +40,11 @@ const Navbar = () => {
             <button
                 onClick={onClick || (() => goMobile(view))}
                 className={`flex items-center gap-4 w-full px-5 py-3.5 text-left text-base transition-colors ${isActive
-                    ? 'bg-[#B88644]/10 text-[#B88644] font-semibold'
+                    ? 'bg-[#7B8FA3]/10 text-[#7B8FA3] font-semibold'
                     : 'text-slate-700 active:bg-slate-50'
                     }`}
             >
-                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#B88644]' : 'text-slate-400'}`} />
+                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#7B8FA3]' : 'text-slate-400'}`} />
                 <span>{label}</span>
             </button>
         );
@@ -57,14 +56,14 @@ const Navbar = () => {
             <nav className={`fixed top-0 right-0 bg-white/95 backdrop-blur-sm z-[60] border-b border-slate-100 px-4 md:px-6 py-2 flex items-center justify-between h-14 transition-[left] duration-200 left-0 ${hasSidebar ? (state.sidebarOpen ? 'md:left-60' : 'md:left-14') : ''}`}>
                 {/* Left: logo (always on mobile, only when no sidebar on desktop) */}
                 <button onClick={resetToHome} className={`flex items-center gap-2 cursor-pointer group ${hasSidebar ? 'md:hidden' : ''}`}>
-                    <img src="/logo.png" alt="Virggile" className="w-9 h-9 transition-transform hover:scale-105" />
+                    <img src="/logo.png" alt="NavigGPT" className="w-9 h-9 transition-transform hover:scale-105" />
                     <span className="text-lg font-semibold tracking-tight text-slate-600">
                         {t('brand_name').split('').map((char, i) =>
                             char.toLowerCase() === 'g' ? (
                                 <span
                                     key={i}
                                     className="bg-clip-text text-transparent brand-protect"
-                                    style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only' }}
+                                    style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)', colorScheme: 'light only' }}
                                 >
                                     {char}
                                 </span>
@@ -84,7 +83,7 @@ const Navbar = () => {
                         ) : (
                             <button
                                 onClick={() => openAuthModal()}
-                                className="px-4 py-1.5 bg-[#B88644] text-white text-xs font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm brand-protect"
+                                className="px-4 py-1.5 bg-[#7B8FA3] text-white text-xs font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-sm brand-protect"
                             >
                                 {t('auth_sign_in')}
                             </button>
@@ -120,14 +119,14 @@ const Navbar = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 h-14 border-b border-slate-100 shrink-0">
                     <button onClick={() => { resetToHome(); setMobileOpen(false); }} className="flex items-center gap-2">
-                        <img src="/logo.png" alt="Virggile" className="w-9 h-9" />
+                        <img src="/logo.png" alt="NavigGPT" className="w-9 h-9" />
                         <span className="text-lg font-semibold tracking-tight text-slate-600">
                             {t('brand_name').split('').map((char, i) =>
                                 char.toLowerCase() === 'g' ? (
                                     <span
                                         key={i}
                                         className="bg-clip-text text-transparent brand-protect"
-                                        style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)' }}
+                                        style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)' }}
                                     >
                                         {char}
                                     </span>
@@ -224,7 +223,7 @@ const Navbar = () => {
                             </div>
                             <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-[#B88644] rounded-full transition-all"
+                                    className="h-full bg-[#7B8FA3] rounded-full transition-all"
                                     style={{ width: `${Math.min(100, (state.usage.used / state.usage.limit) * 100)}%` }}
                                 />
                             </div>
@@ -237,7 +236,7 @@ const Navbar = () => {
                     <div className="p-5 border-t border-slate-100 shrink-0">
                         <button
                             onClick={() => { openAuthModal(); setMobileOpen(false); }}
-                            className="w-full py-3 bg-[#B88644] text-white text-sm font-bold rounded-full active:scale-95 transition-all shadow-sm"
+                            className="w-full py-3 bg-[#7B8FA3] text-white text-sm font-bold rounded-full active:scale-95 transition-all shadow-sm"
                         >
                             {t('auth_sign_in')}
                         </button>

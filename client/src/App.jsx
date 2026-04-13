@@ -32,7 +32,7 @@ function App() {
   useRouting();
 
   // Protected views that require authentication
-  const protectedViews = ['home', 'account', 'prompts', 'companion', 'discernment', 'result'];
+  const protectedViews = ['account', 'prompts'];
 
   // Redirect to landing page when user signs out and is on a protected view
   useEffect(() => {

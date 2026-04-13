@@ -18,7 +18,7 @@ const InstitutionsView = () => {
                     <span
                         key={i}
                         className="bg-clip-text text-transparent brand-protect"
-                        style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only' }}
+                        style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)', colorScheme: 'light only' }}
                     >
                         {match[1]}
                     </span>
@@ -64,8 +64,8 @@ const InstitutionsView = () => {
     return (
         <div className="animate-in fade-in duration-500">
             {/* Banner */}
-            <div className="-mt-6 bg-gradient-to-r from-[#B88644]/15 via-[#D4A24C]/15 to-[#B88644]/15 border-b border-[#B88644]/30">
-                <p className="text-center text-sm font-semibold text-[#8C6230] py-3 px-6 max-w-4xl mx-auto">
+            <div className="-mt-6 bg-gradient-to-r from-[#7B8FA3]/15 via-[#95A8BA]/15 to-[#7B8FA3]/15 border-b border-[#7B8FA3]/30">
+                <p className="text-center text-sm font-semibold text-[#4A5E72] py-3 px-6 max-w-4xl mx-auto">
                     {t('inst_banner')}
                 </p>
             </div>
@@ -83,7 +83,7 @@ const InstitutionsView = () => {
                         <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
                             <button
                                 onClick={handleContact}
-                                className="px-8 py-3.5 bg-[#B88644] text-white text-base font-bold rounded-full hover:bg-[#a6763b] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#B88644]/20 brand-protect"
+                                className="px-8 py-3.5 bg-[#7B8FA3] text-white text-base font-bold rounded-full hover:bg-[#5A7085] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#7B8FA3]/20 brand-protect"
                             >
                                 {t('inst_hero_cta')}
                             </button>
@@ -94,11 +94,11 @@ const InstitutionsView = () => {
                                 {t('inst_hero_secondary')}
                             </button>
                         </div>
-                        <p className="text-sm font-medium text-[#8C6230]/80">{t('inst_hero_trust')}</p>
+                        <p className="text-sm font-medium text-[#4A5E72]/80">{t('inst_hero_trust')}</p>
                     </div>
                     <div className="flex-shrink-0">
                         <div className="w-48 h-48 md:w-64 md:h-64 rounded-full flex items-center justify-center overflow-hidden">
-                            <img src={virggilImage} alt="Virgil" className="w-full h-full object-cover" />
+                            <img src={virggilImage} alt="NavigGPT" className="w-full h-full object-cover" />
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@ const InstitutionsView = () => {
                         {problemStats.map((stat, idx) => (
                             <div key={idx} className="flex flex-col items-center text-center gap-3">
                                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                                    <stat.icon className="w-6 h-6 text-[#D9B06A]" />
+                                    <stat.icon className="w-6 h-6 text-[#A3B5C7]" />
                                 </div>
                                 <span className="text-3xl font-bold text-white">{stat.value}</span>
                                 <p className="text-sm text-slate-300 font-medium">{stat.label}</p>
@@ -152,16 +152,16 @@ const InstitutionsView = () => {
                         </p>
                     </div>
 
-                    {/* Virggil */}
-                    <div className="rounded-3xl border-2 border-[#B88644]/30 bg-white p-8 flex flex-col shadow-lg shadow-[#B88644]/5 relative">
-                        <div className="absolute -top-3 left-6 px-3 py-1 bg-[#B88644] text-white text-xs font-bold rounded-full brand-protect">
+                    {/* NavigGPT */}
+                    <div className="rounded-3xl border-2 border-[#7B8FA3]/30 bg-white p-8 flex flex-col shadow-lg shadow-[#7B8FA3]/5 relative">
+                        <div className="absolute -top-3 left-6 px-3 py-1 bg-[#7B8FA3] text-white text-xs font-bold rounded-full brand-protect">
                             {t('inst_compare_badge')}
                         </div>
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-full bg-[#B88644]/10 flex items-center justify-center">
-                                <Sparkles className="w-5 h-5 text-[#B88644] brand-protect" />
+                            <div className="w-10 h-10 rounded-full bg-[#7B8FA3]/10 flex items-center justify-center">
+                                <Sparkles className="w-5 h-5 text-[#7B8FA3] brand-protect" />
                             </div>
-                            <p className="font-semibold text-slate-800">Virggil</p>
+                            <p className="font-semibold text-slate-800">NavigGPT</p>
                         </div>
                         <p className="text-sm text-slate-700 leading-relaxed flex-grow">
                             {t('inst_compare_virggil_text')}
@@ -184,10 +184,10 @@ const InstitutionsView = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {steps.map((step) => (
                             <div key={step.number} className="rounded-3xl border border-slate-200 bg-white p-8 text-center hover:shadow-lg transition-shadow">
-                                <div className="w-12 h-12 rounded-full bg-[#B88644] text-white flex items-center justify-center mx-auto mb-5 text-lg font-bold brand-protect">
+                                <div className="w-12 h-12 rounded-full bg-[#7B8FA3] text-white flex items-center justify-center mx-auto mb-5 text-lg font-bold brand-protect">
                                     {step.number}
                                 </div>
-                                <step.icon className="w-8 h-8 text-[#B88644] mx-auto mb-4 brand-protect" />
+                                <step.icon className="w-8 h-8 text-[#7B8FA3] mx-auto mb-4 brand-protect" />
                                 <h3 className="text-lg font-bold text-slate-800 mb-2">{step.title}</h3>
                                 <p className="text-sm text-slate-500 leading-relaxed">{step.text}</p>
                             </div>
@@ -207,8 +207,8 @@ const InstitutionsView = () => {
                 {/* Discernment Keys */}
                 <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 mb-20">
                     <div className="flex-1 order-2 md:order-1">
-                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#B88644]/10 mb-4">
-                            <Key className="w-6 h-6 text-[#B88644] brand-protect" />
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#7B8FA3]/10 mb-4">
+                            <Key className="w-6 h-6 text-[#7B8FA3] brand-protect" />
                         </div>
                         <h3 className="text-2xl font-bold text-slate-800 mb-3">
                             {t('inst_feat_keys_title')}
@@ -222,7 +222,7 @@ const InstitutionsView = () => {
                             <div className="space-y-3">
                                 {['inst_feat_keys_filter1', 'inst_feat_keys_filter2', 'inst_feat_keys_filter3'].map((key, i) => (
                                     <div key={i} className="flex items-center gap-3 rounded-xl bg-white border border-slate-100 px-4 py-3">
-                                        <div className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-[#B88644]' : i === 1 ? 'bg-[#E6C15A]' : 'bg-[#D49078]'}`} />
+                                        <div className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-[#7B8FA3]' : i === 1 ? 'bg-[#9BB0C4]' : 'bg-[#8AA0B8]'}`} />
                                         <span className="text-sm text-slate-600">{t(key)}</span>
                                     </div>
                                 ))}
@@ -237,10 +237,10 @@ const InstitutionsView = () => {
                         <div className="rounded-3xl bg-slate-50 border border-slate-200 p-8">
                             <div className="grid grid-cols-2 gap-3">
                                 {[
-                                    { label: t('inst_feat_compass_cat1'), color: 'bg-[#B88644]' },
-                                    { label: t('inst_feat_compass_cat2'), color: 'bg-[#E6C15A]' },
-                                    { label: t('inst_feat_compass_cat3'), color: 'bg-[#D49078]' },
-                                    { label: t('inst_feat_compass_cat4'), color: 'bg-[#A39656]' },
+                                    { label: t('inst_feat_compass_cat1'), color: 'bg-[#7B8FA3]' },
+                                    { label: t('inst_feat_compass_cat2'), color: 'bg-[#9BB0C4]' },
+                                    { label: t('inst_feat_compass_cat3'), color: 'bg-[#8AA0B8]' },
+                                    { label: t('inst_feat_compass_cat4'), color: 'bg-[#6E8496]' },
                                 ].map((cat, i) => (
                                     <div key={i} className="rounded-xl bg-white border border-slate-100 px-4 py-3 flex items-center gap-3">
                                         <div className={`w-3 h-3 rounded-full ${cat.color}`} />
@@ -251,8 +251,8 @@ const InstitutionsView = () => {
                         </div>
                     </div>
                     <div className="flex-1">
-                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#B88644]/10 mb-4">
-                            <Compass className="w-6 h-6 text-[#B88644] brand-protect" />
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#7B8FA3]/10 mb-4">
+                            <Compass className="w-6 h-6 text-[#7B8FA3] brand-protect" />
                         </div>
                         <h3 className="text-2xl font-bold text-slate-800 mb-3">
                             {t('inst_feat_compass_title')}
@@ -276,7 +276,7 @@ const InstitutionsView = () => {
                         <div key={idx} className="rounded-3xl bg-slate-50 border border-slate-100 p-8 flex flex-col">
                             <div
                                 className="text-4xl font-serif leading-none mb-4 bg-clip-text text-transparent brand-protect"
-                                style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only' }}
+                                style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)', colorScheme: 'light only' }}
                             >
                                 "
                             </div>
@@ -285,7 +285,7 @@ const InstitutionsView = () => {
                             </p>
                             <div className="flex items-center gap-1 mb-3">
                                 {Array.from({ length: testimonial.stars }).map((_, i) => (
-                                    <Star key={i} className="w-4 h-4 fill-[#B88644] text-[#B88644] brand-protect" />
+                                    <Star key={i} className="w-4 h-4 fill-[#7B8FA3] text-[#7B8FA3] brand-protect" />
                                 ))}
                             </div>
                             <p className="text-sm font-semibold text-slate-800">{testimonial.author}</p>
@@ -305,7 +305,7 @@ const InstitutionsView = () => {
                         {trustItems.map((item, idx) => (
                             <div key={idx} className="flex flex-col items-center text-center gap-3">
                                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                                    <item.icon className="w-6 h-6 text-[#D9B06A]" />
+                                    <item.icon className="w-6 h-6 text-[#A3B5C7]" />
                                 </div>
                                 <p className="text-sm text-slate-300 font-medium">{item.label}</p>
                             </div>
@@ -325,7 +325,7 @@ const InstitutionsView = () => {
                     </p>
                     <button
                         onClick={handleContact}
-                        className="px-10 py-4 bg-[#B88644] text-white text-lg font-bold rounded-full hover:bg-[#a6763b] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#B88644]/20 brand-protect"
+                        className="px-10 py-4 bg-[#7B8FA3] text-white text-lg font-bold rounded-full hover:bg-[#5A7085] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#7B8FA3]/20 brand-protect"
                     >
                         {t('inst_final_cta')}
                     </button>

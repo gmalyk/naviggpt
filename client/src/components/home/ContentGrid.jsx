@@ -32,7 +32,7 @@ const ContentGrid = () => {
                 <div className="bg-white rounded-full p-1 shadow-xl ring-8 ring-white w-32 h-32 flex items-center justify-center overflow-hidden border border-slate-100 group">
                     <img
                         src={virggilBust}
-                        alt="Virggil"
+                        alt="NavigGPT"
                         className="w-28 h-28 object-contain transition-transform duration-500 group-hover:scale-110"
                     />
                 </div>

@@ -71,7 +71,7 @@ const DiscernmentView = () => {
                     ) : (
                         <div className="flex items-center justify-between pt-4">
                             <div className="flex items-center gap-3">
-                                <button onClick={handleDefineValues} className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#B88644] border border-[#B88644]/30 rounded-full hover:bg-[#B88644]/5 transition-all brand-protect">
+                                <button onClick={handleDefineValues} className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#7B8FA3] border border-[#7B8FA3]/30 rounded-full hover:bg-[#7B8FA3]/5 transition-all brand-protect">
                                     <Compass className="w-4 h-4" />
                                     <span>{state.values.length > 0 ? t('edit_my_values') : t('define_my_values')}</span>
                                 </button>

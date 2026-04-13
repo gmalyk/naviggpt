@@ -13,10 +13,10 @@ const ResultView = () => {
     const { state, dispatch } = useAppState();
     const { t } = useTranslation();
     const { user } = useAuth();
-    const virggileRef = useRef(null);
+    const naviggptRef = useRef(null);
 
     useEffect(() => {
-        const el = virggileRef.current;
+        const el = naviggptRef.current;
         if (!el) return;
 
         let scrolled = false;
@@ -58,14 +58,14 @@ const ResultView = () => {
                         </div>
                     </div>
                 )}
-                <OptimizedResponse content={state.virggileResponse} question={state.question} standardResponse={state.standardResponse} innerRef={virggileRef} />
+                <OptimizedResponse content={state.naviggptResponse} question={state.question} standardResponse={state.standardResponse} innerRef={naviggptRef} />
                 <StandardResponse content={state.standardResponse} />
 
-                {!state.usage?.exempt && state.virggileResponse && (
+                {!state.usage?.exempt && state.naviggptResponse && (
                     <div className="my-6 text-center animate-in fade-in duration-700">
                         <button
                             onClick={handleSubscribe}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#B88644] to-[#D4A24C] text-white text-sm font-semibold rounded-full hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#7B8FA3] to-[#95A8BA] text-white text-sm font-semibold rounded-full hover:scale-105 transition-all shadow-lg hover:shadow-xl"
                         >
                             <Sparkles className="w-4 h-4" />
                             {t('try_free_cta')}

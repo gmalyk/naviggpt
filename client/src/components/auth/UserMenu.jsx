@@ -31,12 +31,12 @@ const UserMenu = () => {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-[#B88644]/30 transition-all brand-protect"
+                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-[#7B8FA3]/30 transition-all brand-protect"
             >
                 {avatarUrl ? (
                     <img src={avatarUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 ) : (
-                    <div className="w-full h-full bg-[#B88644] text-white flex items-center justify-center text-sm font-bold brand-protect">
+                    <div className="w-full h-full bg-[#7B8FA3] text-white flex items-center justify-center text-sm font-bold brand-protect">
                         {initial}
                     </div>
                 )}

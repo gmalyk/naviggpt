@@ -28,8 +28,8 @@ const LandingView = () => {
 
     return (
         <div className="animate-in fade-in duration-500">
-            <div className="-mt-6 bg-gradient-to-r from-[#B88644]/15 via-[#D4A24C]/15 to-[#B88644]/15 border-b border-[#B88644]/30">
-                <p className="text-center text-sm font-semibold text-[#8C6230] py-3 px-6 max-w-4xl mx-auto">
+            <div className="-mt-6 bg-gradient-to-r from-[#7B8FA3]/15 via-[#D4A24C]/15 to-[#7B8FA3]/15 border-b border-[#7B8FA3]/30">
+                <p className="text-center text-sm font-semibold text-[#4A5E72] py-3 px-6 max-w-4xl mx-auto">
                     {t('landing_auth_banner')}
                 </p>
             </div>

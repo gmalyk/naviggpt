@@ -22,7 +22,7 @@ const CategorySection = ({ section, state, onToggle }) => (
                             : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                             }`}
                     >
-                        <div className={`shrink-0 w-2.5 h-2.5 rounded-full border flex items-center justify-center brand-protect ${isSelected ? 'bg-[#B88644] border-[#B88644]' : 'bg-white border-slate-300'
+                        <div className={`shrink-0 w-2.5 h-2.5 rounded-full border flex items-center justify-center brand-protect ${isSelected ? 'bg-[#7B8FA3] border-[#7B8FA3]' : 'bg-white border-slate-300'
                             }`}>
                             {isSelected && <Check className="w-1.5 h-1.5 text-white stroke-[4]" />}
                         </div>

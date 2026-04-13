@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Virggile Backend is running' });
+    res.json({ status: 'ok', message: 'NavigGPT Backend is running' });
 });
 
 app.listen(PORT, () => {

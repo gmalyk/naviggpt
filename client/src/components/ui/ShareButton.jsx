@@ -154,8 +154,8 @@ function drawGoldLine(ctx, y, width = 140) {
     const cx = SLIDE_W / 2;
     const grad = ctx.createLinearGradient(cx - width / 2, y, cx + width / 2, y);
     grad.addColorStop(0, 'rgba(184,134,68,0)');
-    grad.addColorStop(0.2, '#D4A24C');
-    grad.addColorStop(0.8, '#D4A24C');
+    grad.addColorStop(0.2, '#95A8BA');
+    grad.addColorStop(0.8, '#95A8BA');
     grad.addColorStop(1, 'rgba(184,134,68,0)');
     ctx.strokeStyle = grad;
     ctx.lineWidth = 2.5;
@@ -206,8 +206,8 @@ async function drawTitleSlide(ctx, img, crop, question, logoImg) {
 
     ctx.textAlign = 'center';
     ctx.font = `bold ${brandFontSize}px Georgia, "Times New Roman", serif`;
-    ctx.fillStyle = '#D4A24C';
-    ctx.fillText('Virggile', SLIDE_W / 2, y + brandFontSize);
+    ctx.fillStyle = '#95A8BA';
+    ctx.fillText('NavigGPT', SLIDE_W / 2, y + brandFontSize);
     y += brandHeight;
 
     drawGoldLine(ctx, y);
@@ -312,8 +312,8 @@ async function drawCtaSlide(ctx, img, crop, logoImg, ctaText) {
 
     ctx.textAlign = 'center';
     ctx.font = 'bold 64px Georgia, "Times New Roman", serif';
-    ctx.fillStyle = '#D4A24C';
-    ctx.fillText('Virggile', SLIDE_W / 2, y);
+    ctx.fillStyle = '#95A8BA';
+    ctx.fillText('NavigGPT', SLIDE_W / 2, y);
     y += 60;
 
     drawGoldLine(ctx, y, 180);
@@ -326,7 +326,7 @@ async function drawCtaSlide(ctx, img, crop, logoImg, ctaText) {
 
     ctx.font = '34px Georgia, "Times New Roman", serif';
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillText('virggil.com', SLIDE_W / 2, y);
+    ctx.fillText('naviggpt.com', SLIDE_W / 2, y);
 }
 
 async function generateCarousel(question, content, t) {
@@ -443,7 +443,7 @@ const CarouselPreviewModal = ({ slides, onShare, onDownload, onClose, canNativeS
                         <button
                             key={i}
                             onClick={() => goTo(i)}
-                            className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentSlide ? 'bg-[#B88644]' : 'bg-slate-200'}`}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentSlide ? 'bg-[#7B8FA3]' : 'bg-slate-200'}`}
                         />
                     ))}
                 </div>
@@ -452,7 +452,7 @@ const CarouselPreviewModal = ({ slides, onShare, onDownload, onClose, canNativeS
                 <div className="p-3 pt-1 flex flex-col gap-2">
                     <button
                         onClick={onDownload}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#B88644] hover:bg-[#a07538] rounded-xl transition-colors"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#7B8FA3] hover:bg-[#5A7085] rounded-xl transition-colors"
                     >
                         <ImageDown className="w-4 h-4" />
                         Save All Images
@@ -493,9 +493,9 @@ const ShareButton = ({ content, question }) => {
     const handleNativeShare = async () => {
         if (!slides) return;
         const files = slides.map((s, i) =>
-            new File([s.blob], `virggil-${i + 1}.jpg`, { type: 'image/jpeg' })
+            new File([s.blob], `naviggpt-${i + 1}.jpg`, { type: 'image/jpeg' })
         );
-        const shareData = { files, text: 'virggil.com' };
+        const shareData = { files, text: 'naviggpt.com' };
         if (navigator.canShare?.(shareData)) {
             try { await navigator.share(shareData); } catch { /* cancelled */ }
         }
@@ -509,7 +509,7 @@ const ShareButton = ({ content, question }) => {
                 const url = URL.createObjectURL(s.blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `virggil-carousel-${i + 1}.jpg`;
+                a.download = `naviggpt-carousel-${i + 1}.jpg`;
                 a.click();
                 URL.revokeObjectURL(url);
             }, i * 200);
@@ -521,7 +521,7 @@ const ShareButton = ({ content, question }) => {
         <>
             <button
                 onClick={openPreview}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-[#B88644] rounded-lg hover:bg-slate-50 transition-all brand-protect"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-[#7B8FA3] rounded-lg hover:bg-slate-50 transition-all brand-protect"
             >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>{t('share_button')}</span>

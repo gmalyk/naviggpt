@@ -41,10 +41,10 @@ const LandingHowItWorks = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {steps.map((step) => (
                         <div key={step.number} className="rounded-3xl border border-slate-200 bg-white p-8 text-center hover:shadow-lg transition-shadow">
-                            <div className="w-12 h-12 rounded-full bg-[#B88644] text-white flex items-center justify-center mx-auto mb-5 text-lg font-bold brand-protect">
+                            <div className="w-12 h-12 rounded-full bg-[#7B8FA3] text-white flex items-center justify-center mx-auto mb-5 text-lg font-bold brand-protect">
                                 {step.number}
                             </div>
-                            <step.icon className="w-8 h-8 text-[#B88644] mx-auto mb-4 brand-protect" />
+                            <step.icon className="w-8 h-8 text-[#7B8FA3] mx-auto mb-4 brand-protect" />
                             <h3 className="text-lg font-bold text-slate-800 mb-2">{step.title}</h3>
                             <p className="text-sm text-slate-500 leading-relaxed">{step.text}</p>
                         </div>

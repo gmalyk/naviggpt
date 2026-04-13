@@ -30,7 +30,7 @@ const AccountView = () => {
                 {/* Subscription Section */}
                 <div className="rounded-3xl border border-slate-200 bg-white p-8">
                     <div className="flex items-center gap-3 mb-6">
-                        <Crown className="w-5 h-5 text-[#B88644] brand-protect" />
+                        <Crown className="w-5 h-5 text-[#7B8FA3] brand-protect" />
                         <h2 className="text-xl font-bold text-slate-900">{t('account_subscription')}</h2>
                     </div>
 
@@ -40,7 +40,7 @@ const AccountView = () => {
 
                     <button
                         onClick={() => navigateTo(dispatch, 'pricing')}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#B88644] hover:bg-[#a6763b] text-white font-semibold text-sm transition-colors brand-protect"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7B8FA3] hover:bg-[#5A7085] text-white font-semibold text-sm transition-colors brand-protect"
                     >
                         {t('account_subscribe_cta')}
                         <ArrowRight className="w-4 h-4" />
@@ -50,7 +50,7 @@ const AccountView = () => {
                 {/* Newsletter Section */}
                 <div className="rounded-3xl border border-slate-200 bg-white p-8">
                     <div className="flex items-center gap-3 mb-6">
-                        <Mail className="w-5 h-5 text-[#B88644] brand-protect" />
+                        <Mail className="w-5 h-5 text-[#7B8FA3] brand-protect" />
                         <h2 className="text-xl font-bold text-slate-900">{t('account_newsletter')}</h2>
                     </div>
 
@@ -61,7 +61,7 @@ const AccountView = () => {
                         </div>
                         <button
                             onClick={handleNewsletterToggle}
-                            className={`relative w-12 h-6 rounded-full transition-colors brand-protect ${newsletterEnabled ? 'bg-[#B88644]' : 'bg-slate-300'}`}
+                            className={`relative w-12 h-6 rounded-full transition-colors brand-protect ${newsletterEnabled ? 'bg-[#7B8FA3]' : 'bg-slate-300'}`}
                         >
                             <span
                                 className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${newsletterEnabled ? 'translate-x-6' : 'translate-x-0'}`}

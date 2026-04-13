@@ -10,7 +10,7 @@ const LandingCompanions = () => {
             subtitle: t('sage_socrate_subtitle'),
             description: t('sage_socrate_tooltip'),
             image: '/socrate.png',
-            bgColor: '#D49078',
+            bgColor: '#8AA0B8',
         },
         {
             name: t('sage_nestor'),
@@ -18,14 +18,14 @@ const LandingCompanions = () => {
             description: t('sage_nestor_tooltip'),
             image: '/nestor.png',
             imageClass: 'object-[40%_20%]',
-            bgColor: '#E6C15A',
+            bgColor: '#9BB0C4',
         },
         {
             name: t('sage_plutarque'),
             subtitle: t('sage_plutarque_subtitle'),
             description: t('sage_plutarque_tooltip'),
             image: '/plutarque.png',
-            bgColor: '#A39656',
+            bgColor: '#6E8496',
         },
     ];
 
@@ -52,7 +52,7 @@ const LandingCompanions = () => {
                                 />
                             </div>
                             <h3 className="text-xl font-bold text-slate-800 mb-1">{companion.name}</h3>
-                            <p className="text-sm font-medium text-[#B88644] mb-4 brand-protect">{companion.subtitle}</p>
+                            <p className="text-sm font-medium text-[#7B8FA3] mb-4 brand-protect">{companion.subtitle}</p>
                             <p className="text-sm text-slate-500 leading-relaxed">{companion.description}</p>
                         </div>
                     ))}

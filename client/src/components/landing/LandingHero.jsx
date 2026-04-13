@@ -7,7 +7,7 @@ import virggilImage from '../../assets/images/virggil.webp';
 
 const LandingHero = () => {
     const { t } = useTranslation();
-    const { user, openAuthModal } = useAuth();
+    const { user } = useAuth();
     const { dispatch } = useAppState();
 
     const renderHighlighted = (text) => {
@@ -19,7 +19,7 @@ const LandingHero = () => {
                     <span
                         key={i}
                         className="bg-clip-text text-transparent brand-protect"
-                        style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)', colorScheme: 'light only', WebkitTextFillColor: 'transparent', forcedColorAdjust: 'none' }}
+                        style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)', colorScheme: 'light only', WebkitTextFillColor: 'transparent', forcedColorAdjust: 'none' }}
                     >
                         {match[1]}
                     </span>
@@ -30,11 +30,7 @@ const LandingHero = () => {
     };
 
     const handleCTA = () => {
-        if (user) {
-            navigateTo(dispatch, 'home');
-        } else {
-            openAuthModal();
-        }
+        navigateTo(dispatch, 'home');
     };
 
     const scrollToHowItWorks = () => {
@@ -55,7 +51,7 @@ const LandingHero = () => {
                     <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
                         <button
                             onClick={handleCTA}
-                            className="px-8 py-3.5 bg-[#B88644] text-white text-base font-bold rounded-full hover:bg-[#a6763b] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#B88644]/20 brand-protect"
+                            className="px-8 py-3.5 bg-[#7B8FA3] text-white text-base font-bold rounded-full hover:bg-[#a6763b] hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#7B8FA3]/20 brand-protect"
                         >
                             {t('landing_hero_cta')}
                         </button>
@@ -66,7 +62,7 @@ const LandingHero = () => {
                             {t('landing_hero_secondary')}
                         </button>
                     </div>
-                    <p className="text-sm font-medium text-[#8C6230]/80">{t('landing_hero_trust')}</p>
+                    <p className="text-sm font-medium text-[#4A5E72]/80">{t('landing_hero_trust')}</p>
                 </div>
                 <div className="flex-shrink-0">
                     <div className="w-48 h-48 md:w-64 md:h-64 rounded-full flex items-center justify-center overflow-hidden">

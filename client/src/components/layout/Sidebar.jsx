@@ -11,8 +11,7 @@ const Sidebar = () => {
     const { state, dispatch } = useAppState();
     const { user } = useAuth();
     const { t, language } = useTranslation();
-    const blogLocale = ['en','es','fr','it','ar','hi'].includes(language) ? language : 'en';
-    const blogUrl = `https://christian-chatgpt.com/${blogLocale}/`;
+    const blogUrl = '#';
     const isOpen = state.sidebarOpen;
 
     const toggle = () => {
@@ -32,11 +31,11 @@ const Sidebar = () => {
                     className={`flex items-center w-full rounded-lg transition-colors ${isOpen ? 'gap-3 px-3 py-2' : 'justify-center px-0 py-2.5'
                         } ${small ? 'text-xs text-slate-500 hover:text-slate-700' : 'text-sm'
                         } ${isActive
-                            ? 'bg-[#B88644]/10 text-[#B88644] font-medium'
+                            ? 'bg-[#7B8FA3]/10 text-[#7B8FA3] font-medium'
                             : 'text-slate-600 hover:bg-slate-50'
                         }`}
                 >
-                    <Icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#B88644]' : 'text-slate-400'}`} />
+                    <Icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#7B8FA3]' : 'text-slate-400'}`} />
                     {isOpen && <span className="truncate">{label}</span>}
                 </button>
                 {!isOpen && (
@@ -61,14 +60,14 @@ const Sidebar = () => {
                     {isOpen ? (
                         <>
                             <button onClick={() => { dispatch({ type: ACTIONS.SET_DIALOGUE_ACTIVE, payload: false }); go('home'); }} className="flex items-center gap-2 cursor-pointer">
-                                <img src="/logo.png" alt="Virgil" className="w-8 h-8" />
+                                <img src="/logo.png" alt="NavigGPT" className="w-8 h-8" />
                                 <span className="text-lg font-semibold tracking-tight text-slate-600">
                                     {t('brand_name').split('').map((char, i) =>
                                         char.toLowerCase() === 'g' ? (
                                             <span
                                                 key={i}
                                                 className="bg-clip-text text-transparent brand-protect"
-                                                style={{ backgroundImage: 'radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%)' }}
+                                                style={{ backgroundImage: 'radial-gradient(circle, #A3B5C7 0%, #7B8FA3 60%, #4A5E72 100%)' }}
                                             >
                                                 {char}
                                             </span>
@@ -89,7 +88,7 @@ const Sidebar = () => {
                                 onClick={toggle}
                                 className="p-1 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
                             >
-                                <img src="/logo.png" alt="Virgil" className="w-8 h-8 rounded-full" />
+                                <img src="/logo.png" alt="NavigGPT" className="w-8 h-8 rounded-full" />
                             </button>
                             <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 whitespace-nowrap rounded bg-slate-800 px-2.5 py-1 text-[11px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-[70]">
                                 Open sidebar
@@ -143,14 +142,14 @@ const Sidebar = () => {
                         </div>
                         <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-[#B88644] rounded-full transition-all"
+                                className="h-full bg-[#7B8FA3] rounded-full transition-all"
                                 style={{ width: `${Math.min(100, (state.usage.used / state.usage.limit) * 100)}%` }}
                             />
                         </div>
                         {state.usage.remaining <= 1 && (
                             <button
                                 onClick={() => go('pricing')}
-                                className="mt-2 text-[11px] text-[#B88644] font-medium hover:underline"
+                                className="mt-2 text-[11px] text-[#7B8FA3] font-medium hover:underline"
                             >
                                 {t('menu_pricing')}  →
                             </button>

@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', state.theme);
-        localStorage.setItem('virgil-theme', state.theme);
+        localStorage.setItem('naviggpt-theme', state.theme);
         const isDark = state.theme === 'dark';
         document.documentElement.style.colorScheme = isDark ? 'dark' : 'light only';
         const meta = document.querySelector('meta[name="color-scheme"]');

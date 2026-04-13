@@ -9,10 +9,10 @@ import { compassData } from '../../data/compassData';
 const MAX_PER_CATEGORY = 2;
 
 const categoryColors = {
-    relations: { bg: 'bg-[#B88644]/5', border: 'border-[#B88644]/20', accent: 'text-[#8C622D]', selected: 'bg-[#B88644]', icon: Users },
-    travail: { bg: 'bg-[#E6C15A]/5', border: 'border-[#E6C15A]/20', accent: 'text-[#C49A3D]', selected: 'bg-[#E6C15A]', icon: BookOpen },
-    loisirs: { bg: 'bg-[#D49078]/5', border: 'border-[#D49078]/20', accent: 'text-[#B36D56]', selected: 'bg-[#D49078]', icon: Smile },
-    sante: { bg: 'bg-[#A39656]/5', border: 'border-[#A39656]/20', accent: 'text-[#82773F]', selected: 'bg-[#A39656]', icon: Heart }
+    relations: { bg: 'bg-[#7B8FA3]/5', border: 'border-[#7B8FA3]/20', accent: 'text-[#4A5E72]', selected: 'bg-[#7B8FA3]', icon: Users },
+    travail: { bg: 'bg-[#9BB0C4]/5', border: 'border-[#9BB0C4]/20', accent: 'text-[#7A95A9]', selected: 'bg-[#9BB0C4]', icon: BookOpen },
+    loisirs: { bg: 'bg-[#8AA0B8]/5', border: 'border-[#8AA0B8]/20', accent: 'text-[#6B879D]', selected: 'bg-[#8AA0B8]', icon: Smile },
+    sante: { bg: 'bg-[#6E8496]/5', border: 'border-[#6E8496]/20', accent: 'text-[#4F6577]', selected: 'bg-[#6E8496]', icon: Heart }
 };
 
 const CompassView = () => {
@@ -110,7 +110,7 @@ const CompassView = () => {
             <div className={`text-center ${compact ? 'mb-4' : 'mb-8'}`}>
                 {!compact && (
                     <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
-                        <Compass className="w-7 h-7 text-[#B88644] brand-protect" />
+                        <Compass className="w-7 h-7 text-[#7B8FA3] brand-protect" />
                     </div>
                 )}
                 <h1 className={`font-bold text-slate-900 ${compact ? 'text-lg mb-1' : 'text-2xl mb-2'}`}>{t('compass_title')}</h1>
@@ -227,7 +227,7 @@ const CompassView = () => {
                             onClick={handleSave}
                             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${saved
                                 ? 'bg-emerald-500 text-white brand-protect'
-                                : 'bg-[#B88644] text-white hover:bg-[#A07538] brand-protect'
+                                : 'bg-[#7B8FA3] text-white hover:bg-[#5A7085] brand-protect'
                                 }`}
                         >
                             {saved ? t('compass_saved') : state.returnToView ? t('compass_save_and_return') : t('compass_save')}
