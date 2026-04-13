@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Globe, Sparkles, Compass, Plus } from 'lucide-react';
+import { Send, Globe, Sparkles, Plus, Compass } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -134,6 +134,7 @@ const SearchBar = () => {
                             {t(p.labelKey)}
                         </button>
                     ))}
+                    <div className="flex-1" />
                     {!state.dialogueActive && (
                         <>
                             <button
@@ -147,6 +148,22 @@ const SearchBar = () => {
                                 <Globe className="w-3.5 h-3.5" />
                                 <span>{t('web_search_label')}</span>
                             </button>
+                            {user && (
+                                <button
+                                    onClick={() => {
+                                        dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: state.view });
+                                        navigateTo(dispatch, 'compass');
+                                    }}
+                                    className="sm:hidden shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect bg-white/60 border-slate-100 text-slate-400 hover:bg-[#B88644]/10 hover:border-[#B88644]/40 hover:text-[#B88644] relative"
+                                >
+                                    <Compass className="w-3.5 h-3.5 compass-glow text-[#B88644]" />
+                                    {(state.values?.length || 0) > 0 && (
+                                        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#B88644] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                                            {state.values.length}
+                                        </span>
+                                    )}
+                                </button>
+                            )}
                             <div className="relative group/keys flex items-center gap-1.5">
                                 <span className="shrink-0 text-[10px] text-slate-400 self-center mr-1">{t('filter_count_label')}</span>
                                 <button
@@ -170,52 +187,30 @@ const SearchBar = () => {
                                     {t('keys_tooltip')}
                                 </span>
                             </div>
-                            <div className="relative group/compass">
-                                <button
-                                    onClick={() => {
-                                        dispatch({ type: ACTIONS.SET_RETURN_TO_VIEW, payload: state.view || 'home' });
-                                        navigateTo(dispatch, 'compass');
-                                    }}
-                                    className="peer shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 hover:shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center brand-protect"
-                                >
-                                    <Compass className={`w-4 h-4 transition-colors ${state.values?.length > 0 ? 'text-[#B88644]' : 'text-slate-400 group-hover/compass:text-[#B88644]'}`} />
-                                    {state.values?.length > 0 && (
-                                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#B88644] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
-                                            {state.values.length}
-                                        </span>
-                                    )}
-                                </button>
-                                <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 rounded-lg bg-slate-800 text-white text-[11px] leading-snug px-3 py-2 opacity-0 peer-hover:opacity-100 transition-opacity z-50 text-center shadow-lg">
-                                    {state.values?.length > 0
-                                        ? `${state.values.length} ${t('values_selected_count')}`
-                                        : t('compass_fab_hint')
-                                    }
-                                </span>
-                            </div>
+                        </>
+                    )}
+                    {state.dialogueActive && (
+                        <>
+                            {sages.map(s => (
+                                <div key={s.id} className={`relative group/${s.id}`}>
+                                    <button
+                                        onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: s.id })}
+                                        className={`peer shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect ${state.dialogueMode === s.id
+                                            ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
+                                            : `bg-white/60 border-slate-100 text-slate-600 ${s.hoverColor}`
+                                            }`}
+                                    >
+                                        <img src={s.image} alt={t(s.labelKey)} className="w-5 h-5 rounded-full object-cover" style={{ backgroundColor: s.bgColor }} />
+                                        <span>{t(s.labelKey)}</span>
+                                    </button>
+                                    <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-lg bg-slate-800 text-white text-[11px] leading-snug px-3 py-2 opacity-0 peer-hover:opacity-100 transition-opacity z-50 text-center shadow-lg">
+                                        {t(s.tooltipKey)}
+                                    </span>
+                                </div>
+                            ))}
                         </>
                     )}
                 </div>
-                {state.dialogueActive && (
-                    <div className="flex gap-1.5 items-center justify-center sm:justify-start pt-1.5 mt-1.5">
-                        {sages.map(s => (
-                            <div key={s.id} className={`relative group/${s.id}`}>
-                                <button
-                                    onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: s.id })}
-                                    className={`peer shrink-0 px-3 py-1.5 rounded-full text-xs transition-all border flex items-center gap-1.5 brand-protect ${state.dialogueMode === s.id
-                                        ? 'bg-white border-[#B88644] text-[#B88644] font-bold shadow-sm'
-                                        : `bg-white/60 border-slate-100 text-slate-600 ${s.hoverColor}`
-                                        }`}
-                                >
-                                    <img src={s.image} alt={t(s.labelKey)} className="w-5 h-5 rounded-full object-cover" style={{ backgroundColor: s.bgColor }} />
-                                    <span>{t(s.labelKey)}</span>
-                                </button>
-                                <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-lg bg-slate-800 text-white text-[11px] leading-snug px-3 py-2 opacity-0 peer-hover:opacity-100 transition-opacity z-50 text-center shadow-lg">
-                                    {t(s.tooltipKey)}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                )}
             </div>
 
             {/* Topic starters */}

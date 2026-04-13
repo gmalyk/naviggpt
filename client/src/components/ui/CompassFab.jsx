@@ -30,7 +30,7 @@ const CompassFab = () => {
     const strokeOffset = circumference * (1 - progress);
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        <div className="fixed bottom-6 right-3 sm:right-6 z-50 hidden sm:flex flex-col items-end gap-2">
             {/* Tooltip */}
             {hovered && (
                 <div className="bg-slate-800 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap mb-1 animate-in fade-in slide-in-from-bottom-1 duration-150">

@@ -20,10 +20,45 @@ html {
 /* Android Chrome Auto-Dark Protection */
 .brand-protect {
   color-scheme: light only !important;
+  forced-color-adjust: none;
+  -webkit-forced-color-adjust: none;
 }
 
 .bg-clip-text {
   color-scheme: light only !important;
+  forced-color-adjust: none;
+  -webkit-forced-color-adjust: none;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile: solid gold instead of gradient to prevent color-invert artifacts */
+@media (max-width: 767px) {
+  .bg-clip-text.brand-protect {
+    background-image: none !important;
+    -webkit-text-fill-color: #D9B06A !important;
+    color: #D9B06A !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-clip-text.brand-protect {
+    background-image: radial-gradient(circle, #D9B06A 0%, #B88644 60%, #8C6230 100%) !important;
+    -webkit-text-fill-color: transparent !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color-scheme: light only !important;
+    forced-color-adjust: none !important;
+    -webkit-forced-color-adjust: none !important;
+  }
+}
+
+/* Mobile dark mode: still use solid gold */
+@media (max-width: 767px) and (prefers-color-scheme: dark) {
+  .bg-clip-text.brand-protect {
+    background-image: none !important;
+    -webkit-text-fill-color: #D9B06A !important;
+    color: #D9B06A !important;
+  }
 }
 
 @theme {
@@ -125,6 +160,15 @@ html, body, #root {
 
 .sidebar-disabled-item:hover::after {
   opacity: 1;
+}
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* Custom scrollbar */

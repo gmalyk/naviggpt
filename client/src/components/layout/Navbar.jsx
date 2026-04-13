@@ -15,7 +15,9 @@ import ThemeSwitcher from './ThemeSwitcher';
 const Navbar = () => {
     const { state, dispatch } = useAppState();
     const { user, loading: authLoading, openAuthModal } = useAuth();
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const blogLocale = ['en','es','fr','it','ar','hi'].includes(language) ? language : 'en';
+    const blogUrl = `https://christian-chatgpt.com/${blogLocale}/`;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [mobilePremiumTip, setMobilePremiumTip] = useState(null);
 
@@ -158,8 +160,11 @@ const Navbar = () => {
                             }} />
                         )}
                         <MobileNavItem icon={Compass} label={t('menu_compass')} view="compass" />
-                        <MobileNavItem icon={MessageSquare} label={t('menu_forum')} view="forum" />
-                        <MobileNavItem icon={PenLine} label={t('menu_blog')} view="blog" onClick={() => { window.open('https://best-christian-ai.com', '_blank'); setMobileOpen(false); }} />
+                    </div>
+
+                    {/* Theme */}
+                    <div className="px-5 py-2">
+                        <ThemeSwitcher expanded={true} />
                     </div>
 
                     {/* Premium features (disabled) */}
@@ -194,6 +199,8 @@ const Navbar = () => {
                         <MobileNavItem icon={CreditCard} label={t('menu_pricing')} view="pricing" />
                         <MobileNavItem icon={Info} label={t('menu_about')} view="about" />
                         <MobileNavItem icon={Users} label={t('menu_contact')} view="contact" />
+                        <MobileNavItem icon={PenLine} label={t('menu_blog')} view="blog" onClick={() => { window.open(blogUrl, '_blank'); setMobileOpen(false); }} />
+                        <MobileNavItem icon={MessageSquare} label={t('menu_forum')} view="forum" />
                     </div>
 
                     <div className="mx-5 my-2 border-t border-slate-100" />
@@ -202,13 +209,6 @@ const Navbar = () => {
                     <div className="py-1">
                         <MobileNavItem icon={ShieldCheck} label={t('menu_terms')} view="terms" />
                         <MobileNavItem icon={Lock} label={t('menu_privacy')} view="privacy" />
-                    </div>
-
-                    <div className="mx-5 my-2 border-t border-slate-100" />
-
-                    {/* Theme */}
-                    <div className="px-5 py-2">
-                        <ThemeSwitcher expanded={true} />
                     </div>
 
                     {/* Usage meter */}

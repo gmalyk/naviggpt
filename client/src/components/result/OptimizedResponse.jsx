@@ -16,7 +16,7 @@ const OptimizedResponse = ({ content, question, standardResponse, innerRef }) =>
             <MarkdownContent content={content} />
             <div className="flex items-center gap-1 mt-4">
                 <CopyButton content={content} />
-                <ShareButton content={content} question={question} standardResponse={standardResponse} />
+                <ShareButton content={content} question={question} />
             </div>
         </section>
     );

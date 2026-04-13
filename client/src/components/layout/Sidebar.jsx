@@ -10,7 +10,9 @@ import ThemeSwitcher from './ThemeSwitcher';
 const Sidebar = () => {
     const { state, dispatch } = useAppState();
     const { user } = useAuth();
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const blogLocale = ['en','es','fr','it','ar','hi'].includes(language) ? language : 'en';
+    const blogUrl = `https://christian-chatgpt.com/${blogLocale}/`;
     const isOpen = state.sidebarOpen;
 
     const toggle = () => {
@@ -108,8 +110,6 @@ const Sidebar = () => {
                         go('home');
                     }} />
                     <NavItem icon={Compass} label={t('menu_compass')} view="compass" />
-                    <NavItem icon={MessageSquare} label={t('menu_forum')} view="forum" />
-                    <NavItem icon={PenLine} label={t('menu_blog')} onClick={() => window.open('https://best-christian-ai.com', '_blank')} />
                 </div>
 
                 {/* Premium features (disabled) */}
@@ -171,6 +171,8 @@ const Sidebar = () => {
                     <NavItem icon={CreditCard} label={t('menu_pricing')} view="pricing" small />
                     <NavItem icon={Info} label={t('menu_about')} view="about" small />
                     <NavItem icon={Users} label={t('menu_contact')} view="contact" small />
+                    <NavItem icon={PenLine} label={t('menu_blog')} onClick={() => window.open(blogUrl, '_blank')} small />
+                    <NavItem icon={MessageSquare} label={t('menu_forum')} view="forum" small />
                 </div>
 
                 {/* Legal */}

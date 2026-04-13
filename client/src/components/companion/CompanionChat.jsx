@@ -17,6 +17,7 @@ import MarkdownContent from '../ui/MarkdownContent';
 import Logo from '../ui/Logo';
 import LogoSpinner from '../ui/LogoSpinner';
 import SubscriptionModal from '../ui/SubscriptionModal';
+import ShareButton from '../ui/ShareButton';
 
 const sageImages = { socrate: '/socrate.png', nestor: '/nestor.png', plutarque: '/plutarque.png' };
 const sageBgColors = { socrate: '#D49078', nestor: '#E6C15A', plutarque: '#A39656' };
@@ -138,26 +139,28 @@ const CompanionChat = () => {
             {/* Messages area */}
             <div className="flex-1 overflow-y-auto px-4 py-6">
                 <div className="max-w-3xl mx-auto space-y-6">
-                    {/* Companion switcher */}
-                    <div className="flex items-center justify-center gap-2 pt-2 pb-1">
-                        {Object.keys(sageImages).map((key) => (
-                            <div key={key} className="relative group">
-                                <button
-                                    onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: key })}
-                                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${dialogueMode === key
-                                        ? 'bg-[#B88644]/10 text-[#B88644] ring-1 ring-[#B88644]/30'
-                                        : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
-                                        }`}
-                                >
-                                    <img src={sageImages[key]} alt={t(`sage_${key}`)} className="w-5 h-5 rounded-full object-cover" style={{ backgroundColor: sageBgColors[key] }} />
-                                    {t(`sage_${key}`)}
-                                </button>
-                                <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap rounded bg-slate-800 px-2.5 py-1 text-[11px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-[70]">
-                                    {t(`sage_${key}_subtitle`)}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
+                    {/* Companion switcher - shown after first message */}
+                    {messages.length > 0 && (
+                        <div className="flex items-center justify-center gap-2 pt-2 pb-1">
+                            {Object.keys(sageImages).map((key) => (
+                                <div key={key} className="relative group">
+                                    <button
+                                        onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: key })}
+                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${dialogueMode === key
+                                            ? 'bg-[#B88644]/10 text-[#B88644] ring-1 ring-[#B88644]/30'
+                                            : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+                                            }`}
+                                    >
+                                        <img src={sageImages[key]} alt={t(`sage_${key}`)} className="w-5 h-5 rounded-full object-cover" style={{ backgroundColor: sageBgColors[key] }} />
+                                        {t(`sage_${key}`)}
+                                    </button>
+                                    <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap rounded bg-slate-800 px-2.5 py-1 text-[11px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-[70]">
+                                        {t(`sage_${key}_subtitle`)}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Welcome message when empty */}
                     {messages.length === 0 && !loading && !hasReachedConversationLimit && (
@@ -258,13 +261,19 @@ const CompanionChat = () => {
                                     </div>
                                     <div className="pl-7">
                                         <MarkdownContent content={msg.content} />
-                                        <button
-                                            onClick={() => copyExchange(idx)}
-                                            className="mt-2 p-1.5 text-slate-300 hover:text-[#B88644] transition-colors rounded-md hover:bg-[#B88644]/5"
-                                            title={t('copy_exchange')}
-                                        >
-                                            {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
-                                        </button>
+                                        <div className="flex items-center gap-1 mt-2">
+                                            <button
+                                                onClick={() => copyExchange(idx)}
+                                                className="p-1.5 text-slate-300 hover:text-[#B88644] transition-colors rounded-md hover:bg-[#B88644]/5"
+                                                title={t('copy_exchange')}
+                                            >
+                                                {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                                            </button>
+                                            <ShareButton
+                                                content={msg.content}
+                                                question={messages[idx - 1]?.content || ''}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -298,6 +307,7 @@ const CompanionChat = () => {
                             ))}
                         </div>
                     )}
+
 
                     {/* Values compass invitation after 2-3 exchanges */}
                     {messages.length >= 4 && !loading && !compassInviteDismissed && appState.values.length === 0 && (
@@ -351,6 +361,28 @@ const CompanionChat = () => {
             {!hasReachedConversationLimit && (
                 <div className="border-t border-slate-100 px-4 py-3">
                     <div className="max-w-3xl mx-auto">
+                        {/* Companion switcher - only before conversation starts */}
+                        {messages.length === 0 && (
+                            <div className="flex flex-wrap items-center justify-end gap-1.5 mb-2">
+                                {Object.keys(sageImages).map((key) => (
+                                    <div key={key} className="relative group">
+                                        <button
+                                            onClick={() => dispatch({ type: ACTIONS.SET_DIALOGUE_MODE, payload: key })}
+                                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${dialogueMode === key
+                                                ? 'bg-[#B88644]/10 text-[#B88644] ring-1 ring-[#B88644]/30'
+                                                : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+                                                }`}
+                                        >
+                                            <img src={sageImages[key]} alt={t(`sage_${key}`)} className="w-5 h-5 rounded-full object-cover" style={{ backgroundColor: sageBgColors[key] }} />
+                                            {t(`sage_${key}`)}
+                                        </button>
+                                        <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 whitespace-nowrap rounded bg-slate-800 px-2.5 py-1 text-[11px] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-[70]">
+                                            {t(`sage_${key}_subtitle`)}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {/* Attached files chips */}
                         {attachedFiles.length > 0 && (
                             <div className="flex flex-wrap gap-2 mb-2 pl-12">

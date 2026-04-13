@@ -1,17 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, MessageSquare, Info, Users, ShieldCheck, Lock, Compass, CreditCard } from 'lucide-react';
+import { Menu, MessageSquare, Info, Users, ShieldCheck, Lock, Compass, CreditCard, PenLine } from 'lucide-react';
 import { useAppState } from '../../context/AppContext';
 import { ACTIONS } from '../../context/appReducer';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { navigateTo } from '../../hooks/useRouting';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const HamburgerMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const { dispatch } = useAppState();
     const { user, openAuthModal } = useAuth();
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const blogLocale = ['en','es','fr','it','ar','hi'].includes(language) ? language : 'en';
+    const blogUrl = `https://christian-chatgpt.com/${blogLocale}/`;
 
     const handleForum = () => {
         navigateTo(dispatch, 'forum');
@@ -40,14 +43,6 @@ const HamburgerMenu = () => {
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50 animate-in fade-in slide-in-from-top-2">
                     <a
-                        href="/forum"
-                        onClick={(e) => { e.preventDefault(); handleForum(); }}
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
-                    >
-                        <MessageSquare className="w-4 h-4 text-slate-400" />
-                        <span>{t('menu_forum')}</span>
-                    </a>
-                    <a
                         href="/compass"
                         onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'compass'); setIsOpen(false); }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
@@ -55,6 +50,9 @@ const HamburgerMenu = () => {
                         <Compass className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_compass')}</span>
                     </a>
+                    <div className="px-4 py-2 border-t border-slate-100">
+                        <ThemeSwitcher expanded={true} />
+                    </div>
                     <a
                         href="/pricing"
                         onClick={(e) => { e.preventDefault(); navigateTo(dispatch, 'pricing'); setIsOpen(false); }}
@@ -78,6 +76,24 @@ const HamburgerMenu = () => {
                     >
                         <Users className="w-4 h-4 text-slate-400" />
                         <span>{t('menu_contact')}</span>
+                    </a>
+                    <a
+                        href={blogUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                    >
+                        <PenLine className="w-4 h-4 text-slate-400" />
+                        <span>{t('menu_blog')}</span>
+                    </a>
+                    <a
+                        href="/forum"
+                        onClick={(e) => { e.preventDefault(); handleForum(); }}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"
+                    >
+                        <MessageSquare className="w-4 h-4 text-slate-400" />
+                        <span>{t('menu_forum')}</span>
                     </a>
                     <a
                         href="/terms"

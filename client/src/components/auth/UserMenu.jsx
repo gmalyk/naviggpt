@@ -63,6 +63,7 @@ const UserMenu = () => {
                     <button
                         onClick={() => {
                             signOut();
+                            navigateTo(dispatch, 'landing');
                             setIsOpen(false);
                         }}
                         className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-slate-700 text-sm w-full text-left"

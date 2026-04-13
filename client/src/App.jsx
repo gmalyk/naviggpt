@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppState } from './context/AppContext';
 import { useAuth } from './context/AuthContext';
 import { ACTIONS } from './context/appReducer';
-import { useRouting } from './hooks/useRouting';
+import { useRouting, navigateTo } from './hooks/useRouting';
 import { api } from './services/api';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
@@ -21,14 +21,25 @@ import CompassView from './components/compass/CompassView';
 import PrivacyView from './components/privacy/PrivacyView';
 import CompanionView from './components/companion/CompanionView';
 import LandingView from './components/landing/LandingView';
+import InstitutionsView from './components/institutions/InstitutionsView';
 import LimitBanner from './components/ui/LimitBanner';
 import CompassFab from './components/ui/CompassFab';
 
 function App() {
   const { state, dispatch } = useAppState();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   useRouting();
+
+  // Protected views that require authentication
+  const protectedViews = ['home', 'account', 'prompts', 'companion', 'discernment', 'result'];
+
+  // Redirect to landing page when user signs out and is on a protected view
+  useEffect(() => {
+    if (!user && !loading && protectedViews.includes(state.view)) {
+      navigateTo(dispatch, 'landing');
+    }
+  }, [user, loading, state.view]);
 
   const hasSidebar = !!user && state.view !== 'landing';
   const sidebarMargin = hasSidebar ? (state.sidebarOpen ? 'md:ml-60' : 'md:ml-14') : '';
@@ -72,6 +83,8 @@ function App() {
         {state.view === 'compass' && <CompassView />}
 
         {state.view === 'privacy' && <PrivacyView />}
+
+        {state.view === 'institutions' && <InstitutionsView />}
 
         {state.view === 'companion' && <CompanionView />}
 

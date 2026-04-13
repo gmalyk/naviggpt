@@ -13,6 +13,7 @@ const Footer = () => {
         { view: 'contact', href: '/contact', label: t('menu_contact') },
         { view: 'forum', href: '/forum', label: t('menu_forum') },
         { view: 'compass', href: '/compass', label: t('menu_compass') },
+        { view: 'institutions', href: '/institutions', label: t('menu_institutions') },
         { view: 'terms', href: '/terms', label: t('menu_terms') },
         { view: 'privacy', href: '/privacy', label: t('menu_privacy') },
     ];
